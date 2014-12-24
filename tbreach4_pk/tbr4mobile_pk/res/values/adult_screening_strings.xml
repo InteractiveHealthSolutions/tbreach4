@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="adult_cough">Do you have Cough?</string>
+    <string name="adult_cough_duration">Duration of cough in Weeks	</string>
+    <string name="cough_productive">Do you have productive cough?</string>
+    <string name="cough_blood">Have you had blood in your cough during the last 2 weeks?</string>
+    <string name="tb_before">Have you ever had TB before?</string>
+    <string name="tb_medication">Have you ever taken medication for TB that lasted or was supposed to last for 6/8 months?</string>
+    <string name="tb_treatment">For how many months did you take the treatment?</string>
+    <string name="tb_in_family">Does anyone in your family currently have TB?</string>
+    <string name="fever_weeks">Have you had fever in the last two weeks?</string>
+    <string name="adult_night_sweats">Have you had night sweats during the last 2 weeks?</string>
+    <string name="adult_weight_loss">Have you had unexplained weight loss during the last 2 weeks</string>
+    
+    <string-array name="adult_cough_durations">
+        <item>Less than 2 Weeks</item>
+        <item>2 to 3 Weeks</item>
+        <item>More than 3 Weeks</item>
+        <item>Unknown</item>
+        <item>Refused</item>
+    </string-array>
+    
+    <string-array name="tb_treatment_options">
+        <item>Less than 1 month</item>
+        <item>More than 1 month</item>
+    </string-array>
+    
+</resources>

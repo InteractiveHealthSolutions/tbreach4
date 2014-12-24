@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="submit_forms">Check the saved forms you want to submit.</string>
+    <string name="location">Site</string>
+    <string name="location_hint">Enter 2 digit ID</string>
+    <string name="tb_screening">TB Screening</string>
+    <string name="screening">Lung Health Screen</string>
+    <string name="paediatric_screening">Pediatrics Screening</string>
+    <string name="adult_screening">Adult Screening</string>
+    <string name="reverse_contact_tracing">Reverse Contact Tracing</string>
+    <string name="paediatric_contact_tracing">Paediatric Contact Tracing</string>
+    <string name="adult_reverse_contact_tracing">Adult Reverse Contact Tracing</string>
+    <string name="non_pulmonary_suspect">Non-Pulmonary Suspect</string>
+    <string name="customer_info">Client Information</string>
+    <string name="test_indication">Test Indication</string>
+    <string name="blood_sugar_order">Blood Sugar Test Order</string>
+    <string name="blood_sugar_result">Blood Sugar Test Result</string>
+    <string name="clinical_evaluation">Clinical Evaluation</string>
+    <string name="drug_dispersal">Drug Dispersal</string>
+    <string name="feedback">Feedback</string>
+    <string name="patient_registration">Patient Registration</string>
+    <string name="dot_dot_dot">...</string>
+
+</resources>

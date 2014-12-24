@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="tables">
+        <item>CREATE TABLE IF NOT EXISTS identifiers (
+            id INT NOT NULL UNIQUE COLLATE NOCASE, 
+            type TEXT NOT NULL COLLATE NOCASE, 
+            name TEXT NOT NULL COLLATE NOCASE,
+            PRIMARY KEY (id, type))		</item>
+		<item>CREATE TABLE IF NOT EXISTS forms (
+            form_date DATETIME,
+            timestamp DATETIME NOT NULL,
+            form TEXT NOT NULL COLLATE NOCASE,
+            content TEXT NOT NULL COLLATE NOCASE,
+            obs TEXT NOT NULL COLLATE NOCASE)
+		</item>
+		<item>CREATE TABLE IF NOT EXISTS offline_forms (
+            timestamp DATETIME NOT NULL,
+		    username TEXT NOT NULL COLLATE NOCASE,
+            form TEXT NOT NULL COLLATE NOCASE,
+            json TEXT NOT NULL COLLATE NOCASE, 
+            PRIMARY KEY (timestamp))
+		</item>
+	</string-array>
+</resources>
