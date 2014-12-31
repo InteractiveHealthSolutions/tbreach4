@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="search_patient">Search Patient</string>
+    <string name="video_viewed">Did you watch the sputum instructions video prior to expectorating?</string>
+    
+    <string-array name="video_viewed_option">
+        <item>Yes</item>
+        <item>No</item>
+        <item>Refuse</item>
+        <item>Unknown</item>
+        <item>Video unavailable</item>
+    </string-array>
+    
+    <string name="sputum_time">When was the specimen coughed up?</string>
+    
+    <string-array name="sputum_time_option">
+        <item>Spot (Same day as screening)</item>
+        <item>2nd Day Morning (the day after screening)</item>
+        <item>3rd Day Morning</item>
+        <item>More than 3 days ago</item>
+        <item>Unknown</item>
+    </string-array>
+    
+    <string name="sputum_status">Does the screener accept or reject the sample? </string>
+    
+    <string-array name="sputum_status_option">
+        <item>Accept</item>
+        <item>Reject</item>
+    </string-array>
+    
+    <string name="rejection_reason">Reason for rejection</string>
+    
+    <string-array name="rejection_reason_option">
+        <item>Saliva</item>
+        <item>Food Particles</item>
+        <item>Insufficient Quantity</item>
+        <item>More than 3 days old</item>
+    </string-array>
+    
+    <string name="lab_test_id">Scan Lab Test ID barcode</string>
+    <string name="lab_test_id_hint">Enter 11 digit NHLS ID</string>
+    
+    <string name="screener_instruction_for_sputum_accept">Inspect Sputum Sample.</string>
+    <string name="screener_instruction_for_sputum_reject">This sample is too old. Reject this sample and ask the patient for another sputum sample. Repeat sputum instructions. </string>
+    <string name="screener_instruction_repeat">Please take a new sputum sample from the Patient and fill this form again.</string>
+    <string name="screener_instruction_verify_patient">Please verify patient name with the patient. If name, matches proceed to the next question on the form. If name does not match, make sure you have scanned the correct barcode. If the name still does not match after rescanning the code, then re-screen the patient and fill out the sputum submission form.</string>
+    
+    <string name="fetch_name">Fetch Patient\'s Name</string>
+    
+</resources>

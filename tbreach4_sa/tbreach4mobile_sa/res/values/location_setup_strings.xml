@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <string name="screening_type">Type of Screening</string>
+     <string name="community">Community</string>
+     <string name="facility">Facility</string>
+     <string name="district">District</string>
+     <string name="search_district">Search district</string>
+     <string name="screening_Strategy">Screening strategy</string>
+     <string name="search_screening_Strategy">Search screening strategy</string>
+     <string name="location_id">Location: </string>
+     <string name="search_location_id">Search location Id</string>
+     <string name="search_facility">Search facility</string>
+     <string name="district_id">Enter District Id</string>
+     <string name="district_search_hint">Enter two digit id</string>
+     <string name="facility_id">Enter Facility Id</string>
+     <string name="facility_search_hint">Enter three digit id</string>
+     <string name="choose_district">Please choose district</string>
+     <string name="screening_strategy_id">Enter Screening Strategy Id</string>
+     <string name="screening_strategy_search_hint">Enter three digit id</string>
+     <string name="facility_choose">Choose one facility</string>
+     <string name="district_choose">Choose one district</string>
+     <string name="screening_strategy_choose">Choose one screening strategy</string>
+</resources>

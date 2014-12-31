@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        
+          <TextView
+        android:id="@+location_id/screeningTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/screening_type"
+        android:textSize="25sp" />
+
+    <RadioGroup
+        android:id="@+location_id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"  >
+
+        <RadioButton
+            android:id="@+location_id/communityRadio"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/community" />
+
+        <RadioButton
+            android:id="@+location_id/facilityRadio"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/facility" />
+    </RadioGroup>
+
+<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+location_id/districtTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/district"
+            android:textSize="25sp" />
+
+        <ImageButton
+            android:id="@+location_id/districtButton"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/search_screening_Strategy"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/search_orange" />
+
+    </RelativeLayout>
+
+    <Spinner
+        android:id="@+location_id/districtSpinner"
+        style="@style/AppBaseTheme"
+        android:prompt="@string/district_choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+location_id/screeningStrategyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/screening_Strategy"
+            android:textSize="25sp" />
+
+        <ImageButton
+            android:id="@+location_id/screeningStrategyButton"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_orange"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/search_screening_Strategy" />
+
+    </RelativeLayout>
+
+    <Spinner
+        android:id="@+location_id/screeningStrategySpinner"
+        style="@style/AppBaseTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/screening_strategy_choose"
+        android:textColor="#aa66cc" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+location_id/facilityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/facility"
+            android:textSize="25sp" />
+
+        <ImageButton
+        android:id="@+location_id/facilityButton"
+        style="@style/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/search_facility"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/search_orange" />
+
+    </RelativeLayout>
+    
+    <Spinner
+        android:id="@+location_id/facilitySpinner"
+        style="@style/AppBaseTheme"
+         android:prompt="@string/facility_choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#aa66cc" />
+        
+    <TextView
+        android:id="@+location_id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/location_id"
+        android:textSize="25sp" />
+        
+    
+    
+    <TextView
+          android:id="@+location_id/locationIdTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="60dp"
+          android:textSize="20sp" />
+
+    </LinearLayout>
+
+</ScrollView>

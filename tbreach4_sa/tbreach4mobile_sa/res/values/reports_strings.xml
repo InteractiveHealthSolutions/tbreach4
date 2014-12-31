@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="reporting">Reports</string>
+    <string name="screening_report">Screening Report</string>
+    <string name="daily_report">Daily Summary</string>
+    <string name="date_report">Forms by Date</string>
+    <string name="performance">Performance</string>
+    <string name="saved_forms">Saved Forms</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="error_code">Error Code</string>
+    
+    <string name="mtb_burden">MTB Burden</string>
+    
+    <string-array name="mtb_burden_option">
+        <item>Very Low</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+    
+    <string name="rif_result">RIF Result</string>
+    
+    <string-array name="rif_result_option">
+        <item>Not Detected</item>
+        <item>Detected</item>
+        <item>Indeterminate</item>
+    </string-array>
+    
+    <string name="gxp_result">GeneXpert Result</string>
+    
+    <string-array name="gxp_result_option">
+        <item>MTB Negative</item>
+        <item>MTB Positive</item>
+        <item>Error</item>
+        <item>Invalid</item>
+        <item>No Result</item>
+    </string-array>
+    
+    <string name="sample_accepted">Sample accepted at lab?</string>
+    <string name="date_result_recieved">Date result received from sputum collection point</string>
+    <string name="date_test_report">Date of Test Report</string>
+    
+</resources>

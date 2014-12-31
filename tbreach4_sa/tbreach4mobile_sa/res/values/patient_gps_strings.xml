@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="patient_home_gps">Patient Home GPS</string>
+    <string name="get_gps">Get GPS Address</string>
+</resources>
