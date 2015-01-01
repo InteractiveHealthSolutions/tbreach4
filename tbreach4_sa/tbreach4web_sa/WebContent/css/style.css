@@ -1,0 +1,160 @@
+.divCenter {
+	border: 2px solid;
+	border-radius: 50px;
+	padding: 20px;
+	background-color: #C5E3BF;
+	border-color: #F58220;
+	color: #F58220;
+	font-weight: bold;
+	font-size: 20;
+}
+
+select { 
+    color:orange;
+}
+
+span {
+	color: red;
+	font-size: 15;
+}
+
+h2 {
+	text-align: center;
+	color: #F58220;
+}
+
+table {
+	color: #F58220;
+	font-weight: bold;
+}
+
+input {
+	color: #F58220;
+	font-weight: bold;
+}
+
+input[type="submit"]:hover {
+	color: orange;
+}
+
+a:link {
+	text-decoration: none;
+	color: #F58220;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #F58220;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: orange;
+}
+
+a:active {
+	text-decoration: underline;
+	color: orange;
+}
+
+
+.mytable a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+.mytable a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+.mytable a:active,
+.mytable a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+.mytable {
+	font-family:Arial, Helvetica, sans-serif;
+	color:#F58220;
+	font-size:12px;
+	text-shadow: 1px 1px 0px #fff;
+	background:#C5E3BF;
+	margin:10px;
+	border:#F58220 1px solid;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	box-shadow: 0 1px 2px #d1d1d1;
+}
+.mytable th {
+	padding:10px 10px 10px 10px;
+	border-top:1px solid #fafafa;
+	border-bottom:1px solid #e0e0e0;
+
+	background: #C5E3BF;
+	background: -webkit-gradient(linear, left top, left bottom, from(#C5E3BF), to(#C5E3BF));
+	background: -moz-linear-gradient(top,  #C5E3BF,  #C5E3BF);
+	
+	font-size: 15;
+	color:orange;
+}
+.mytable th:first-child {
+	text-align: left;
+	padding-left:10px;
+}
+.mytable tr:first-child th:first-child {
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+.mytable tr:first-child th:last-child {
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+.mytable tr {
+	text-align: center;
+	padding-left:10px;
+}
+.mytable td:first-child {
+	text-align: left;
+	padding-left:10px;
+	border-left: 0;
+}
+.mytable td {
+	padding:1px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+
+	background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+.mytable tr.even td {
+	background: #f6f6f6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+.mytable tr:last-child td {
+	border-bottom:0;
+}
+.mytable tr:last-child td:first-child {
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+.mytable tr:last-child td:last-child {
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+.mytable tr:hover td {
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
