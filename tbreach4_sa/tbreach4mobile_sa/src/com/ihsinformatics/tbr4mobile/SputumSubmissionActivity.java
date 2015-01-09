@@ -555,7 +555,36 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	{
 		super.onActivityResult (requestCode, resultCode, data);
 		// Retrieve barcode scan results or Search for ID
-		if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
+		
+		if (requestCode == Barcode.BARCODE_RESULT_TEST_ID)
+		{
+			if (resultCode == RESULT_OK)
+			{
+				String str = data.getStringExtra (Barcode.SCAN_RESULT);
+				
+				// Check for valid Id
+				if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
+				{
+					labTestId.setText (str);
+				}
+				else
+				{
+					App.getAlertDialog (this, AlertType.ERROR, labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
+				}
+			}
+			else if (resultCode == RESULT_CANCELED)
+			{
+				// Handle cancel
+				App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.operation_cancelled)).show ();
+			}
+			// Set the locale again, since the Barcode app restores system's locale because of orientation
+			Locale.setDefault (App.getCurrentLocale ());
+			Configuration config = new Configuration ();
+			config.locale = App.getCurrentLocale ();
+			getApplicationContext ().getResources ().updateConfiguration (config, null);
+			
+		}
+		else if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
 		{
 			if (resultCode == RESULT_OK)
 			{
@@ -585,34 +614,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 			config.locale = App.getCurrentLocale ();
 			getApplicationContext ().getResources ().updateConfiguration (config, null);
 		}
-		else if (requestCode == Barcode.BARCODE_RESULT_TEST_ID)
-		{
-			if (resultCode == RESULT_OK)
-			{
-				String str = data.getStringExtra (Barcode.SCAN_RESULT);
-				
-				// Check for valid Id
-				if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
-				{
-					labTestId.setText (str);
-				}
-				else
-				{
-					App.getAlertDialog (this, AlertType.ERROR, labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
-				}
-			}
-			else if (resultCode == RESULT_CANCELED)
-			{
-				// Handle cancel
-				App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.operation_cancelled)).show ();
-			}
-			// Set the locale again, since the Barcode app restores system's locale because of orientation
-			Locale.setDefault (App.getCurrentLocale ());
-			Configuration config = new Configuration ();
-			config.locale = App.getCurrentLocale ();
-			getApplicationContext ().getResources ().updateConfiguration (config, null);
-			
-		}
+		
 	}
 
 	@Override

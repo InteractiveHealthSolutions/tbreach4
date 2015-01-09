@@ -57,39 +57,11 @@
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
-            android:name=".NonPulmonarySuspectActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".CustomerInfoActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
             android:name=".PatientReportActivity"
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
-            android:name=".BloodSugarTestActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".BloodSugarResultsActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".ClinicalEvaluationActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".DrugDispersalActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
             android:name=".FeedbackActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".PatientGpsActivity"
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
@@ -105,18 +77,8 @@
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
-            android:name=".GPSTracker"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
-            android:name=".GPSActivity"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity
             android:name=".Barcode"
             android:configChanges="keyboardHidden|orientation" >
-        </activity>
-        <activity android:name="UpdateMetadataActivity" >
         </activity>
     </application>
 
