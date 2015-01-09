@@ -741,6 +741,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 						horizontalLayout.addView(viewGroups[i][j]);
 						/*j++;
 						horizontalLayout.addView(viewGroups[i][j]);*/
+						
 					}
 					layout.addView(horizontalLayout);
 				} else

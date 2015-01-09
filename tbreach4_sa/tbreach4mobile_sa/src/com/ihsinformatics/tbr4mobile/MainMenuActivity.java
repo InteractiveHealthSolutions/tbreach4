@@ -136,6 +136,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 					location = location.concat(" - ");
 					location = location.concat(ss[1]);
 				}
+				
 				else{
 					location = App.getFacility();
 				}
