@@ -132,19 +132,19 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 
 	MyTextView coughSymptom;
 	MyEditText coughSymptomDuration;
-	MyTextView coughDays;
+	//MyTextView coughDays;
 	MyTextView nigtSweatsSymptom;
 	MyEditText nightSweatsSymptomDuration;
-	MyTextView nightSweatsDays;
+	//MyTextView nightSweatsDays;
 	MyTextView weightLossSymptom;
 	MyEditText weightLossSymptomDuration;
-	MyTextView weightLossDays;
+	//MyTextView weightLossDays;
 	MyTextView feverSymptom;
 	MyEditText feverSymptomDuration;
-	MyTextView feverDays;
+	//MyTextView feverDays;
 	MyTextView haemoptysisSymptom;
 	MyEditText haemoptysisSymptomDuration;
-	MyTextView haemoptysisDays;
+	//MyTextView haemoptysisDays;
 
 	MyTextView screenerInstructionTextView1;
 	MyTextView screenerInstructionRiskTextView;
@@ -423,26 +423,26 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		coughTextView = new MyTextView(context, R.style.text, R.string.cough);
 		cough = new MySpinner(context, getResources().getStringArray(
 				R.array.options), R.string.cough, R.string.option_hint);
-		coughDays = new MyTextView(context, R.style.text, R.string.day);
+		//coughDays = new MyTextView(context, R.style.text, R.string.day);
 		nightSweatsTextView = new MyTextView(context, R.style.text,
 				R.string.night_sweats);
 		nightSweats = new MySpinner(context, getResources().getStringArray(
 				R.array.options), R.string.night_sweats, R.string.option_hint);
-		nightSweatsDays = new MyTextView(context, R.style.text, R.string.day);
+		//nightSweatsDays = new MyTextView(context, R.style.text, R.string.day);
 		weightLossTextView = new MyTextView(context, R.style.text,
 				R.string.weight_loss);
 		weightLoss = new MySpinner(context, getResources().getStringArray(
 				R.array.options), R.string.weight_loss, R.string.option_hint);
-		weightLossDays = new MyTextView(context, R.style.text, R.string.day);
+		//weightLossDays = new MyTextView(context, R.style.text, R.string.day);
 		feverTextView = new MyTextView(context, R.style.text, R.string.fever);
 		fever = new MySpinner(context, getResources().getStringArray(
 				R.array.options), R.string.fever, R.string.option_hint);
-		feverDays = new MyTextView(context, R.style.text, R.string.day);
+		//feverDays = new MyTextView(context, R.style.text, R.string.day);
 		haemoptysisTextView = new MyTextView(context, R.style.text,
 				R.string.haemoptysis);
 		haemoptysis = new MySpinner(context, getResources().getStringArray(
 				R.array.options), R.string.haemoptysis, R.string.option_hint);
-		haemoptysisDays = new MyTextView(context, R.style.text, R.string.day);
+		//haemoptysisDays = new MyTextView(context, R.style.text, R.string.day);
 		
 		summaryHeadingTextView = new MyTextView(context, R.style.text,
 				R.string.summary);
@@ -688,11 +688,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 						weightLoss },
 				{ feverTextView, fever, haemoptysisTextView, haemoptysis },
 				{ summaryHeadingTextView, symptomQuestion, coughSymptom,
-						coughSymptomDuration, coughDays, nigtSweatsSymptom,
-						nightSweatsSymptomDuration, nightSweatsDays, weightLossSymptom,
-						weightLossSymptomDuration, weightLossDays, feverSymptom,
-						feverSymptomDuration, feverDays, haemoptysisSymptom,
-						haemoptysisSymptomDuration, haemoptysisDays },
+						coughSymptomDuration, /*coughDays,*/ nigtSweatsSymptom,
+						nightSweatsSymptomDuration, /*nightSweatsDays,*/ weightLossSymptom,
+						weightLossSymptomDuration, /*weightLossDays,*/ feverSymptom,
+						feverSymptomDuration, /*feverDays,*/ haemoptysisSymptom,
+						haemoptysisSymptomDuration,/* haemoptysisDays*/ },
 				{ screenerInstructionTextView1,
 						screenerInstructionRiskTextView,
 						riskFactorHeadingTextView, contactWithTbTextView,
@@ -739,8 +739,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 						horizontalLayout.addView(viewGroups[i][j]);
 						j++;
 						horizontalLayout.addView(viewGroups[i][j]);
-						j++;
-						horizontalLayout.addView(viewGroups[i][j]);
+						/*j++;
+						horizontalLayout.addView(viewGroups[i][j]);*/
 					}
 					layout.addView(horizontalLayout);
 				} else
@@ -881,19 +881,19 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		
 		coughSymptom.setEnabled(hasCough);
 		coughSymptomDuration.setEnabled(hasCough);
-		coughDays.setEnabled(hasCough);
+		//coughDays.setEnabled(hasCough);
 		nigtSweatsSymptom.setEnabled(hasNightSweats);
 		nightSweatsSymptomDuration.setEnabled(hasNightSweats);
-		nightSweatsDays.setEnabled(hasNightSweats);
+		//nightSweatsDays.setEnabled(hasNightSweats);
 		weightLossSymptom.setEnabled(hasWeightLoss);
 		weightLossSymptomDuration.setEnabled(hasWeightLoss);
-		weightLossDays.setEnabled(hasWeightLoss);
+		//weightLossDays.setEnabled(hasWeightLoss);
 		feverSymptom.setEnabled(hasFever);
 		feverSymptomDuration.setEnabled(hasFever);
-		feverDays.setEnabled(hasFever);
+		//feverDays.setEnabled(hasFever);
 		haemoptysisSymptom.setEnabled(hasHaemoptysis);
 		haemoptysisSymptomDuration.setEnabled(hasHaemoptysis);
-		haemoptysisDays.setEnabled(hasHaemoptysis);
+		//haemoptysisDays.setEnabled(hasHaemoptysis);
 		
 		if(!coughSymptom.isEnabled())
 			coughSymptomDuration.setText("0");

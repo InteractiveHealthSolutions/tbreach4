@@ -126,16 +126,21 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		if (App.getLocation () != null)
 		{
 			
-			String loc[] = App.getLocation().split(" ");
-			String location = loc[0];
-			
-			String screeningType = App.getScreeningType();
-			if(screeningType.equalsIgnoreCase("Community")){
-				String ss[] = App.getScreeningStrategy().split("-");
-				location = location.concat(" - ");
-				location = location.concat(ss[1]);
-			}
+			if (App.getLocation() != ""){
+				String loc[] = App.getLocation().split(" ");
+				String location = loc[0];
+				
+				String screeningType = App.getScreeningType();
+				if(screeningType.equalsIgnoreCase("Community")){
+					String ss[] = App.getScreeningStrategy().split("-");
+					location = location.concat(" - ");
+					location = location.concat(ss[1]);
+				}
+				else{
+					location = App.getFacility();
+				}
 			locationTextView.setText (location);
+			}
 		}
 		// When online, check if there are offline forms for current user
 		if (!App.isOfflineMode ())

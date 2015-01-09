@@ -63,7 +63,7 @@
     <string name="night_sweats_checkbox">"Night Sweats      "</string>
     <string name="weight_loss_checkbox">"Weight Loss        "</string>
     <string name="fever_checkbox">"Fever                    "</string>
-    <string name="haemoptysis_checkbox">"Coughing Blood "</string>
+    <string name="haemoptysis_checkbox">"Coughing Blood  "</string>
     <string name="day">" Day(s)"</string>
     
     <string name="symptoms_period">For how long (days) have you had each of these symptoms?</string>
