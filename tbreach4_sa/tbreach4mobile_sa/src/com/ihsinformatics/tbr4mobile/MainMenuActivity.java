@@ -198,10 +198,10 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 				Intent locationSetupIntent = new Intent (this, LocationSetupActivity.class);
 				startActivity (locationSetupIntent);
 				break;
-			case R.menu_id.searchPatientActivity :
+			/*case R.menu_id.searchPatientActivity :
 				Intent patientSearchIntent = new Intent (this, PatientSearchActivity.class);
 				startActivity (patientSearchIntent);
-				break;
+				break;*/
 			/*case R.menu_id.reportsActivity :
 				Intent reportsIntent = new Intent (this, ReportsActivity.class);
 				startActivity (reportsIntent);
@@ -451,11 +451,15 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			@Override
 			public void onClick (DialogInterface dialog, int which)
 			{
+				
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
 				SharedPreferences.Editor editor = preferences.edit ();
 				editor.putBoolean (Preferences.AUTO_LOGIN, false);
 				editor.apply ();
+				App.setAutoLogin(false);
 				finish ();
+				Intent mainMenuIntent = new Intent (getApplicationContext (), LoginActivity.class);
+				startActivity (mainMenuIntent);
 			}
 		});
 		confirmationDialog.setButton (AlertDialog.BUTTON_NEUTRAL, getResources ().getString (R.string.cancel), new AlertDialog.OnClickListener ()

@@ -338,30 +338,46 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		dob = Calendar.getInstance();
 		dobPicker.init(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH),
 				dob.get(Calendar.DAY_OF_MONTH), new OnDateChangedListener() {
-
+	   
 					@Override
 					public void onDateChanged(DatePicker view, int year,
 							int monthOfYear, int dayOfMonth) {
 
-						dob.set(Calendar.YEAR, year);
-						dob.set(Calendar.MONTH, monthOfYear);
-						dob.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-						int diff = formDate.get(Calendar.YEAR)
-								- dob.get(Calendar.YEAR);
-						if (dob.get(Calendar.MONTH) > formDate
-								.get(Calendar.MONTH)
-								|| (dob.get(Calendar.MONTH) == formDate
-										.get(Calendar.MONTH) && dob
-										.get(Calendar.DATE) > formDate
-										.get(Calendar.DATE))) {
-							diff--;
+						Calendar selectedCal = Calendar.getInstance();
+	                    selectedCal.set(year, monthOfYear, dayOfMonth);
+
+	                    long selectedMilli = selectedCal.getTimeInMillis();
+
+	                    Date datePickerDate = new Date(selectedMilli);
+	                    if (datePickerDate.after(new Date())) {
+	                    	final Calendar cal = Calendar.getInstance();
+	                    	dobPicker.updateDate(cal.get(Calendar.YEAR),
+	                                cal.get(Calendar.MONTH),
+	                                cal.get(Calendar.DAY_OF_MONTH));
+	                    	} 
+						else{			
+							dob.set(Calendar.YEAR, year);
+							dob.set(Calendar.MONTH, monthOfYear);
+							dob.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+	
+							int diff = formDate.get(Calendar.YEAR)
+									- dob.get(Calendar.YEAR);
+							if (dob.get(Calendar.MONTH) > formDate
+									.get(Calendar.MONTH)
+									|| (dob.get(Calendar.MONTH) == formDate
+											.get(Calendar.MONTH) && dob
+											.get(Calendar.DATE) > formDate
+											.get(Calendar.DATE))) {
+								diff--;
+							}
+	
+							age.setText(Integer.toString(diff));
 						}
-
-						age.setText(Integer.toString(diff));
-
+						
 					}
 				});
+		
 		ageTextView = new MyTextView(context, R.style.text, R.string.age);
 		age = new MyEditText(context, R.string.age, R.string.age_hint,
 				InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
@@ -651,17 +667,17 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.string.physical_address);
 		physicalAddress = new MyEditText(context, R.string.physical_address,
 				R.string.physical_address_hint, InputType.TYPE_CLASS_TEXT,
-				R.style.edit, 0, false);
+				R.style.edit, 225, false);
 		townAddressTextView = new MyTextView(context, R.style.text,
 				R.string.town_address);
 		townAddress = new MyEditText(context, R.string.town_address,
 				R.string.town_address_hint, InputType.TYPE_CLASS_TEXT,
-				R.style.edit, 0, false);
+				R.style.edit, 225, false);
 		landmarkAddressTextView = new MyTextView(context, R.style.text,
 				R.string.landmark_address);
 		landmarkAddress = new MyEditText(context, R.string.landmark_address,
 				R.string.landmark_address_hint, InputType.TYPE_CLASS_TEXT,
-				R.style.edit, 0, false);
+				R.style.edit, 225, false);
 		sputumVideoInstructionTextView = new MyTextView(context, R.style.text,
 				R.string.sputum_video);
 		sputumVideoInstruction = new MySpinner(context, getResources()
@@ -773,6 +789,27 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		weightLoss.setOnItemSelectedListener(this);
 		fever.setOnItemSelectedListener(this);
 		haemoptysis.setOnItemSelectedListener(this);
+		
+		TextView[] textViews = new TextView[]{
+				 yearsWorkingNow     
+				,yearsWorkingPreviously   
+				,coughSymptomDuration  
+				,nightSweatsSymptomDuration 
+				,weightLossSymptomDuration
+				,feverSymptomDuration
+				,haemoptysisSymptomDuration
+				,tbTreatmentPastDuration
+				,phone2OtherOwner
+				,phone1OtherOwner
+				,phone2
+				,phone1
+				,patientId
+				};
+		
+		for (TextView v : textViews) {
+			v.isFocusableInTouchMode();
+		}
+		
 
 		views = new View[] { /*
 							 * english, afrikaans, zulu, xhosa, swati, tswana,
@@ -854,15 +891,17 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		hypertension.setSelection(2);
 		
 		if(!coughSymptom.isEnabled())
-			coughSymptomDuration.setText("0");
+			coughSymptomDuration.setHint("  0  ");
 		if(!nigtSweatsSymptom.isEnabled())
-			nightSweatsSymptomDuration.setText("0");
+			nightSweatsSymptomDuration.setHint("  0  ");
 		if(!weightLossSymptom.isEnabled())
-			weightLossSymptomDuration.setText("0");
+			weightLossSymptomDuration.setHint("  0  ");
 		if(!haemoptysisSymptom.isEnabled())
-			haemoptysisSymptomDuration.setText("0");
+			haemoptysisSymptomDuration.setHint("  0  ");
 		if(!feverSymptom.isEnabled())
-			feverSymptomDuration.setText("0");
+			feverSymptomDuration.setHint("  0  ");
+		
+	
 
 	}
 
@@ -1011,7 +1050,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 								+ ": "
 								+ getResources().getString(
 										R.string.out_of_range) + "\n");
-
+						tbTreatmentPastDuration.setTextColor(getResources().getColor(R.color.Red));
 					}
 					if (b > 24) {
 						valid = false;
@@ -1020,7 +1059,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 								+ ": "
 								+ getResources().getString(
 										R.string.out_of_range) + "\n");
-
+						tbTreatmentPastDuration.setTextColor(getResources().getColor(R.color.Red));
 					}
 				}
 				if (patientId.isEnabled()) {
@@ -1036,6 +1075,34 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				}
 			} catch (NumberFormatException e) {
 			}
+			if (!RegexUtil.isValidAddress(App.get(physicalAddress))) {
+				valid = false;
+				message.append(physicalAddress.getTag().toString()
+						+ ": "
+						+ getResources().getString(
+								R.string.invalid_data) + "\n");
+				physicalAddress.setTextColor(getResources().getColor(
+						R.color.Red));
+			}
+			if (!RegexUtil.isValidAddress(App.get(townAddress))) {
+				valid = false;
+				message.append(townAddress.getTag().toString()
+						+ ": "
+						+ getResources().getString(
+								R.string.invalid_data) + "\n");
+				townAddress.setTextColor(getResources().getColor(
+						R.color.Red));
+			}
+			if (!RegexUtil.isValidAddress(App.get(landmarkAddress))) {
+				valid = false;
+				message.append(landmarkAddress.getTag().toString()
+						+ ": "
+						+ getResources().getString(
+								R.string.invalid_data) + "\n");
+				landmarkAddress.setTextColor(getResources().getColor(
+						R.color.Red));
+			}
+			
 		}
 		if (!valid) {
 			App.getAlertDialog(this, AlertType.ERROR, message.toString())
@@ -1244,12 +1311,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				protected void onPostExecute(String result) {
 					super.onPostExecute(result);
 					loading.dismiss();
-					if (result.equals("SUCCESS")) {
-						App.getAlertDialog(ScreeningActivity.this,
-								AlertType.INFO,
-								getResources().getString(R.string.inserted))
-								.show();
-						initView(views);
+					if (result.contains ("SUCCESS"))
+					{
+						result = result.replace("SUCCESS","");
+						App.getAlertDialog (ScreeningActivity.this, AlertType.INFO, getResources ().getString (R.string.success_screening)+result).show ();
+						initView (views);
 					} else {
 						App.getAlertDialog(ScreeningActivity.this,
 								AlertType.ERROR, result).show();

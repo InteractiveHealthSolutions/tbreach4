@@ -257,7 +257,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 					{formDateTextView, formDateButton, patientIdTextView, patientId, scanBarcode, firstNameTextView, firstName, surnameTextView, surname,  searchPatientButton}, 
 				    {screenerInstructionOneTextView, screenerInstructionOne},
 					{viewedSputumVideoTextView, viewedSputumVideo, sputumTimeTextView, sputumTime,screenerInstructionTwoTextView,screenerInstructionTwo},
-					{sputumStatusTextView, sputumStatus, rejectionReasonTextView, rejectionReason, labTestIdTextView,labTestId,scanBarcodeLabTestId,screenerInstructionThreeTextView,screenerInstructionThree}, 
+					{sputumStatusTextView, sputumStatus,rejectionReasonTextView, rejectionReason, screenerInstructionThreeTextView,screenerInstructionThree,labTestIdTextView,labTestId,scanBarcodeLabTestId}, 
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -284,7 +284,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		searchPatientButton.setOnClickListener(this);
 		scanBarcodeLabTestId.setOnClickListener(this);
 		navigationSeekbar.setOnSeekBarChangeListener (this);
-		views = new View[] {patientId, firstName, surname, viewedSputumVideo, sputumTime, sputumStatus};
+		views = new View[] {patientId, firstName, surname, viewedSputumVideo, sputumTime, sputumStatus,labTestId};
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -327,6 +327,10 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
         sputumTime.setSelection(4);
         rejectionReasonTextView.setEnabled(false);
         rejectionReason.setEnabled(false);
+        firstNameValue = "";
+        lastNameValue = "";
+        firstName.setText(firstNameValue);
+		surname.setText(lastNameValue);
 	}
 
 	@Override
@@ -739,13 +743,13 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	@Override
 	public boolean onLongClick (View view)
 	{
-		if (view == patientId)
+		/*if (view == patientId)
 		{
 			Intent intent = new Intent (view.getContext (), PatientSearchActivity.class);
 			intent.putExtra (PatientSearchActivity.SEARCH_RESULT, "");
 			startActivityForResult (intent, GET_PATIENT_ID);
 			return true;
-		}
+		}*/
 		return false;
 	}
 }

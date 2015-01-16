@@ -176,10 +176,11 @@ public class ServerService
 	 * 
 	 * @return status
 	 */
-	public boolean authenticate ()
+	public String authenticate ()
 	{
 		//return true;
-		return (getUser (App.getUsername ()) != null);
+		return getUser (App.getUsername ());
+		
 	}
 
 	/**
@@ -214,9 +215,10 @@ public class ServerService
 	}
 
 	
-	public OpenMrsObject getUser (String name)
+	public String getUser (String name)
 	{
 		OpenMrsObject user = null;
+		JSONObject userObj = null;
 		// Always fetch from server and save this user
 		try
 		{
@@ -225,9 +227,19 @@ public class ServerService
 			json.put ("form_name", FormType.GET_USER);
 			json.put ("username", name);
 			String response = get ("?content=" + JsonUtil.getEncodedJson (json));
+			
+			if(response == null){
+			    return "CONNECTION_ERROR";	
+			}
+			
+			userObj = JsonUtil.getJSONObject (response);
+			if (userObj == null)
+			{
+				return response;
+			}
+			
 			if (response != null)
 			{
-				JSONObject userObj = JsonUtil.getJSONObject (response);
 				ContentValues values = new ContentValues ();
 				String userName = userObj.getString ("name");
 				// If user is found, then save it into local DB
@@ -244,22 +256,25 @@ public class ServerService
 						dbUtil.insert (Metadata.METADATA_TABLE, values);
 					}
 					user = getOpenMrsObjectFromDb (Metadata.USER, name);
+					if(user != null){
+						return "SUCCESS";
+					}
 				}
 			}
-			else
+		}
+		catch (Exception e)
+		{
+			try
 			{
-				return null;
+				String error = userObj.getString ("ERROR");
+				return error;
+			}
+			catch (Exception error)
+			{
+				return "UNKNOWN_ERROR";
 			}
 		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		return user;
+		return "FAIL";
 	}
 
 	/**
@@ -993,7 +1008,6 @@ public class ServerService
 					else
 						gen = "Female";
 					String add = jsonResponse.get ("address").toString ();
-					String colony = jsonResponse.get ("colony").toString ();
 					String town = jsonResponse.get ("town").toString ();
 					String landmark = jsonResponse.get ("landmark").toString ();
 					String city = jsonResponse.get ("city").toString ();
@@ -1013,17 +1027,16 @@ public class ServerService
 					details[3] = new String[] {"Age", String.valueOf (age)};
 					details[4] = new String[] {"Gender", gen};
 					details[5] = new String[] {"Address", add};
-					details[6] = new String[] {"Colony", colony};
-					details[7] = new String[] {"Town", town};
-					details[8] = new String[] {"Landmark", landmark};
-					details[9] = new String[] {"city", city};
-					details[10] = new String[] {"Country", country};
-					details[11] = new String[] {"Phone1", phone1};
-					details[12] = new String[] {"Contact_TB", contactTb};
-					details[13] = new String[] {"Diabetes", diabetes};
-					details[14] = new String[] {"dateSputumSUbmission", dateSputumSubmission};
-					details[15] = new String[] {"testId", testId};
-					details[16] = new String[] {"pid", pid};
+					details[6] = new String[] {"Town", town};
+					details[7] = new String[] {"Landmark", landmark};
+					details[8] = new String[] {"city", city};
+					details[9] = new String[] {"Country", country};
+					details[10] = new String[] {"Phone1", phone1};
+					details[11] = new String[] {"Contact_TB", contactTb};
+					details[12] = new String[] {"Diabetes", diabetes};
+					details[13] = new String[] {"dateSputumSUbmission", dateSputumSubmission};
+					details[14] = new String[] {"testId", testId};
+					details[15] = new String[] {"pid", pid};
 					
 				}
 				catch (JSONException e)
@@ -1592,7 +1605,8 @@ public class ServerService
 			if (jsonResponse.has ("result"))
 			{
 				String result = jsonResponse.getString ("result");
-				return result;
+				String pid = jsonResponse.getString ("pid");
+				return result+"\n"+pid;
 			}
 			return response;
 		}

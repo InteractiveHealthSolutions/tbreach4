@@ -147,6 +147,11 @@ public class RegexUtil
 	 */
 	public static boolean isWord (String string)
 	{
+		
+		if(string.length() < 3){
+			return false;
+		}
+		
 		try
 		{
 			return string.matches (alphaPattern);
@@ -378,14 +383,16 @@ public class RegexUtil
 		str = str.replace ("-", "");
 		String idWithoutCheckdigit = str.substring (0, str.length () - 1);
 		char idCheckdigit = str.charAt (str.length () - 1);
-		String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
+		String validChars = "0123456789";
+		if (validChars.indexOf (idCheckdigit) == -1)
+			return false;
 		idWithoutCheckdigit = idWithoutCheckdigit.trim ();
 		int sum = 0;
 		for (int i = 0; i < idWithoutCheckdigit.length (); i++)
 		{
 			char ch = idWithoutCheckdigit.charAt (idWithoutCheckdigit.length () - i - 1);
 			if (validChars.indexOf (ch) == -1)
-				isValid = false;
+				return false;
 			int digit = (int) ch - 48;
 			int weight;
 			if (i % 2 == 0)
@@ -403,4 +410,27 @@ public class RegexUtil
 		isValid = checkDigit == Integer.parseInt (String.valueOf (idCheckdigit));
 		return isValid;
 	}
+	
+	/**
+	 * Checks if given string not only contains special character
+	 * 
+	 * @param str
+	 * 
+	 * @return true/false
+	 */
+	public static boolean isValidAddress (String str)
+	{
+		boolean isValid = false;
+		String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		for (int i = 0; i < str.length (); i++)
+		{
+			char ch = str.charAt(i);
+			if (validChars.indexOf (ch) != -1){
+				return true;
+			}
+		}
+		
+		return isValid;
+	}
+	
 }

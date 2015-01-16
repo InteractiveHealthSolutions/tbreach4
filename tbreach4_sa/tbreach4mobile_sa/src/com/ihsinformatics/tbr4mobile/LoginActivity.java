@@ -181,10 +181,10 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 		else if (validate ())
 		{
 			// Authenticate from server
-			AsyncTask<String, String, Boolean> authenticationTask = new AsyncTask<String, String, Boolean> ()
+			AsyncTask<String, String, String> authenticationTask = new AsyncTask<String, String, String> ()
 			{
 				@Override
-				protected Boolean doInBackground (String... params)
+				protected String doInBackground (String... params)
 				{
 					runOnUiThread (new Runnable ()
 					{
@@ -201,13 +201,13 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					{
 						if (App.getUsername ().equalsIgnoreCase (App.get (username)) && App.getPassword ().equals (App.get (password)))
 						{
-							return true;
+							return "SUCCESS";
 						}
-						return false;
+						return "FAIL";
 					}
 					App.setUsername (App.get (username));
 					App.setPassword (App.get (password));
-					boolean exists = serverService.authenticate ();
+					String exists = serverService.authenticate ();
 					return exists;
 				}
 
@@ -217,11 +217,11 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 				};
 
 				@Override
-				protected void onPostExecute (Boolean result)
+				protected void onPostExecute (String result)
 				{
 					super.onPostExecute (result);
 					loading.dismiss ();
-					if (result)
+					if (result.equals("SUCCESS"))
 					{
 						serverService.setCurrentUser (App.get (username));
 						// Save username and password in preferences
@@ -234,13 +234,30 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						startActivity (intent);
 						finish ();
 					}
-					else
+					else if(result.equals("FAIL"))
 					{
 						App.setUsername ("");
 						App.setPassword ("");
 						Toast toast = Toast.makeText (LoginActivity.this, getResources ().getString (R.string.authentication_error), App.getDelay ());
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
+					}
+					else if(result.equals("CONNECTION_ERROR"))
+					{
+						App.setUsername ("");
+						App.setPassword ("");
+						Toast toast = Toast.makeText (LoginActivity.this, getResources ().getString (R.string.data_connection_error), App.getDelay ());
+						toast.setGravity (Gravity.CENTER, 0, 0);
+						toast.show ();
+					}
+					else {
+						
+						App.setUsername ("");
+						App.setPassword ("");
+						Toast toast = Toast.makeText (LoginActivity.this, result, App.getDelay ());
+						toast.setGravity (Gravity.CENTER, 0, 0);
+						toast.show ();
+						
 					}
 				}
 			};

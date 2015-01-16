@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ihsinformatics.tbr4mobile"
     android:versionCode="10"
-    android:versionName="1.0.0" >
+    android:versionName="1.1.1 - beta" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -42,43 +42,53 @@
         </activity>
         <activity
             android:name=".ScreeningActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".LocationSetupActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".SputumResultActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".SputumSubmissionActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".PatientReportActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".FeedbackActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".PatientSearchActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".ReportsActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".SavedFormsActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".Barcode"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

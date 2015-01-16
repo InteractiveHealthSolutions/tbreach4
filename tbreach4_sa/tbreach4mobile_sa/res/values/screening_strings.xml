@@ -34,7 +34,7 @@
     <string name="symptomsHeading">TB Symptoms</string>
     <string name="riskFactorHeading">Risk Factors</string>
     <string name="screenerInstructionHeading">Screener Instruction</string>
-    <string name="summary">TB Symtoms - Summary</string>
+    <string name="summary">TB Symptoms - Summary</string>
     
     <!-- MINE Question -->
     <string name="workNowMine">Do you work on the mines now?</string>
@@ -151,6 +151,8 @@
     <string name="cxr_rif_indication">CXR and MTB/RIF</string>
     <string name="blood_sugar_indication">Blood Sugar</string>
     <string name="cxr_spirometry_indication">CXR and Spirometry</string>
+    
+    <string name="success_screening">"Screening Form Successfully saved."</string>
 
     <!-- String arrays -->
     <string-array name="hiv_result">

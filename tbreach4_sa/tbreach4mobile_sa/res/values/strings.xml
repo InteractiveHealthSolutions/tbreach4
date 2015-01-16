@@ -28,7 +28,7 @@
     <string name="patient_id">Patient ID</string>
     <string name="patient_id_hint">Enter ID (10 digits)</string>
     <string name="refresh_database">Refresh Database</string>
-    <string name="search_patients">Search..</string>
+    <string name="search_patients">Search</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="text_copied">Patient ID copied..</string>
     <string name="goto_first">&lt;&lt;</string>
