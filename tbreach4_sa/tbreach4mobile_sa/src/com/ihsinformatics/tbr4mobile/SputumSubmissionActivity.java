@@ -257,7 +257,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 					{formDateTextView, formDateButton, patientIdTextView, patientId, scanBarcode, firstNameTextView, firstName, surnameTextView, surname,  searchPatientButton}, 
 				    {screenerInstructionOneTextView, screenerInstructionOne},
 					{viewedSputumVideoTextView, viewedSputumVideo, sputumTimeTextView, sputumTime,screenerInstructionTwoTextView,screenerInstructionTwo},
-					{sputumStatusTextView, sputumStatus, rejectionReasonTextView, rejectionReason, labTestIdTextView,labTestId,scanBarcodeLabTestId,screenerInstructionThreeTextView,screenerInstructionThree}, 
+					{sputumStatusTextView, sputumStatus,rejectionReasonTextView, rejectionReason, screenerInstructionThreeTextView,screenerInstructionThree,labTestIdTextView,labTestId,scanBarcodeLabTestId}, 
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -284,7 +284,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		searchPatientButton.setOnClickListener(this);
 		scanBarcodeLabTestId.setOnClickListener(this);
 		navigationSeekbar.setOnSeekBarChangeListener (this);
-		views = new View[] {patientId, firstName, surname, viewedSputumVideo, sputumTime, sputumStatus};
+		views = new View[] {patientId, firstName, surname, viewedSputumVideo, sputumTime, sputumStatus,labTestId};
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -327,6 +327,10 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
         sputumTime.setSelection(4);
         rejectionReasonTextView.setEnabled(false);
         rejectionReason.setEnabled(false);
+        firstNameValue = "";
+        lastNameValue = "";
+        firstName.setText(firstNameValue);
+		surname.setText(lastNameValue);
 	}
 
 	@Override
@@ -555,7 +559,36 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	{
 		super.onActivityResult (requestCode, resultCode, data);
 		// Retrieve barcode scan results or Search for ID
-		if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
+		
+		if (requestCode == Barcode.BARCODE_RESULT_TEST_ID)
+		{
+			if (resultCode == RESULT_OK)
+			{
+				String str = data.getStringExtra (Barcode.SCAN_RESULT);
+				
+				// Check for valid Id
+				if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
+				{
+					labTestId.setText (str);
+				}
+				else
+				{
+					App.getAlertDialog (this, AlertType.ERROR, labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
+				}
+			}
+			else if (resultCode == RESULT_CANCELED)
+			{
+				// Handle cancel
+				App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.operation_cancelled)).show ();
+			}
+			// Set the locale again, since the Barcode app restores system's locale because of orientation
+			Locale.setDefault (App.getCurrentLocale ());
+			Configuration config = new Configuration ();
+			config.locale = App.getCurrentLocale ();
+			getApplicationContext ().getResources ().updateConfiguration (config, null);
+			
+		}
+		else if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
 		{
 			if (resultCode == RESULT_OK)
 			{
@@ -585,34 +618,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 			config.locale = App.getCurrentLocale ();
 			getApplicationContext ().getResources ().updateConfiguration (config, null);
 		}
-		else if (requestCode == Barcode.BARCODE_RESULT_TEST_ID)
-		{
-			if (resultCode == RESULT_OK)
-			{
-				String str = data.getStringExtra (Barcode.SCAN_RESULT);
-				
-				// Check for valid Id
-				if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
-				{
-					labTestId.setText (str);
-				}
-				else
-				{
-					App.getAlertDialog (this, AlertType.ERROR, labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
-				}
-			}
-			else if (resultCode == RESULT_CANCELED)
-			{
-				// Handle cancel
-				App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.operation_cancelled)).show ();
-			}
-			// Set the locale again, since the Barcode app restores system's locale because of orientation
-			Locale.setDefault (App.getCurrentLocale ());
-			Configuration config = new Configuration ();
-			config.locale = App.getCurrentLocale ();
-			getApplicationContext ().getResources ().updateConfiguration (config, null);
-			
-		}
+		
 	}
 
 	@Override
@@ -737,13 +743,13 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	@Override
 	public boolean onLongClick (View view)
 	{
-		if (view == patientId)
+		/*if (view == patientId)
 		{
 			Intent intent = new Intent (view.getContext (), PatientSearchActivity.class);
 			intent.putExtra (PatientSearchActivity.SEARCH_RESULT, "");
 			startActivityForResult (intent, GET_PATIENT_ID);
 			return true;
-		}
+		}*/
 		return false;
 	}
 }

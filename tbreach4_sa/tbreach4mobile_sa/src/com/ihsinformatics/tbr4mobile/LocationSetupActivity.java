@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -451,6 +452,7 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 				final EditText districtText = new EditText (this);
 				districtText.setTag ("district");
 				districtText.setHint (R.string.district_search_hint);
+				districtText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				maxLength = 2;    
 				districtText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
 				builder.setView (districtText);
@@ -568,6 +570,7 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 				final EditText facilityText = new EditText (this);
 				facilityText.setTag ("facility");
 				facilityText.setHint (R.string.facility_search_hint);
+				facilityText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				maxLength = 3;    
 				facilityText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
 				builder.setView (facilityText);
@@ -685,6 +688,7 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 				final EditText screeningStrategyText = new EditText (this);
 				screeningStrategyText.setTag ("screening_strategy");
 				screeningStrategyText.setHint (R.string.screening_strategy_search_hint);
+				screeningStrategyText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				maxLength = 3;    
 				screeningStrategyText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
 				builder.setView (screeningStrategyText);

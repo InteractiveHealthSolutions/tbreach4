@@ -425,7 +425,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 					loading.dismiss ();
 					if (result.equals ("SUCCESS"))
 					{
-						App.getAlertDialog (SputumResultActivity.this, AlertType.INFO, getResources ().getString (R.string.inserted)).show ();
+						App.getAlertDialog (SputumResultActivity.this, AlertType.INFO, getResources ().getString (R.string.success_screening)).show ();
 						initView (views);
 					}
 					else

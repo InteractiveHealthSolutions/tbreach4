@@ -84,6 +84,7 @@ public class SavedFormsActivity extends Activity implements OnCheckedChangeListe
 		submitFormsButton.setOnClickListener (this);
 		discardFormsButton.setOnClickListener (this);
 		discardFormsButton.setEnabled (false);
+		submitFormsButton.setEnabled(false);
 	}
 
 	@Override
@@ -107,6 +108,15 @@ public class SavedFormsActivity extends Activity implements OnCheckedChangeListe
 		{
 			formsRadioGroup.removeAllViews ();
 			String[][] forms = serverService.getSavedForms (App.getUsername ());
+			if (forms == null || forms.length == 0){
+				discardFormsButton.setEnabled (false);
+				submitFormsButton.setEnabled(false);
+			}else{
+				discardFormsButton.setEnabled (true);
+				submitFormsButton.setEnabled(true);
+			}
+		
+			
 			for (String[] form : forms)
 			{
 				Date date = new Date (Long.parseLong (form[0]));
@@ -194,7 +204,16 @@ public class SavedFormsActivity extends Activity implements OnCheckedChangeListe
 					}
 					discardFormsButton.setEnabled (true);
 					App.getAlertDialog (SavedFormsActivity.this, AlertType.INFO, response.toString ()).show ();
-					formsRadioGroup.removeAllViews ();					
+					formsRadioGroup.removeAllViews ();
+					
+					String[][] forms = serverService.getSavedForms (App.getUsername ());
+					if (forms == null || forms.length == 0){
+						discardFormsButton.setEnabled (false);
+						submitFormsButton.setEnabled(false);
+					}else{
+						discardFormsButton.setEnabled (true);
+						submitFormsButton.setEnabled(true);
+					}
 				}
 			};
 			submitTask.execute ("");
@@ -248,6 +267,15 @@ public class SavedFormsActivity extends Activity implements OnCheckedChangeListe
 						Toast.makeText (SavedFormsActivity.this, getResources ().getString (R.string.deleted), App.getDelay ()).show ();
 						startActivity (emailIntent);
 						formsRadioGroup.removeAllViews ();
+						
+						String[][] forms = serverService.getSavedForms (App.getUsername ());
+						if (forms == null || forms.length == 0){
+							discardFormsButton.setEnabled (false);
+							submitFormsButton.setEnabled(false);
+						}else{
+							discardFormsButton.setEnabled (true);
+							submitFormsButton.setEnabled(true);
+						}
 					}
 				});
 				confirmDialog.show ();

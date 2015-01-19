@@ -276,7 +276,7 @@ public class MobileService
 		catch (ContextAuthenticationException e)
 		{
 			e.printStackTrace ();
-			response = JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.AUTHENTICATION_ERROR) + "\n" + e.getMessage ()).toString ();
+			response = JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.AUTHENTICATION_ERROR)).toString();
 		}
 		catch (JSONException e)
 		{
@@ -450,6 +450,7 @@ public class MobileService
 			String username = values.getString ("username");
 			User user = Context.getUserService ().getUserByUsername (username);
 			JSONObject userObj = new JSONObject ();
+			userObj.put ("result", "SUCCESS");
 			userObj.put ("id", user.getUserId ());
 			userObj.put ("name", user.getUsername ());
 			json = userObj.toString ();
@@ -1081,6 +1082,8 @@ public class MobileService
 				}
 				Context.getEncounterService ().saveEncounter (encounter);
 				json.put ("result", "SUCCESS");
+				patientId = "Patient Id: " + patientId;
+				json.put("pid", patientId);
 			}
 		}
 		catch (NonUniqueObjectException e)
@@ -1634,7 +1637,7 @@ public class MobileService
 	}
 	
 	public String[][] getAllMessages(String filter){
-		String selectQuery = "SELECT * from openmrs_rpt.inboundMessages where voided = 0 "+filter+" order by recieveDate desc";
+		String selectQuery = "SELECT * from openmrs_rpt.inboundMessages where voided = 0 "+filter+" order by SUBSTRING(recieveDate, 1, 10) desc, username";
 		System.out.println (selectQuery);
 	    String[][] data = executeQuery (selectQuery, null);
 		return data;

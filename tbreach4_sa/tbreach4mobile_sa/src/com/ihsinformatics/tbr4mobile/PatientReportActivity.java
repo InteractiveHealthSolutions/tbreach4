@@ -79,7 +79,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	MyEditText			testId;
 	MyButton			scanBarcode;
 	
-	MyButton 			searchButton;
+	//MyButton 			searchButton;
 
 	MyTextView			firstNameTextView;
 	MyEditText			firstName;
@@ -94,8 +94,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	
 	MyTextView			physicalAddressTextView;
 	MyEditText			physicalAddress;
-	MyTextView      	colonyAddressTextView;
-	MyEditText			colonyAddress;
+	//MyTextView      	colonyAddressTextView;
+	//MyEditText			colonyAddress;
 	MyTextView			townAddressTextView;
 	MyEditText			townAddress;
 	MyTextView			landmarkAddressTextView;
@@ -217,7 +217,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		testIdMyTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
 		testId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		
-		searchButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.search_patients, R.string.search_patients);
+		//searchButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.search_patients, R.string.search_patients);
 		
 		// Patient's Name
 		firstNameTextView = new MyTextView (context, R.style.text, R.string.first_name);
@@ -243,9 +243,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		physicalAddress  = new MyEditText (context, R.string.physical_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
 		physicalAddress.setKeyListener(null);
 		
-		colonyAddressTextView = new MyTextView (context, R.style.text, R.string.colony_address);
-		colonyAddress  = new MyEditText (context, R.string.colony_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
-		colonyAddress.setKeyListener(null);
+		//colonyAddressTextView = new MyTextView (context, R.style.text, R.string.colony_address);
+		//colonyAddress  = new MyEditText (context, R.string.colony_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
+		//colonyAddress.setKeyListener(null);
 		
 		townAddressTextView = new MyTextView (context, R.style.text, R.string.town_address);
 		townAddress = new MyEditText (context, R.string.town_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
@@ -287,9 +287,11 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		nhlsId = new MyEditText (context, R.string.lab_test_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		nhlsId.setKeyListener(null);
 		
-		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId, searchButton},
+		saveButton.setText("Search");
+		
+		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId/*, searchButton*/},
 								{pidTextView, pid, nhlsIdTextView, nhlsId, firstNameTextView,firstName,surnameTextView,surname, genderTextView, gender},
-								{dobTextView,dob, ageTextView, age, physicalAddressTextView, physicalAddress, colonyAddressTextView, colonyAddress, townAddressTextView, townAddress },
+								{dobTextView,dob, ageTextView, age, physicalAddressTextView, physicalAddress, /*colonyAddressTextView, colonyAddress,*/ townAddressTextView, townAddress },
 								{landmarkAddressTextView, landmarkAddress, cityTextView, city, countryTextView, country, phoneTextView, phone, },
 								{contactTbTextView, contactTb, diabetesTextView, diabetes, sputumSubmissionDateTextView, sputumSubmissionDate} };
 		// Create layouts and store in ArrayList
@@ -312,13 +314,13 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		lastButton.setOnClickListener (this);
 		clearButton.setOnClickListener (this);
 		scanBarcode.setOnClickListener (this);
-		searchButton.setOnClickListener (this);
+		saveButton.setOnClickListener (this);
 		
 		patientIdRadioButton.setOnClickListener(this);
 		nhlsIdRadioButton.setOnClickListener(this);
 		
 		navigationSeekbar.setOnSeekBarChangeListener (this);
-		views = new View[] {patientId, testId, pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, colonyAddress, townAddress, landmarkAddress, city, country,
+		views = new View[] {patientId, testId, pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, /*colonyAddress,*/ townAddress, landmarkAddress, city, country,
 							phone, contactTb, diabetes,sputumSubmissionDate};
 		
 		pager.setOnPageChangeListener (this);
@@ -357,7 +359,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		
 		patientIdRadioButton.setChecked(true);
 		testId.setEnabled(false);
-		saveButton.setEnabled(false);
+		
 	}
 
 	@Override
@@ -450,10 +452,6 @@ public class PatientReportActivity extends AbstractFragmentActivity
 			initView(views);
 				
 		}
-		else if (view == saveButton)
-		{
-			submit ();
-		}
 		else if (view == scanBarcode)
 		{
 			Intent intent = new Intent (Barcode.BARCODE_INTENT);
@@ -476,7 +474,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 			patientId.clearFocus();
 			patientId.setText("");
 		}
-		else if (view == searchButton)
+		else if ( view == saveButton )
 		{
 			
 			clear();
@@ -542,7 +540,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	public void clear ()
 	{
 		
-		View[] viewsArray = new View[] {pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, colonyAddress, townAddress, landmarkAddress, city, country,
+		View[] viewsArray = new View[] {pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, /*colonyAddress,*/ townAddress, landmarkAddress, city, country,
 				phone, contactTb, diabetes,sputumSubmissionDate};
 		
 		for (View v : viewsArray)
@@ -583,17 +581,16 @@ public class PatientReportActivity extends AbstractFragmentActivity
 						age.setText(result[3][1]);
 						gender.setText(result[4][1]);
 						physicalAddress.setText(result[5][1]);
-						colonyAddress.setText(result[6][1]);
-						townAddress.setText(result[7][1]);
-						landmarkAddress.setText(result[8][1]);
-						city.setText(result[9][1]);
-						country.setText(result[10][1]);
-						phone.setText(result[11][1]);
-						contactTb.setText(result[12][1]);
-						diabetes.setText(result[13][1]);
-						sputumSubmissionDate.setText(result[14][1]);
-						nhlsId.setText(result[15][1]);
-						pid.setText(result[16][1]);
+						townAddress.setText(result[6][1]);
+						landmarkAddress.setText(result[7][1]);
+						city.setText(result[8][1]);
+						country.setText(result[9][1]);
+						phone.setText(result[10][1]);
+						contactTb.setText(result[11][1]);
+						diabetes.setText(result[12][1]);
+						sputumSubmissionDate.setText(result[13][1]);
+						nhlsId.setText(result[14][1]);
+						pid.setText(result[15][1]);
 						return "SUCCESS";
 					}
 

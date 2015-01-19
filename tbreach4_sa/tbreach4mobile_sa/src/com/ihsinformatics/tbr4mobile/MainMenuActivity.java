@@ -126,16 +126,22 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		if (App.getLocation () != null)
 		{
 			
-			String loc[] = App.getLocation().split(" ");
-			String location = loc[0];
-			
-			String screeningType = App.getScreeningType();
-			if(screeningType.equalsIgnoreCase("Community")){
-				String ss[] = App.getScreeningStrategy().split("-");
-				location = location.concat(" - ");
-				location = location.concat(ss[1]);
-			}
+			if (App.getLocation() != ""){
+				String loc[] = App.getLocation().split(" ");
+				String location = loc[0];
+				
+				String screeningType = App.getScreeningType();
+				if(screeningType.equalsIgnoreCase("Community")){
+					String ss[] = App.getScreeningStrategy().split("-");
+					location = location.concat(" - ");
+					location = location.concat(ss[1]);
+				}
+				
+				else{
+					location = App.getFacility();
+				}
 			locationTextView.setText (location);
+			}
 		}
 		// When online, check if there are offline forms for current user
 		if (!App.isOfflineMode ())
@@ -192,10 +198,10 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 				Intent locationSetupIntent = new Intent (this, LocationSetupActivity.class);
 				startActivity (locationSetupIntent);
 				break;
-			case R.menu_id.searchPatientActivity :
+			/*case R.menu_id.searchPatientActivity :
 				Intent patientSearchIntent = new Intent (this, PatientSearchActivity.class);
 				startActivity (patientSearchIntent);
-				break;
+				break;*/
 			/*case R.menu_id.reportsActivity :
 				Intent reportsIntent = new Intent (this, ReportsActivity.class);
 				startActivity (reportsIntent);
@@ -445,11 +451,15 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			@Override
 			public void onClick (DialogInterface dialog, int which)
 			{
+				
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
 				SharedPreferences.Editor editor = preferences.edit ();
 				editor.putBoolean (Preferences.AUTO_LOGIN, false);
 				editor.apply ();
+				App.setAutoLogin(false);
 				finish ();
+				Intent mainMenuIntent = new Intent (getApplicationContext (), LoginActivity.class);
+				startActivity (mainMenuIntent);
 			}
 		});
 		confirmationDialog.setButton (AlertDialog.BUTTON_NEUTRAL, getResources ().getString (R.string.cancel), new AlertDialog.OnClickListener ()

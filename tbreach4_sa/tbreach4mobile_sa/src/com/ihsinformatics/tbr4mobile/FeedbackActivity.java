@@ -126,6 +126,7 @@ public class FeedbackActivity extends AbstractFragmentActivity
 	@Override
 	public void createViews (final Context context)
 	{
+		saveButton.setText(R.string.feedback_send);
 		FORM_NAME = FormType.FEEDBACK;
 		TAG = "FeedbackActivity";
 		PAGE_COUNT = 1;
@@ -146,7 +147,7 @@ public class FeedbackActivity extends AbstractFragmentActivity
 		feedbackTypeTextView = new MyTextView (context, R.style.text, R.string.feedback_type);
 		feedbackType = new MySpinner (context, getResources ().getStringArray (R.array.feedback_types), R.string.feedback_type, R.string.option_hint);
 		feedbackTextView = new MyTextView (context, R.style.text, R.string.feedback);
-		feedback = new MyEditText (context, R.string.feedback, R.string.feedback_hint, InputType.TYPE_TEXT_FLAG_MULTI_LINE, R.style.edit, -1, true);
+		feedback = new MyEditText (context, R.string.feedback, R.string.feedback_hint, InputType.TYPE_TEXT_FLAG_MULTI_LINE, R.style.edit, 225, true);
 		feedback.setMinLines (5);
 		feedback.setMaxHeight (10);
 		View[][] viewGroups = {{feedbackTypeTextView, feedbackType, feedbackTextView, feedback}};
@@ -294,7 +295,7 @@ public class FeedbackActivity extends AbstractFragmentActivity
 					super.onPostExecute (result);
 					if (result.equals ("SUCCESS"))
 					{
-						App.getAlertDialog (FeedbackActivity.this, AlertType.INFO, getResources ().getString (R.string.inserted)).show ();
+						App.getAlertDialog (FeedbackActivity.this, AlertType.INFO, getResources ().getString (R.string.feedback_send_success)).show ();
 						initView (views);
 					}
 					else

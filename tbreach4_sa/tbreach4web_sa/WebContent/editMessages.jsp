@@ -55,7 +55,8 @@ function addOption(text,value,type)
 function viewMessage()
 {
 	var dateFrom = document.getElementById('dateFrom').value;
-	if (dateFrom == ''){
+	var dateTo = document.getElementById('dateTo').value;
+	if (dateFrom == '' || dateTo == ''){
 		alert('Missing Date. Please select date to continue.');
 		return false;
 	}
@@ -84,8 +85,12 @@ function editMessages(){
 <form name="view_form" action="DashboardServlet" method="post" ONSUBMIT="return viewMessage()">
 <table>
 <tr>
-<td>Date:</td>
+<td>Date (from):</td>
 <td><input type="date" name="dateFrom" id="dateFrom"></td>
+</tr>
+<tr>
+<td>Date (to):</td>
+<td><input type="date" name="dateTo" id="dateTo"></td>
 </tr>
 <tr>
 <td>Username:</td>
@@ -121,7 +126,7 @@ Last Import on: <i>  <%= MobileService.getService().getLastImport() %> SAST </i>
 <center>
 <font color="orange"> 
 <br>
-Date : <%=request.getAttribute("date")%>
+Date : <%=request.getAttribute("dateFrom")%> - <%=request.getAttribute("dateTo")%>
 <% if(request.getAttribute("username") != null){
 %> &nbsp;&nbsp; Username : <%=request.getAttribute("username")%> <% } %>
 </font>
@@ -130,13 +135,15 @@ Date : <%=request.getAttribute("date")%>
 <form id="login" name="login" action="DashboardServlet" method="post" ONSUBMIT="return editMessages()">
 <%
 int size = Integer.valueOf(request.getAttribute("size").toString());
-String date = request.getAttribute("date").toString();
+String dateFrom = request.getAttribute("dateFrom").toString();
+String dateTo = request.getAttribute("dateTo").toString();
 String u = "";
 if(request.getAttribute("username") != null){
    u = request.getAttribute("username").toString();
 }
 %>
-<input type="hidden" id="dateFrom" name="dateFrom" value = "<%=date%>">
+<input type="hidden" id="dateFrom" name="dateFrom" value = "<%=dateFrom%>">
+<input type="hidden" id="dateTo" name="dateTo" value = "<%=dateTo%>">
 <input type="hidden" id="usernames" name="usernames" value = "<%=u%>">
 <input type="hidden" id="size" name="size" value = "<%=size%>">
 <input type="hidden" id="user" name="user" value = "<%=userName%>">
@@ -153,6 +160,7 @@ if(request.getAttribute("username") != null){
 <th>RECIEVE DATE</th>
 </tr>
 <%
+String separator = "";
 for(int i = 0; i<size; i++){
 	String m = "message-"+i;
 	String v = "void-"+i;
@@ -164,6 +172,26 @@ for(int i = 0; i<size; i++){
 	String phoneNumber = request.getAttribute("phoneNumber-"+i).toString();
 	String message = request.getAttribute(m).toString();
 	String recieveDate = request.getAttribute("recieveDate-"+i).toString();	
+	
+	String[] array = recieveDate.split(" ");
+	if(separator.equals("")){
+		separator = array[0];
+		%>	    
+		<tr>
+		<td style="display:none;"></td>
+		<td><%=separator%></td>
+		</tr>
+	  	<%
+	}
+	else if(!array[0].equals(separator)){
+		separator = array[0];
+	%>	    
+		<tr>
+		<td style="display:none;"></td>
+		<td><%=separator%></td>
+		</tr>
+	  	
+<%	}
 %>
 <tr>
 <td style="display:none;"> <input type="hidden" id="<%=rn%>" name="<%=rn%>" value = "<%= referenceNumber %>"> </td>
