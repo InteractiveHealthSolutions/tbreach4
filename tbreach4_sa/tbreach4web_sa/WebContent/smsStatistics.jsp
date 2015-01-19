@@ -1,3 +1,13 @@
+<%-- Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ include file="header.jsp" %> 
@@ -107,7 +117,7 @@ function viewMessage()
 <input type="submit" value="Export" name="Export" id="Export">
 </form>
 <font size=2>
-Last Import on: <i>  <%= MobileService.getService().getLastImport() %> </i>
+Last Import on: <i>  <%= MobileService.getService().getLastImport() %> SAST</i>
 </font>
 </div>
 </td></tr>
@@ -137,7 +147,7 @@ if(request.getAttribute("location") != null){
 </center>
 
 
-
+<div align="center" >
 <table class="myTable" id="detail_stat_table" align="center" >
 <tr>
 <th>USERNAME</th>
@@ -180,9 +190,19 @@ for(int i = 0; i<size; i++){
 	}
 		
     if (tokens.length != 4){
-    	 int j = i+1;
+    	boolean flag = true;
+    	int j = i+1;
+    	if(request.getAttribute("dateText-"+j) != null){
+    		String value = request.getAttribute("dateText-"+j).toString();
+    		if(!value.equals(dateText))
+    			flag = false;
+    	}
+    	else {
+    		if(!(j<size))
+    			flag = false;
+    	}
     	 
-    	 if(!(j<size)){%>
+    	 if(!flag){%>
     		 
     		 <tr>
 		<td></td>
@@ -220,8 +240,18 @@ for(int i = 0; i<size; i++){
 		nonSuspect = Integer.valueOf(tokens[2]);
 		sputumSent = Integer.valueOf(tokens[3]);
 	} catch (Exception e) {
-		int j = i +1;
-		 if(!(j<size)){%>
+		boolean flag = true;
+		int j = i+1;
+		if(request.getAttribute("dateText-"+j) != null){
+			String value = request.getAttribute("dateText-"+j).toString();
+			if(!value.equals(dateText))
+				flag = false;
+		}
+		else {
+			if(!(j<size))
+				flag = false;
+		}
+		 if(!flag){%>
 		 
 		 <tr>
 	<td></td>
@@ -265,9 +295,7 @@ for(int i = 0; i<size; i++){
 	totalSuspectPerDay = totalSuspectPerDay + suspect;
 	totalNonSuspectPerDay = totalNonSuspectPerDay + nonSuspect;
 	totalSputumSubmittedPerDay = totalSputumSubmittedPerDay + sputumSent;
-	System.out.println("second");
-	System.out.println(totalScreeningPerDay +" "+ totalSuspectPerDay +" "+ totalNonSuspectPerDay +" "+totalSputumSubmittedPerDay);
-
+	
 	totalScreeningOverall = totalScreeningOverall + totalScreened;
 	totalSuspectOverall = totalSuspectOverall + suspect;
 	totalNonSuspectOverall = totalNonSuspectOverall + nonSuspect;
@@ -290,7 +318,7 @@ for(int i = 0; i<size; i++){
 		<td></td>
 		<td></td>
 		<td></td>
-		<th>TOTAL <br>(<%=dateText%>):</th>
+		<th>TOTAL (<%=dateText%>):</th>
 		<th><%=totalScreeningPerDay%></th>
 		<th><%=totalSuspectPerDay %></th>
 		<th><%=totalNonSuspectPerDay %></th>
@@ -307,6 +335,7 @@ for(int i = 0; i<size; i++){
 
 }%>
 </table>
+</div>
 
 <div align="center">
 <table class="myTable">

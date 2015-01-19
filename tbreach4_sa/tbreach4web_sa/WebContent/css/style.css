@@ -79,7 +79,7 @@ a:active {
 	font-size:12px;
 	text-shadow: 1px 1px 0px #fff;
 	background:#C5E3BF;
-	margin:20px;
+	margin:10px;
 	border:#F58220 1px solid;
 
 	-moz-border-radius:3px;
@@ -91,7 +91,7 @@ a:active {
 	box-shadow: 0 1px 2px #d1d1d1;
 }
 .mytable th {
-	padding:21px 25px 22px 25px;
+	padding:10px 10px 10px 10px;
 	border-top:1px solid #fafafa;
 	border-bottom:1px solid #e0e0e0;
 
@@ -104,7 +104,7 @@ a:active {
 }
 .mytable th:first-child {
 	text-align: left;
-	padding-left:20px;
+	padding-left:10px;
 }
 .mytable tr:first-child th:first-child {
 	-moz-border-radius-topleft:3px;
@@ -118,15 +118,15 @@ a:active {
 }
 .mytable tr {
 	text-align: center;
-	padding-left:20px;
+	padding-left:10px;
 }
 .mytable td:first-child {
 	text-align: left;
-	padding-left:20px;
+	padding-left:10px;
 	border-left: 0;
 }
 .mytable td {
-	padding:18px;
+	padding:1px;
 	border-top: 1px solid #ffffff;
 	border-bottom:1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;

@@ -1,3 +1,13 @@
+/* Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 
 package com.ihsresearch.tbr4web.server;
 
@@ -25,12 +35,13 @@ public class ImportIncomingMessages
 		
 		System.out.println (date);
 
-		String dropScreenerDataQuery = "drop table openmrs_rpt.screener_data;";
+		String dropScreenerDataQuery = "drop table openmrs_rpt.data_screener;";
 		MobileService.getService ().execute (dropScreenerDataQuery);
 		
 		String createScreenerDataQuery 
-						= "create table openmrs_rpt.screener_data(" +
+						= "create table openmrs_rpt.data_screener(" +
 								"username VARCHAR(50) NOT NULL," +
+								"name VARCHAR(50) NOT NULL," +
 								"location VARCHAR(50), " +
 								"primaryNumber VARCHAR(20)," +
 								"secondaryNumber VARCHAR(20));"; 
@@ -42,7 +53,7 @@ public class ImportIncomingMessages
 		               		"originator VARCHAR(20) NOT NULL," +
 		               		"referenceNumber VARCHAR(16) NOT NULL," +
 		               		"recieveDate datetime NOT NULL," +
-		               		"message VARCHAR(20) NOT NULL," +
+		               		"message VARCHAR(2000) NOT NULL," +
 		               		"dateText VARCHAR(20) NOT NULL," +
 		               		"PRIMARY KEY ( referenceNumber ));";
 		
@@ -52,19 +63,18 @@ public class ImportIncomingMessages
 		              = "INSERT INTO openmrs_rpt.temporarytable (originator, referenceNumber, recieveDate, message, dateText)" +
 		              		"(select * from " +
 		              	     	"(Select originator, referenceNumber, recieveDate, text, DATE_FORMAT(recieveDate, '%y-%m-%d') as Date " +
-		              	     	"from smstarseel.inboundmessage where recieveDate >= '2014-09-29 %' and recieveDate <= '2014-09-29 23:59:59.999'" +
+		              	     	"from smstarseel.inboundmessage " +
 		              	     	"order by recieveDate desc) as temp " +
-		              	    "where referenceNumber NOT IN (Select referenceNumber from openmrs_rpt.inboundmessages) " +
 		              	    "group by Date, originator);";
 		
 		MobileService.getService ().execute (insertTemporaryTableQuery);
 		
 		String insertScreenerDataQuery
-		               = "INSERT into openmrs_rpt.screener_data (username, location, primaryNumber, secondaryNumber) (" +
-		               		"Select table1.username, table2.location, concat('+',table3.pp) as primaryPhoneNUmber , concat('+',table4.sp) as secondaryPhoneNumber from (" +
+		               = "INSERT into openmrs_rpt.data_screener (username, name, location, primaryNumber, secondaryNumber) (" +
+		               		"Select table1.username, table5.n, table2.location, concat('+',table3.pp) as primaryPhoneNUmber , concat('+',table4.sp) as secondaryPhoneNumber from (" +
 		               		   "(select p.person_id, username " +
 		               		   "from openmrs.users u , openmrs.person p " +
-		               		   "where u.person_id = p.person_id and u.retired = 0 and username is not null ) as table1 " +
+		               		   "where u.person_id = p.person_id and username is not null) as table1 " +
 		               		   "left join " +
 		               		   "(select person_id, name as location from openmrs.person_attribute pa, openmrs.location l " +
 		               		   "where pa.person_attribute_type_id = 13 and l.location_id = pa.value and pa.voided = 0) as table2 " +
@@ -72,20 +82,25 @@ public class ImportIncomingMessages
 		               		   "left join " +
 		               		   "(select value as pp, person_id from openmrs.person_attribute pa " +
 		               		   "where pa.person_attribute_type_id = 8 and pa.voided = 0) as table3 " +
-		               		   "ON table2.person_id = table3.person_id " +
+		               		   "ON table1.person_id = table3.person_id " +
 		               		   "left join " +
 		               		   "(select value as sp, person_id from openmrs.person_attribute pa " +
 		               		   "where pa.person_attribute_type_id = 10 and pa.voided = 0) as table4 " +
-		               		   "ON table3.person_id = table4.person_id " +
+		               		   "ON table1.person_id = table4.person_id " +
+		               		   "left join " + 
+		               		   "(select concat(concat(IFNULL(pn.given_name,''),' '),IFNULL(pn.family_name, '')) as n, person_id " + 
+		               		   "from openmrs.person_name pn) as table5 " +
+		               		   "ON table1.person_id = table5.person_id " +
 		               		   ")" +
 		               		");";
+		System.out.println (insertScreenerDataQuery);
 		
 		MobileService.getService ().execute (insertScreenerDataQuery);
 		
 		String insertInboundMessagesQuery
-		              = "insert into openmrs_rpt.inboundmessages(originator, referenceNumber, recieveDate, message, dateText, username, location, primaryNumber, secondaryNumber) " +
-		              		"Select * from openmrs_rpt.temporarytable tt, openmrs_rpt.screener_data sd " +
-		              		"where tt.originator = sd.primaryNumber OR tt.originator = sd.secondaryNumber;";
+		              = "insert into openmrs_rpt.inboundmessages(originator, referenceNumber, recieveDate, message, dateText, username, name , location, primaryNumber, secondaryNumber) " +
+		              		"Select * from openmrs_rpt.temporarytable tt, openmrs_rpt.data_screener sd " +
+		              		"where ( tt.originator = sd.primaryNumber OR tt.originator = sd.secondaryNumber) and tt.referenceNumber NOT IN (Select referenceNumber from openmrs_rpt.inboundmessages);";
 		
 		MobileService.getService ().execute (insertInboundMessagesQuery);
 		

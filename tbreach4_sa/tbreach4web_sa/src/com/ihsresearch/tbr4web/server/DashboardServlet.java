@@ -1,3 +1,23 @@
+/* Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
+/* Copyright(C) 2014 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 
 package com.ihsresearch.tbr4web.server;
 
@@ -202,12 +222,12 @@ public class DashboardServlet extends HttpServlet
 		   String location = request.getParameter ("locations");
 		   
 		   String filter = " and recieveDate like '"+date+"%'";
-		   if(username != "" || username == null){
+		   if(username != "" && username != null){
 			   filter = filter + " and username = '"+username+"'";
 			   request.setAttribute ("username", username);
 		   }
 		   
-		   if(location != "" || location == null){
+		   if(location != "" && location != null){
 			   filter = filter + " and location = '"+location+"'";
 			   request.setAttribute ("location", location);
 		   }
@@ -219,11 +239,12 @@ public class DashboardServlet extends HttpServlet
 		   request.setAttribute ("size", size);
 		   
 		   for (int i = 0; i<size; i++){
+			   String user = data[i][13]+" ("+data[i][5]+")";
 			   request.setAttribute ("phoneNumber-"+i, data[i][0]);
 			   request.setAttribute ("referenceNumber-"+i, data[i][1]);
 			   request.setAttribute ("recieveDate-"+i, data[i][2]);
 			   request.setAttribute ("message-"+i, data[i][3]);
-			   request.setAttribute ("username-"+i, data[i][5]);
+			   request.setAttribute ("username-"+i, user);
 			   request.setAttribute ("location-"+i, data[i][6]);
 		   }
 		   
@@ -334,7 +355,7 @@ public class DashboardServlet extends HttpServlet
 		   String referenceNumber = "1".concat (String.valueOf (timestamp));
 		   
 		   String usernames[][] = MobileService.getService ().getUsername (username);
-		   String usernameDetails[] = {usernames[0][0],usernames[0][1], usernames[0][2], usernames[0][3]};
+		   String usernameDetails[] = {usernames[0][0],usernames[0][1], usernames[0][2], usernames[0][3], usernames[0][4]};
 		   String messageDetails[] = {date,referenceNumber,text,user, formatedDate};
 		   
 		   boolean flag = MobileService.getService ().saveText (usernameDetails, messageDetails);
@@ -397,11 +418,12 @@ public class DashboardServlet extends HttpServlet
 			   request.setAttribute ("dateTo", dateTo);
 			   
 			   for (int i = 0; i<size; i++){
+				   String user = data[i][13]+" ("+data[i][5]+")";
 				   request.setAttribute ("phoneNumber-"+i, data[i][0]);
 				   request.setAttribute ("dateText-"+i, data[i][4]);
 				   request.setAttribute ("recieveDate-"+i, data[i][2]);
 				   request.setAttribute ("message-"+i, data[i][3]);
-				   request.setAttribute ("username-"+i, data[i][5]);
+				   request.setAttribute ("username-"+i, user);
 				   request.setAttribute ("location-"+i, data[i][6]);
 			   } 
 			   

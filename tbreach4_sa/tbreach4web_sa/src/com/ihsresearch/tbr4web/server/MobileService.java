@@ -1,3 +1,13 @@
+/* Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 /**
  * This class incorporates Open MRS API services. The content type used is JSON for Requests and Responses
  * 
@@ -511,10 +521,10 @@ public class MobileService
 		{
 			Context.openSession ();
 			Context.authenticate (username, password);
-			String selectQuery = "SELECT Date,Name,Facility,District,originator,recieveDate,text FROM openmrs_rpt.screener_data ,"
+			String selectQuery = "SELECT Date,Name,Facility,District,originator,recieveDate,text FROM openmrs_rpt.data_screener ,"
 					+ "(SELECT originator, recieveDate, text, DATE_FORMAT(recieveDate, '%y-%m-%d') as Date FROM (Select * from smstarseel.inboundmessage where recieveDate >= '" + from
 					+ "' and recieveDate <= '" + to + " 23:59:59.999' order by recieveDate desc) as temp group by Date, originator order by recieveDate desc) as screening_summary "
-					+ "where screener_data.PhoneNumber = screening_summary.originator order by recieveDate desc;";
+					+ "where data_screener.PhoneNumber = screening_summary.originator order by recieveDate desc;";
 			data = executeQuery (selectQuery, null);
 		}
 		catch(Exception e){
@@ -1590,7 +1600,7 @@ public class MobileService
 	}
 	
 	public String[][] getUsername(String username){
-		String selectQuery = "SELECT * from openmrs_rpt.screener_data where username = '"+username+"'";
+		String selectQuery = "SELECT * from openmrs_rpt.data_screener where username = '"+username+"'";
 	    String[][] data = executeQuery (selectQuery, null);
 		return data;
 	}
@@ -1598,15 +1608,19 @@ public class MobileService
 	public boolean saveText(String[] username , String[] messageDetail){
 		// username                                // messageDetail
 		// 0 - username                            // 0 - date
-		// 1 - location                            // 1 - referenceNumber
-		// 2 - primaryNumber                       // 2 - text
-		// 3 - secondaryNumber                    // 3 - addedby
-		                                          // 4 - formatteddate
+		// 1 - name                                // 1 - referenceNumber
+		// 2 - location                           // 2 - text
+		// 3 - primaryNumber                      // 3 - addedby
+		// 4 - secondaryNumber                    // 4 - formatteddate
 		
+		String originator = username[3];
+		if(username[3]== null || username[3]=="null"){
+			originator = username[4];
+		}
 		String insertQuery = 
 			"insert into openmrs_rpt.inboundmessages " +
-			"(originator,referenceNumber,recieveDate,message,dateText,username,location,primaryNumber,secondaryNumber,addedby) " +
-			"values('"+username[2]+"', '"+messageDetail[1]+"', '"+messageDetail[0]+" 23:59:59.999',  '"+messageDetail[2]+"', '"+messageDetail[4]+"', '"+username[0]+"', '"+username[1]+"', '"+username[2]+"', '"+username[3]+"', '"+messageDetail[3]+"');";
+			"(originator,referenceNumber,recieveDate,message,dateText,username,name,location,primaryNumber,secondaryNumber,addedby) " +
+			"values('"+originator+"', '"+messageDetail[1]+"', '"+messageDetail[0]+" 23:59:59.999',  '"+messageDetail[2]+"', '"+messageDetail[4]+"', '"+username[0]+"', '"+username[1]+"', '"+username[2]+"', '"+username[3]+"', '"+username[4]+"', '"+messageDetail[3]+"');";
 		System.out.println (insertQuery);
 		boolean flag = execute (insertQuery);
 		return flag;	
@@ -1614,13 +1628,13 @@ public class MobileService
 	
 	
 	public String[][] getUsernameList(){
-		String selectQuery = "SELECT username from openmrs_rpt.screener_data";
+		String selectQuery = "SELECT username from openmrs_rpt.data_screener";
 	    String[][] data = executeQuery (selectQuery, null);
 		return data;
 	}
 	
 	public String[][] getAllMessages(String filter){
-		String selectQuery = "SELECT * from openmrs_rpt.inboundMessages where voided = 0 "+filter;
+		String selectQuery = "SELECT * from openmrs_rpt.inboundMessages where voided = 0 "+filter+" order by recieveDate desc";
 		System.out.println (selectQuery);
 	    String[][] data = executeQuery (selectQuery, null);
 		return data;
@@ -1628,6 +1642,12 @@ public class MobileService
 	
 	public String[][] getAllLocations(){
 		String selectQuery = "select name from openmrs.location";
+	    String[][] data = executeQuery (selectQuery, null);
+		return data;
+	}
+	
+	public String[][] getAllScreeners(){
+		String selectQuery = "select * from openmrs_rpt.data_screener where username like '0%'";
 	    String[][] data = executeQuery (selectQuery, null);
 		return data;
 	}
