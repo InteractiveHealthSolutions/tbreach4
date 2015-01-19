@@ -217,11 +217,12 @@ public class DashboardServlet extends HttpServlet
 
 		   RequestDispatcher rd;
 		
-		   String date = request.getParameter ("dateFrom");
+		   String dateFrom = request.getParameter ("dateFrom");
+		   String dateTo = request.getParameter ("dateTo");
 		   String username = request.getParameter ("usernames");
 		   String location = request.getParameter ("locations");
 		   
-		   String filter = " and recieveDate like '"+date+"%'";
+		   String filter = " and recieveDate >= '"+dateFrom+" %' and recieveDate <= '"+dateTo+ " 23:59:59.999'";
 		   if(username != "" && username != null){
 			   filter = filter + " and username = '"+username+"'";
 			   request.setAttribute ("username", username);
@@ -235,7 +236,8 @@ public class DashboardServlet extends HttpServlet
 		   String data[][] = MobileService.getService ().getAllMessages (filter);
 		   int size = data.length;
 		   
-		   request.setAttribute ("date", date);
+		   request.setAttribute ("dateFrom", dateFrom);
+		   request.setAttribute ("dateTo", dateTo);
 		   request.setAttribute ("size", size);
 		   
 		   for (int i = 0; i<size; i++){
