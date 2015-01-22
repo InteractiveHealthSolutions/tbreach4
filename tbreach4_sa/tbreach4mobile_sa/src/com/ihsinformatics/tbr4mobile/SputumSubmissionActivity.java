@@ -104,6 +104,9 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	MyTextView			screenerInstructionThreeTextView;
 	MyTextView			screenerInstructionThree;
 	
+	MyTextView 			sputumSubmissionSpace;
+	
+	MyButton 			saveButton;
 			
 	
 	String firstNameValue = "";
@@ -177,7 +180,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	{
 		FORM_NAME = "Sputum Submission";
 		TAG = "SputumSubmissionActivity";
-		PAGE_COUNT = 4;
+		PAGE_COUNT = 5;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -253,11 +256,19 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		screenerInstructionThree.setBackgroundResource(R.color.LightBlue);
 		screenerInstructionThree.setTypeface(null, Typeface.ITALIC);
 		
+		sputumSubmissionSpace = new MyTextView(context, R.style.text,
+				R.string.sputumSubmission_space);
+		
+		saveButton = new MyButton(context, R.style.button,
+				R.drawable.custom_button_beige, R.string.submit_form,
+				R.string.submit_form);
+		
 		View[][] viewGroups = { 
 					{formDateTextView, formDateButton, patientIdTextView, patientId, scanBarcode, firstNameTextView, firstName, surnameTextView, surname,  searchPatientButton}, 
 				    {screenerInstructionOneTextView, screenerInstructionOne},
 					{viewedSputumVideoTextView, viewedSputumVideo, sputumTimeTextView, sputumTime,screenerInstructionTwoTextView,screenerInstructionTwo},
-					{sputumStatusTextView, sputumStatus,rejectionReasonTextView, rejectionReason, screenerInstructionThreeTextView,screenerInstructionThree,labTestIdTextView,labTestId,scanBarcodeLabTestId}, 
+					{sputumStatusTextView, sputumStatus,rejectionReasonTextView, rejectionReason, screenerInstructionThreeTextView,screenerInstructionThree},
+					{labTestIdTextView,labTestId,scanBarcodeLabTestId ,sputumSubmissionSpace,saveButton}
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();

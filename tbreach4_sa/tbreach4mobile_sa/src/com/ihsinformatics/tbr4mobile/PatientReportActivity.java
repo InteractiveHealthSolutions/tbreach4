@@ -79,7 +79,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	MyEditText			testId;
 	MyButton			scanBarcode;
 	
-	//MyButton 			searchButton;
+	MyButton 			searchButton;
 
 	MyTextView			firstNameTextView;
 	MyEditText			firstName;
@@ -207,7 +207,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		searchPatientTextView = new MyTextView (context, R.style.text, R.string.search_option);
 		patientIdRadioButton = new MyRadioButton (context, R.string.patient_id_radio, R.style.radio, R.string.patient_id_radio);
 		nhlsIdRadioButton = new MyRadioButton (context, R.string.nhls_id_radio, R.style.radio, R.string.nhls_id_radio);
-		searchOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL ());
+		searchOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL (),1);
 
 		
 		patientIdMyTextView = new MyTextView (context, R.style.text, R.string.patient_id);
@@ -217,7 +217,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		testIdMyTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
 		testId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		
-		//searchButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.search_patients, R.string.search_patients);
+		searchButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.search_patients, R.string.search_patients);
 		
 		// Patient's Name
 		firstNameTextView = new MyTextView (context, R.style.text, R.string.first_name);
@@ -287,9 +287,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		nhlsId = new MyEditText (context, R.string.lab_test_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		nhlsId.setKeyListener(null);
 		
-		saveButton.setText("Search");
+		//saveButton.setText("Search");
 		
-		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId/*, searchButton*/},
+		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId, searchButton},
 								{pidTextView, pid, nhlsIdTextView, nhlsId, firstNameTextView,firstName,surnameTextView,surname, genderTextView, gender},
 								{dobTextView,dob, ageTextView, age, physicalAddressTextView, physicalAddress, /*colonyAddressTextView, colonyAddress,*/ townAddressTextView, townAddress },
 								{landmarkAddressTextView, landmarkAddress, cityTextView, city, countryTextView, country, phoneTextView, phone, },
@@ -314,7 +314,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		lastButton.setOnClickListener (this);
 		clearButton.setOnClickListener (this);
 		scanBarcode.setOnClickListener (this);
-		saveButton.setOnClickListener (this);
+		searchButton.setOnClickListener (this);
 		
 		patientIdRadioButton.setOnClickListener(this);
 		nhlsIdRadioButton.setOnClickListener(this);
@@ -474,7 +474,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 			patientId.clearFocus();
 			patientId.setText("");
 		}
-		else if ( view == saveButton )
+		else if ( view == searchButton )
 		{
 			
 			clear();

@@ -30,6 +30,8 @@
         <item>No Result</item>
     </string-array>
     
+    
+    <string name="sputumResult_space">"\n\n"</string>
     <string name="sample_accepted">Sample accepted at lab?</string>
     <string name="date_result_recieved">Date result received from sputum collection point</string>
     <string name="date_test_report">Date of Test Report</string>

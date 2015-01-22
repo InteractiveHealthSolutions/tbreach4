@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,6 +72,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 		login.setOnClickListener (this);
 		views = new View[] {username, password, login};
 		super.onCreate (savedInstanceState);
+		//password.setInputType(InputType.TYPE_CLASS_TEXT);;
 		initView (views);
 	}
 
@@ -209,6 +211,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					App.setPassword (App.get (password));
 					String exists = serverService.authenticate ();
 					return exists;
+					//return "SUCCESS";
 				}
 
 				@Override

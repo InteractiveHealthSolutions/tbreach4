@@ -97,6 +97,10 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	
 	MyTextView 			errorCodeTextView;
 	MyEditText			errorCode;
+	
+	MyTextView 			sputumResultSpace;
+	
+	MyButton 			saveButton;
 
 
 	/**
@@ -210,11 +214,17 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		errorCodeTextView = new MyTextView (context, R.style.text, R.string.error_code);
 		errorCode = new MyEditText (context, R.string.error_code, R.string.error_code, InputType.TYPE_CLASS_NUMBER, R.style.edit, 4, false);
 		
+		sputumResultSpace = new MyTextView(context, R.style.text,
+				R.string.sputumResult_space);
+		
+		saveButton = new MyButton(context, R.style.button,
+				R.drawable.custom_button_beige, R.string.submit_form,
+				R.string.submit_form);
 		
 		View[][] viewGroups = { 
 					{labTestIdTextView, labTestId, scanBarcodeLabTestId,  dateOfTestReportTextView, dateOfTestReportButton, formDateTextView, formDateButton}, 
 				    {sputumAcceptedTextView, sputumAccepted, rejectionReasonTextView, rejectionReason, genexpertResultTextView, genexpertResult},
-					{rifResultTextView, rifResult, mtbBurdenTextView, mtbBurden, errorCodeTextView, errorCode },
+					{rifResultTextView, rifResult, mtbBurdenTextView, mtbBurden, errorCodeTextView, errorCode, sputumResultSpace,saveButton },
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();

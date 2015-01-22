@@ -87,9 +87,14 @@
         <item name="android:layout_height">@dimen/xlarge</item>
     </style>
 
+    <style name="radio_disable" parent="@style/plain">
+       <item name="android:textColor">@color/DarkGray</item>
+    </style>
+    
     <style name="radio" parent="@style/plain">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+       <item name="android:textColor">@color/IRDTitle</item>
     </style>
 
 </resources>

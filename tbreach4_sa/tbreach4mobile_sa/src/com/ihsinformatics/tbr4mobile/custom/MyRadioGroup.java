@@ -14,6 +14,7 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 
 package com.ihsinformatics.tbr4mobile.custom;
 
+import com.ihsinformatics.tbr4mobile.R;
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.CompoundButton;
@@ -29,6 +30,9 @@ import android.widget.TextView;
 public class MyRadioGroup extends RadioGroup implements android.widget.CompoundButton.OnCheckedChangeListener
 {
 	MyRadioButton[]	buttons;
+	
+	public int HORIZONTAL = 0;
+	public int VERTICAL = 1;
 
 	public MyRadioGroup (Context context)
 	{
@@ -48,36 +52,69 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 	 * @param isRTL
 	 *            Should this group be displayed Right-to-Left?
 	 */
-	public MyRadioGroup (Context context, MyRadioButton[] radioButtons, int tag, int style, boolean isRTL)
+	public MyRadioGroup (Context context, MyRadioButton[] radioButtons, int tag, int style, boolean isRTL , int layout)
 	{
 		super (context);
 		if (tag != -1)
 		{
 			setTag (getResources ().getString (tag));
 		}
-		for (RadioButton rb : radioButtons)
-		{
-			TextView rbTextView = new TextView (context);
-			rbTextView.setTextAppearance (context, style);
-			rbTextView.setText (rb.getText ());
-			rb.setText ("");
+		if(layout == 0){
 			LinearLayout group = new LinearLayout (context);
 			group.setOrientation (LinearLayout.HORIZONTAL);
-			group.setLayoutParams (new LayoutParams (LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-			if (isRTL)
+			//group.setLayoutParams (new LayoutParams (LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			//group.setGravity (Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+			
+			for (RadioButton rb : radioButtons)
 			{
-				group.setGravity (Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-				group.addView (rbTextView);
-				group.addView (rb);
+				TextView rbTextView = new TextView (context);
+				rbTextView.setTextAppearance (context, style);
+				rbTextView.setText (rb.getText ());
+				rb.setText ("");
+				
+				if (isRTL)
+				{
+					
+					group.addView (rbTextView);
+					group.addView (rb);
+				}
+				else
+				{
+					group.addView (rb);
+					group.addView (rbTextView);
+				}
+				rb.setOnCheckedChangeListener (this);
+				
 			}
-			else
-			{
-				group.addView (rb);
-				group.addView (rbTextView);
-			}
-			rb.setOnCheckedChangeListener (this);
+			
 			addView (group);
 			buttons = radioButtons;
+		}else{
+			for (RadioButton rb : radioButtons)
+			{
+				TextView rbTextView = new TextView (context);
+				rbTextView.setTextAppearance (context, style);
+				rbTextView.setText (rb.getText ());
+				rb.setText ("");
+				LinearLayout group = new LinearLayout (context);
+				group.setOrientation (LinearLayout.HORIZONTAL);
+				group.setLayoutParams (new LayoutParams (LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+				if (isRTL)
+				{
+					group.setGravity (Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+					group.addView (rbTextView);
+					group.addView (rb);
+				}
+				else
+				{
+					group.addView (rb);
+					group.addView (rbTextView);
+				}
+				rb.setOnCheckedChangeListener (this);
+				addView (group);
+				buttons = radioButtons;
+			}
+			
 		}
 	}
 
@@ -92,5 +129,28 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 					r.setChecked (false);
 			}
 		}
+	}
+	
+	@Override
+	public void setEnabled (boolean state)
+	{
+		super.setEnabled (state);
+		
+		if(state == false){
+			for (RadioButton r : buttons)
+			{
+				    r.setEnabled(false);
+					r.setChecked (false);
+					r.setTextAppearance(getContext (), R.style.radio_disable);
+			}
+		}else{
+			buttons[0].setChecked(true);
+			for (RadioButton r : buttons)
+			{
+				    r.setEnabled(true);
+				    r.setTextAppearance(getContext (), R.style.radio);
+			}
+		}
+		
 	}
 }

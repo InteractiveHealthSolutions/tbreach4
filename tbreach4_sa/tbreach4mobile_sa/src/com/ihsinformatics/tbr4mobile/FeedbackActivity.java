@@ -17,6 +17,7 @@ package com.ihsinformatics.tbr4mobile;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.ihsinformatics.tbr4mobile.custom.MyButton;
 import com.ihsinformatics.tbr4mobile.custom.MyEditText;
 import com.ihsinformatics.tbr4mobile.custom.MySpinner;
 import com.ihsinformatics.tbr4mobile.custom.MyTextView;
@@ -60,6 +61,7 @@ public class FeedbackActivity extends AbstractFragmentActivity
 	MySpinner	feedbackType;
 	MyTextView	feedbackTextView;
 	MyEditText	feedback;
+	MyButton saveButton;
 
 	/**
 	 * Subclass representing Fragment for feedback form
@@ -126,7 +128,7 @@ public class FeedbackActivity extends AbstractFragmentActivity
 	@Override
 	public void createViews (final Context context)
 	{
-		saveButton.setText(R.string.feedback_send);
+		
 		FORM_NAME = FormType.FEEDBACK;
 		TAG = "FeedbackActivity";
 		PAGE_COUNT = 1;
@@ -150,7 +152,11 @@ public class FeedbackActivity extends AbstractFragmentActivity
 		feedback = new MyEditText (context, R.string.feedback, R.string.feedback_hint, InputType.TYPE_TEXT_FLAG_MULTI_LINE, R.style.edit, 225, true);
 		feedback.setMinLines (5);
 		feedback.setMaxHeight (10);
-		View[][] viewGroups = {{feedbackTypeTextView, feedbackType, feedbackTextView, feedback}};
+		saveButton = new MyButton(context, R.style.button,
+				R.drawable.custom_button_beige, R.string.feedback_send,
+				R.string.feedback_send);
+		
+		View[][] viewGroups = {{feedbackTypeTextView, feedbackType, feedbackTextView, feedback, saveButton}};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
 		for (int i = 0; i < PAGE_COUNT; i++)

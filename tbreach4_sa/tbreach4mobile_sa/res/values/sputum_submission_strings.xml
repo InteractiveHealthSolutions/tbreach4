@@ -48,4 +48,6 @@
     
     <string name="fetch_name">Fetch Patient\'s Name</string>
     
+    <string name="sputumSubmission_space">"\n\n\n\n\n\n"</string>
+    
 </resources>
