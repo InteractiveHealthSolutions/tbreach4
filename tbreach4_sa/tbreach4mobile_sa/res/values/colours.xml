@@ -6,6 +6,7 @@
     <color name="IRDTitle">#F58220</color>
 	<color name="IRDHighlight">#A9A9A9</color>
 	
+	<color name="GreenShade">#656a23</color>
 	<color name="BlueShade">#8FBAC8</color>
     <color name="Transparent">#00000000</color>
     <color name="Snow">#FFFAFA</color>

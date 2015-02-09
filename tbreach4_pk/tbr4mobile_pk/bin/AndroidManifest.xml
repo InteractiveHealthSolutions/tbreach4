@@ -83,17 +83,28 @@
             android:configChanges="keyboardHidden|orientation" >
         </activity>
 
-       
+        <activity
+            android:name=".ReportsActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
         <activity
             android:name=".SavedFormsActivity"
             android:configChanges="keyboardHidden|orientation" >
         </activity>
-        
+        <activity
+            android:name=".GPSTracker"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity
+            android:name=".GPSActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
         <activity
             android:name=".Barcode"
             android:configChanges="keyboardHidden|orientation" >
         </activity>
-       
+        <activity android:name="UpdateMetadataActivity" >
+        </activity>
     </application>
 
 </manifest>

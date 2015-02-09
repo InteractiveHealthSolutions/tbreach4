@@ -34,7 +34,7 @@
     <string name="symptomsHeading">TB Symptoms</string>
     <string name="riskFactorHeading">Risk Factors</string>
     <string name="screenerInstructionHeading">Screener Instruction</string>
-    <string name="summary">TB Symptoms - Summary</string>
+    <string name="summary">TB Symptoms Duration</string>
     
     <!-- MINE Question -->
     <string name="workNowMine">Do you work on the mines now?</string>
@@ -50,15 +50,14 @@
     <string name="hivTestNew">Would you like to have an HIV test?</string>
     
     <!-- TB Symptoms strings -->
-    <string name="cough">Do you have cough of any duration?</string>
-    <string name="cough_duration">Do you have cough that has lasted 2 weeks or more?</string>
-    <string name="night_sweats">Do you experience drenching night sweats?</string>
-    <string name="weight_loss">Have you had unexplained weightloss of greater than 1.5kg in one month?</string>
-    <string name="fever">Have you had a persistent fever of more than 2 weeks?</string>
-    <string name="haemoptysis">Do you cough up blood stained sputum?</string>
+    <string name="cough">"Cough                   "</string>
+    <string name="night_sweats">"Night Sweats      "</string>
+    <string name="weight_loss">"Weight Loss        "</string>
+    <string name="fever">"Fever                     "</string>
+    <string name="haemoptysis">"Coughing Blood "</string>
     
     
-    <string name="symptom_question">For how long (days) have you had each of these symptoms?</string>
+    <string name="symptom_question">For how many days have you had each of these symptoms.</string>
     <string name="cough_checkbox">"Cough                  "</string>
     <string name="night_sweats_checkbox">"Night Sweats      "</string>
     <string name="weight_loss_checkbox">"Weight Loss        "</string>
@@ -66,8 +65,17 @@
     <string name="haemoptysis_checkbox">"Coughing Blood  "</string>
     <string name="day">" Day(s)"</string>
     
+    <string name="cough_duration">"Cough"</string>
+    <string name="night_sweats_duration">"Night Sweats"</string>
+    <string name="weight_loss_duration">"Weight Loss"</string>
+    <string name="fever_duration">"Fever"</string>
+    <string name="haemoptysis_duration">"Coughing Blood"</string>
+    
     <string name="symptoms_period">For how long (days) have you had each of these symptoms?</string>
-    <string name="symptoms_period_hint">"        "</string>
+    <string name="symptoms_question">Do you have any of the following symptoms?</string>
+    <string name="symptoms_period_hint">"0       "</string>
+    
+     <string name="instructions">"(N = No , Y = Yes , R = Refuse)\n"</string>
     
     <!-- Risk Factor -->
     <string name="risk_instruction">Say to patient, \"Now I am going to ask you a few questions about your medical history.\"</string>
@@ -75,7 +83,7 @@
     <string name="tb_treatment_previously">Have you previously been treated for TB?</string>
     <string name="tb_treatment_duration">For how many months were you previously on treatment for?</string>
     <string name="tb_treatment_duration_hint">Enter between 1 to 24</string>
-    <string name="diabetes">Has a doctor ever told you that you have sugar sickness (diabetes)?</string>
+    <string name="diabetes">Do you have diabetes?</string>
     <string name="family_diabetes">Do any of your parents, siblings or children have sugar sickness (diabetes)?</string>
     <string name="hypertension">Have you ever taken medication for high blood pressure on a regular basis?</string>
     <string name="breathing_shortness">Do you have shortness of breath while resting?</string>
@@ -85,6 +93,8 @@
     <string name="screener_instruction_one_yes">Refer patient to the closest PHC, CHC or Hospital for free and confidential HIV testing and counselling.</string>
     <string name="screener_instruction_one_no">Say to patient, \"If you ever would like to receive a free and confidential HIV test, any government clinic or hospital would be able to perform the test of you.\" </string>
     <string name="screener_instruction_two">Do I Need to Assign a Patient ID and Collect a Sputum Sample?</string>
+    
+    <string name="patient_referred">Was patient referred</string>
     
     <!-- Coustomer Information -->
     <string name="phone1_provided">Are you willing to provide a contact number?</string>
@@ -109,7 +119,7 @@
     <string name="physical_address_hint">Enter Address</string>
     <string name="colony_address">Colony</string>
     <string name="colony_address_hint">Enter Colony</string>
-    <string name="town_address">Town</string>
+    <string name="town_address">Town/City</string>
     <string name="town_address_hint">Enter Town</string>
     <string name="landmark_address">Landmark</string>
     <string name="landmark_address_hint">Enter nearby Landmark</string>
@@ -131,6 +141,8 @@
     <string name="respiratory_rate">Respiratory rate (breaths per minute)</string>
     <string name="respiratory_rate_hint">Enter between 10 and 120</string>
 
+    <string name="zero">0</string>
+    
     <!-- Othe Disease History strings -->
     <string name="family_tb">Does anyone in the home have TB or had TB in the past?</string>
     <string name="active_breathing_shortness">Do you have shortness of breath while doing phsyical activity?</string>
@@ -153,6 +165,18 @@
     <string name="cxr_spirometry_indication">CXR and Spirometry</string>
     
     <string name="success_screening">"Screening Form Successfully saved."</string>
+    
+    <string name="screening_space">"\n\n\n"</string>
+    
+    <string name="n">"N"</string>
+    <string name="y">"Y"</string>
+    <string name="r">"R"</string>
+    
+    <string name="positive">Positive</string>
+    <string name="negative">Negative</string>
+    <string name="video_unavailable">"Video unavailable"</string>
+    <string name="myself">"Myself"</string>
+    <string name="someone_else">"Someone else"</string>
 
     <!-- String arrays -->
     <string-array name="hiv_result">

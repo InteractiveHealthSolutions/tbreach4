@@ -1016,7 +1016,8 @@ public class ServerService
 					String contactTb = jsonResponse.get ("contact_tb").toString ();
 					String diabetes = jsonResponse.get ("diabetes").toString ();
 					String dateSputumSubmission = jsonResponse.get ("date").toString ();
-					dateSputumSubmission = dateSputumSubmission.substring(0,dateSputumSubmission.indexOf(" "));
+					if (!dateSputumSubmission.equals(""))
+						dateSputumSubmission = dateSputumSubmission.substring(0,dateSputumSubmission.indexOf(" "));
 					String testId = jsonResponse.get ("test_lab_id").toString ();
 					String pid = jsonResponse.get ("pid").toString ();
 					
@@ -1239,16 +1240,18 @@ public class ServerService
 	{
 		String response = "";
 		// Demographics
-		String id = values.getAsString ("LabTestId");
+		String id = values.getAsString ("TestId");
+		String patientId = values.getAsString ("PatientId");
 		String formDate = values.getAsString ("formDate");
 		
 		try
 		{
-			// Check if the test Id exists
-			String patientId = getPatientIdFromTestId (id,"Y");
-			if (patientId == null)
-				return context.getResources ().getString (R.string.test_id_missing);
-			
+			if(patientId == null || patientId.equals("")){
+				// Check if the test Id exists
+				patientId = getPatientIdFromTestId (id,"Y");
+				if (patientId == null)
+					return context.getResources ().getString (R.string.test_id_missing);
+			}
 			// Save Form
 			JSONObject json = new JSONObject ();
 			json.put ("app_ver", App.getVersion ());

@@ -19,5 +19,7 @@
     <string name="phone_number">Phone number</string>
     <string name="date_of_sputum_submission">Date sputum handed from patient to screener</string>
     <string name="search_option">Search by</string>
+    <string name="test_id">Lab Test ID</string>
     
+    <string name="scan_code">Scan Code</string>
 </resources>

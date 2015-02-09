@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -53,6 +55,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	EditText						password;
 	Button							login;
 	CheckBox						offline;
+	TextView						showPassword;
 	View[]							views;
 	Animation						alphaAnimation;
 
@@ -67,10 +70,14 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 		password = (EditText) findViewById (R.login_id.passwordEditText);
 		login = (Button) findViewById (R.login_id.loginButton);
 		offline = (CheckBox) findViewById (R.login_id.offlineCheckBox);
+		showPassword = (TextView) findViewById (R.login_id.showPasswordTextView);
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
+		
 		login.setOnClickListener (this);
+		showPassword.setOnClickListener (this);
 		views = new View[] {username, password, login};
 		super.onCreate (savedInstanceState);
+		//password.setInputType(InputType.TYPE_CLASS_TEXT);;
 		initView (views);
 	}
 
@@ -209,6 +216,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					App.setPassword (App.get (password));
 					String exists = serverService.authenticate ();
 					return exists;
+					//return "SUCCESS";
 				}
 
 				@Override
@@ -276,6 +284,21 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 			case R.login_id.loginButton :
 				App.setOfflineMode (offline.isChecked ());
 				submit ();
+				break;
+			case R.login_id.showPasswordTextView :
+				String status = showPassword.getText().toString();
+				if(status.equals("Show Password"))
+				{
+					password.setInputType( InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					showPassword.setText("Hide Password");
+				}
+				else{
+					password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					showPassword.setText("Show Password");
+				}
+				
+				int position = password.getText().length(); 
+				password.setSelection(position);
 				break;
 		}
 	}

@@ -4,6 +4,22 @@
     <string name="search_patient">Search Patient</string>
     <string name="video_viewed">Did you watch the sputum instructions video prior to expectorating?</string>
     
+    <string name="spot">Spot (Same day as screening)</string>
+    <string name="second_day">2nd Day Morning (the day after screening)</string>
+    <string name="third_day">3rd Day Morning</string>
+    <string name="after_third_day">More than 3 days ago</string>
+    
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    
+    
+     <string name="saliva">Saliva</string>
+     <string name="food_particles">Food Particles</string>
+     <string name="insufficient_quantity">Insufficient Quantity</string>
+     <string name="more_than_three_days">More than 3 days old</string>
+    
+    <string name="scan_qr_code">Scan QR Code</string>
+     
     <string-array name="video_viewed_option">
         <item>Yes</item>
         <item>No</item>
@@ -47,5 +63,9 @@
     <string name="screener_instruction_verify_patient">Please verify patient name with the patient. If name, matches proceed to the next question on the form. If name does not match, make sure you have scanned the correct barcode. If the name still does not match after rescanning the code, then re-screen the patient and fill out the sputum submission form.</string>
     
     <string name="fetch_name">Fetch Patient\'s Name</string>
+    
+    <string name="sputumSubmission_space">"\n\n\n\n\n\n\n"</string>
+    
+    <string name="scan_nhls_code">"Scan NHLS Barcode"</string>
     
 </resources>
