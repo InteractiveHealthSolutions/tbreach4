@@ -22,6 +22,8 @@ import java.util.Locale;
 
 import com.ihsinformatics.tbr4mobile.custom.MyButton;
 import com.ihsinformatics.tbr4mobile.custom.MyEditText;
+import com.ihsinformatics.tbr4mobile.custom.MyRadioButton;
+import com.ihsinformatics.tbr4mobile.custom.MyRadioGroup;
 import com.ihsinformatics.tbr4mobile.custom.MySpinner;
 import com.ihsinformatics.tbr4mobile.custom.MyTextView;
 import com.ihsinformatics.tbr4mobile.shared.AlertType;
@@ -70,33 +72,72 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	static final int	GET_PATIENT_ID	= 1;
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 	
-	MyTextView 			labTestIdTextView;
-	MyEditText			labTestId;
-	MyButton			scanBarcodeLabTestId;
 	
-	MyTextView			dateOfTestReportTextView;
-	MyButton			dateOfTestReportButton;
+	/*MyTextView          submitByTextView;
+	MyRadioGroup		submitOption;
+	MyRadioButton		patientIdRadioButton;
+	MyRadioButton		nhlsIdRadioButton;*/
+	
+	MyTextView			patientIdMyTextView;
+	MyEditText			patientId;
+	MyTextView			testIdMyTextView;
+	MyEditText			testId;
+	MyButton			scanBarcode;
+	
+	
+	/*MyTextView 		labTestIdTextView;
+	MyEditText			labTestId;
+	MyButton			scanBarcodeLabTestId;*/
+	
+	/*MyTextView			dateOfTestReportTextView;
+	MyButton			dateOfTestReportButton;*/
 	
 	MyTextView			formDateTextView;
 	MyButton			formDateButton;
 	
 	MyTextView		    sputumAcceptedTextView;
-	MySpinner			sputumAccepted;
+	
+	/*MyRadioGroup 		sputumAcceptedGroup;
+	MyRadioButton 		noSputumAccepted;
+	MyRadioButton 		yesSputumAccepted;
+	
+	//MySpinner			sputumAccepted;
 	
 	MyTextView			rejectionReasonTextView;
-	MySpinner			rejectionReason;
+	
+	MyRadioGroup 		rejectionReasonGroup;
+	MyRadioButton 		salivaRejectionReason;
+	MyRadioButton 		foodParticlesRejectionReason;
+	MyRadioButton 		insufficientRejectionReason;
+	MyRadioButton 		oldRejectionReason;*/
+	
+	//MySpinner			rejectionReason;
 	
 	MyTextView			genexpertResultTextView;
-	MySpinner			genexpertResult;
+	
+	MyRadioGroup 		genexpertResultGroup;
+	MyRadioButton 		negativeGenexpertResult;
+	MyRadioButton 		positiveGenexpertResult;
+	MyRadioButton 		errorGenexpertResult;
+	MyRadioButton 		invalidGenexpertResult;
+	MyRadioButton 		noResultGenexpertResult;
+	
+	//MySpinner			genexpertResult;
 	
 	MyTextView			rifResultTextView;
-	MySpinner			rifResult;
 	
-	MyTextView			mtbBurdenTextView;
+	MyRadioGroup 		rifResultGroup;
+	MyRadioButton 		notDetectedRifResult;
+	MyRadioButton 		detectedRifResult;
+	MyRadioButton 		indeterminateRifResult;
+	
+	//MySpinner			rifResult;
+	
+	/*MyTextView			mtbBurdenTextView;
 	MySpinner			mtbBurden;
 	
 	MyTextView 			errorCodeTextView;
-	MyEditText			errorCode;
+	MyEditText			errorCode;*/
 	
 	MyTextView 			sputumResultSpace;
 	
@@ -186,34 +227,97 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		pager.setOffscreenPageLimit (PAGE_COUNT);
 		// Create views for pages
 		
-		labTestIdTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
-		labTestId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
+		/*submitByTextView = new MyTextView (context, R.style.text, R.string.search_option);
+		patientIdRadioButton = new MyRadioButton (context, R.string.patient_id_radio, R.style.radio, R.string.patient_id_radio);
+		nhlsIdRadioButton = new MyRadioButton (context, R.string.nhls_id_radio, R.style.radio, R.string.nhls_id_radio);
+		submitOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL (),0);
+	*/
+		patientIdMyTextView = new MyTextView (context, R.style.text, R.string.patient_id);
+		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
+		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_qr_code, R.string.scan_qr_code);
+		
+		testIdMyTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
+		testId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
+				
+		/*labTestIdTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
+		labTestId = new MyEditText (context, R.string.test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		scanBarcodeLabTestId = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_barcode, R.string.scan_barcode);
-		
-		dateOfTestReportTextView = new MyTextView (context, R.style.text, R.string.date_test_report);
+		*/
+		/*dateOfTestReportTextView = new MyTextView (context, R.style.text, R.string.date_test_report);
 		dateOfTestReportButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.date_test_report, R.string.date_test_report);
-		
+		*/
 		formDateTextView = new MyTextView (context, R.style.text, R.string.date_result_recieved);
 		formDateButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.date_result_recieved, R.string.date_result_recieved);
 		
 		sputumAcceptedTextView = new MyTextView (context, R.style.text, R.string.sample_accepted);
-		sputumAccepted = new MySpinner (context, getResources ().getStringArray (R.array.option_yes_no), R.string.sample_accepted, R.string.option_hint); 
 		
-		rejectionReasonTextView = new MyTextView (context, R.style.text, R.string.rejection_reason);
-		rejectionReason = new MySpinner (context, getResources ().getStringArray (R.array.rejection_reason_option), R.string.rejection_reason, R.string.option_hint); 
+		/*noSputumAccepted = new MyRadioButton(context, R.string.no, R.style.radio,
+				R.string.no);
+		yesSputumAccepted = new MyRadioButton(context, R.string.yes, R.style.radio,
+				R.string.yes);
+		
+		sputumAcceptedGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { yesSputumAccepted, noSputumAccepted}, R.string.sample_accepted,
+				R.style.radio, App.isLanguageRTL(),0);*/
+		
+		//sputumAccepted = new MySpinner (context, getResources ().getStringArray (R.array.option_yes_no), R.string.sample_accepted, R.string.option_hint); 
+		
+		/*rejectionReasonTextView = new MyTextView (context, R.style.text, R.string.rejection_reason);
+		
+		salivaRejectionReason = new MyRadioButton(context, R.string.saliva, R.style.radio,
+				R.string.saliva);
+		foodParticlesRejectionReason = new MyRadioButton(context, R.string.food_particles, R.style.radio,
+				R.string.food_particles);
+		insufficientRejectionReason = new MyRadioButton(context, R.string.insufficient_quantity, R.style.radio,
+				R.string.insufficient_quantity);
+		oldRejectionReason = new MyRadioButton(context, R.string.more_than_three_days, R.style.radio,
+				R.string.more_than_three_days);
+		
+		rejectionReasonGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { salivaRejectionReason, foodParticlesRejectionReason, insufficientRejectionReason, oldRejectionReason }, R.string.rejection_reason,
+				R.style.radio, App.isLanguageRTL(),1);
+		*/
+		//rejectionReason = new MySpinner (context, getResources ().getStringArray (R.array.rejection_reason_option), R.string.rejection_reason, R.string.option_hint); 
 		
 		genexpertResultTextView = new MyTextView (context, R.style.text, R.string.gxp_result);
-		genexpertResult = new MySpinner (context, getResources ().getStringArray (R.array.gxp_result_option), R.string.gxp_result, R.string.option_hint); 
+		
+		negativeGenexpertResult = new MyRadioButton(context, R.string.mtb_neg, R.style.radio,
+				R.string.mtb_neg);
+		positiveGenexpertResult = new MyRadioButton(context, R.string.mtb_pos, R.style.radio,
+				R.string.mtb_pos);
+		errorGenexpertResult = new MyRadioButton(context, R.string.error, R.style.radio,
+				R.string.error);
+		invalidGenexpertResult = new MyRadioButton(context, R.string.invalid, R.style.radio,
+				R.string.invalid);
+		noResultGenexpertResult = new MyRadioButton(context, R.string.no_result, R.style.radio,
+				R.string.no_result);
+		
+		genexpertResultGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { negativeGenexpertResult, positiveGenexpertResult, errorGenexpertResult, invalidGenexpertResult, noResultGenexpertResult }, R.string.gxp_result,
+				R.style.radio, App.isLanguageRTL(),1);
+		//genexpertResult = new MySpinner (context, getResources ().getStringArray (R.array.gxp_result_option), R.string.gxp_result, R.string.option_hint); 
 		
 		rifResultTextView = new MyTextView (context, R.style.text, R.string.rif_result);
-		rifResult = new MySpinner (context, getResources ().getStringArray (R.array.rif_result_option), R.string.rif_result, R.string.option_hint); 
 		
-		mtbBurdenTextView = new MyTextView (context, R.style.text, R.string.mtb_burden);
+		notDetectedRifResult = new MyRadioButton(context, R.string.not_detected, R.style.radio,
+				R.string.not_detected);
+		detectedRifResult = new MyRadioButton(context, R.string.detected, R.style.radio,
+				R.string.detected);
+		indeterminateRifResult = new MyRadioButton(context, R.string.indeterminate, R.style.radio,
+				R.string.indeterminate);
+		
+		rifResultGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { notDetectedRifResult, detectedRifResult, indeterminateRifResult}, R.string.rif_result,
+				R.style.radio, App.isLanguageRTL(),1);
+		
+		//rifResult = new MySpinner (context, getResources ().getStringArray (R.array.rif_result_option), R.string.rif_result, R.string.option_hint); 
+		
+		/*mtbBurdenTextView = new MyTextView (context, R.style.text, R.string.mtb_burden);
 		mtbBurden = new MySpinner (context, getResources ().getStringArray (R.array.mtb_burden_option), R.string.mtb_burden, R.string.option_hint); 
 	
 		errorCodeTextView = new MyTextView (context, R.style.text, R.string.error_code);
 		errorCode = new MyEditText (context, R.string.error_code, R.string.error_code, InputType.TYPE_CLASS_NUMBER, R.style.edit, 4, false);
-		
+		*/
 		sputumResultSpace = new MyTextView(context, R.style.text,
 				R.string.sputumResult_space);
 		
@@ -222,9 +326,9 @@ public class SputumResultActivity extends AbstractFragmentActivity
 				R.string.submit_form);
 		
 		View[][] viewGroups = { 
-					{labTestIdTextView, labTestId, scanBarcodeLabTestId,  dateOfTestReportTextView, dateOfTestReportButton, formDateTextView, formDateButton}, 
-				    {sputumAcceptedTextView, sputumAccepted, rejectionReasonTextView, rejectionReason, genexpertResultTextView, genexpertResult},
-					{rifResultTextView, rifResult, mtbBurdenTextView, mtbBurden, errorCodeTextView, errorCode, sputumResultSpace,saveButton },
+				    {formDateTextView, formDateButton, /*submitByTextView, submitOption,*/  patientIdMyTextView, patientId, scanBarcode/*, testIdMyTextView, testId*/},
+				    {sputumAcceptedTextView, /*sputumAcceptedGroup,*/ /*sputumAccepted,*/ /*rejectionReasonTextView, rejectionReasonGroup,*/ /*rejectionReason,*/ genexpertResultTextView, genexpertResultGroup,/* genexpertResult*/},
+					{rifResultTextView, rifResultGroup, /*rifResult,*/ /*mtbBurdenTextView, mtbBurden, errorCodeTextView, errorCode,*/ sputumResultSpace,saveButton },
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -242,15 +346,28 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			groups.add (scrollView);
 		}
 		// Set event listeners
-		dateOfTestReportButton.setOnClickListener(this);
+		/*dateOfTestReportButton.setOnClickListener(this);*/
 		formDateButton.setOnClickListener (this);
 		firstButton.setOnClickListener (this);
 		lastButton.setOnClickListener (this);
 		clearButton.setOnClickListener (this);
 		saveButton.setOnClickListener (this);
-		scanBarcodeLabTestId.setOnClickListener(this);
+		scanBarcode.setOnClickListener(this);
+		/*scanBarcodeLabTestId.setOnClickListener(this);*/
 		navigationSeekbar.setOnSeekBarChangeListener (this);
-		views = new View[] {labTestId, sputumAccepted, rejectionReason, genexpertResult, rifResult, mtbBurden, errorCode};
+		/*patientIdRadioButton.setOnClickListener(this);
+		nhlsIdRadioButton.setOnClickListener(this);*/
+		/*noSputumAccepted.setOnClickListener(this);
+		yesSputumAccepted.setOnClickListener(this);*/
+		
+		negativeGenexpertResult.setOnClickListener(this);
+		positiveGenexpertResult.setOnClickListener(this);
+		errorGenexpertResult.setOnClickListener(this);
+		invalidGenexpertResult.setOnClickListener(this);
+		noResultGenexpertResult.setOnClickListener(this);
+		
+		
+		views = new View[] {testId, patientId, /*labTestId,*/ /*sputumAccepted, rejectionReason, genexpertResult,*/ /*rifResult,*/ /*mtbBurden, errorCode*/};
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -287,21 +404,36 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	{
 		super.initView (views);
 		formDate = Calendar.getInstance ();
-		testDate = null;
 		updateDisplay ();
 		
-		rejectionReasonTextView.setEnabled(false);
-		rejectionReason.setEnabled(false);	
+		/*patientIdRadioButton.setChecked(true);*/
+		testIdMyTextView.setEnabled(false);
+		testId.setEnabled(false);
+		/*yesSputumAccepted.setChecked(true);
+		salivaRejectionReason.setChecked(true);*/
+		negativeGenexpertResult.setChecked(true);
+		notDetectedRifResult.setChecked(true);
+		
+		/*rejectionReasonTextView.setVisibility(View.GONE);
+		rejectionReasonGroup.setVisibility(View.GONE);*/
+		genexpertResultTextView.setVisibility(View.VISIBLE);
+		genexpertResultGroup.setVisibility(View.VISIBLE);
+		
+		rifResultTextView.setVisibility(View.INVISIBLE);
+		rifResultGroup.setVisibility(View.INVISIBLE);
+		/*mtbBurdenTextView.setEnabled(false);
+		mtbBurden.setEnabled(false);
+		
+		errorCodeTextView.setEnabled(false);
+		errorCode.setEnabled(false);*/
+		
+		//rejectionReason.setEnabled(false);	
 	}
 
 	@Override
 	public void updateDisplay ()
 	{
-		formDateButton.setText (DateFormat.format ("dd-MMM-yyyy", formDate));
-		if(testDate == null)
-			dateOfTestReportButton.setText(R.string.date_test_report);
-		else
-			dateOfTestReportButton.setText(DateFormat.format ("dd-MMM-yyyy", testDate));		
+		formDateButton.setText (DateFormat.format ("dd-MMM-yyyy", formDate));		
 	}
 
 	@Override
@@ -310,7 +442,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		boolean valid = true;
 		StringBuffer message = new StringBuffer ();
 		// Validate mandatory controls
-		View[] mandatory = {labTestId, errorCode};
+		View[] mandatory = {testId, /*errorCode,*/ patientId};
 		for (View v : mandatory)
 		{
 			if(v.isEnabled())
@@ -330,33 +462,25 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			message.append (getResources ().getString (R.string.empty_data) + "\n");
 		}
 		// Validate data
-		if (valid)
+		/*if (valid)
 		{
 			  
-		    if(labTestId.isEnabled())
+		    if(testId.isEnabled())
 		    {
-		    	 if (!(App.get (labTestId).length() == 11))
+		    	 if (!(App.get (testId).length() <= 11))
 				{
 					valid = false;
-					message.append (labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-					labTestId.setTextColor (getResources ().getColor (R.color.Red));
+					message.append (testId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+					testId.setTextColor (getResources ().getColor (R.color.Red));
 				}
 		    }
 				
-		}
+		}*/
 		// Validate range
 		if (formDate.getTime ().after (new Date ()))
 		{
 			valid = false;
 			message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
-		}
-		if(testDate != null)
-		{
-			if (testDate.getTime ().after (new Date ()))
-			{
-				valid = false;
-				message.append (dateOfTestReportButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
-			}
 		}
 		if (!valid)
 		{
@@ -370,82 +494,84 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	{
 		if (validate ())
 		{
-			final ContentValues values = new ContentValues ();
-			values.put ("formDate", App.getSqlDate (formDate));
-			values.put ("LabTestId", App.get (labTestId));
-			
-			final ArrayList<String[]> observations = new ArrayList<String[]> ();
-			if(testDate != null)
-				observations.add (new String[] {"Date Of Test Report", App.getSqlDate (formDate)});
-			if (sputumAccepted.isEnabled())
-				observations.add (new String[] {"Sputum Accepted", App.get (sputumAccepted)});
-			if (rejectionReason.isEnabled())
-				observations.add (new String[] {"Sputum Rejection Reason", App.get (rejectionReason)});
-			if (genexpertResult.isEnabled())
-				observations.add (new String[] {"GeneXpert Result", App.get (genexpertResult)});
-			if (rifResult.isEnabled())
-				observations.add (new String[] {"RIF Result", App.get (rifResult)});
-			if (mtbBurden.isEnabled())
-				observations.add (new String[] {"MTB Burden", App.get (mtbBurden)});
-			if (errorCode.isEnabled())
-				observations.add (new String[] {"Error Code", App.get (errorCode)});
-			if (labTestId.isEnabled())
-				observations.add (new String[] {"Lab Test Id", App.get (labTestId)});
-			
-			observations.add (new String[] {"District", App.getDistrict ()});
-			
-			if(App.getScreeningType ().equals("Community"))
-			{
-				String screeningStrategy = App.getScreeningStrategy().substring(6,App.getScreeningStrategy().length());
-				observations.add (new String[] {"Screening Strategy", screeningStrategy});
-			}	
-			else
-				observations.add (new String[] {"Facility name", App.getFacility()});
-			
-			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
-			{
-				@Override
-				protected String doInBackground (String... params)
+		
+				final ContentValues values = new ContentValues ();
+				values.put ("formDate", App.getSqlDate (formDate));
+				values.put ("LabTestId", App.get (testId));
+				values.put ("PatientId", App.get (patientId));
+				
+				final ArrayList<String[]> observations = new ArrayList<String[]> ();
+			    observations.add (new String[] {"Date Of Test Report", App.getSqlDate (formDate)});
+				/*if (sputumAcceptedGroup.getVisibility() == View.VISIBLE)
+					observations.add (new String[] {"Sputum Accepted", yesSputumAccepted.isChecked() ? "Yes" : "No"});
+				if (rejectionReasonGroup.getVisibility() == View.VISIBLE)
+					observations.add (new String[] {"Sputum Rejection Reason", salivaRejectionReason.isChecked() ? "Saliva" :(foodParticlesRejectionReason.isChecked() ? "Food Particles" : (insufficientRejectionReason.isChecked() ? "Insufficient Quantity" : "More than 3 days old"))});
+				*/if (genexpertResultGroup.getVisibility() == View.VISIBLE)
+					observations.add (new String[] {"GeneXpert Result", negativeGenexpertResult.isChecked() ? "MTB Negative" :(positiveGenexpertResult.isChecked() ? "MTB Positive" : (errorGenexpertResult.isChecked() ? "Error" : (invalidGenexpertResult.isChecked() ? "Invalid" : "No Result")))});
+				if (rifResultGroup.getVisibility() == View.VISIBLE)
+					observations.add (new String[] {"RIF Result", notDetectedRifResult.isChecked() ? "Not Detected" : (detectedRifResult.isChecked() ? "Detected" : "Indeterminate")});
+				/*if (mtbBurden.isEnabled())
+					observations.add (new String[] {"MTB Burden", App.get (mtbBurden)});
+				if (errorCode.isEnabled())
+					observations.add (new String[] {"Error Code", App.get (errorCode)});*/
+				if (testId.isEnabled())
+					observations.add (new String[] {"Lab Test Id", App.get (testId)});
+				
+				observations.add (new String[] {"District", App.getDistrict ()});
+				
+				if(App.getScreeningType ().equals("Community"))
 				{
-					runOnUiThread (new Runnable ()
+					String screeningStrategy = App.getScreeningStrategy().substring(6,App.getScreeningStrategy().length());
+					observations.add (new String[] {"Screening Strategy", screeningStrategy});
+				}	
+				else
+					observations.add (new String[] {"Facility name", App.getFacility()});
+				
+				AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
+				{
+					@Override
+					protected String doInBackground (String... params)
 					{
-						@Override
-						public void run ()
+						runOnUiThread (new Runnable ()
 						{
-							loading.setIndeterminate (true);
-							loading.setCancelable (false);
-							loading.setMessage (getResources ().getString (R.string.loading_message));
-							loading.show ();
+							@Override
+							public void run ()
+							{
+								loading.setIndeterminate (true);
+								loading.setCancelable (false);
+								loading.setMessage (getResources ().getString (R.string.loading_message));
+								loading.show ();
+							}
+						});
+						//TODO: Uncomment when live
+						String result = serverService.saveSputumResult (FormType.SPUTUM_RESULT, values, observations.toArray (new String[][] {}));
+						return result;
+					}
+	
+					@Override
+					protected void onProgressUpdate (String... values)
+					{
+					};
+	
+					@Override
+					protected void onPostExecute (String result)
+					{
+						super.onPostExecute (result);
+						loading.dismiss ();
+						if (result.equals ("SUCCESS"))
+						{
+							App.getAlertDialog (SputumResultActivity.this, AlertType.INFO, getResources ().getString (R.string.inserted)).show ();
+							initView (views);
 						}
-					});
-					//TODO: Uncomment when live
-					String result = serverService.saveSputumResult (FormType.SPUTUM_RESULT, values, observations.toArray (new String[][] {}));
-					return result;
-				}
-
-				@Override
-				protected void onProgressUpdate (String... values)
-				{
+						else
+						{
+							App.getAlertDialog (SputumResultActivity.this, AlertType.ERROR, result).show ();
+						}
+					}
 				};
-
-				@Override
-				protected void onPostExecute (String result)
-				{
-					super.onPostExecute (result);
-					loading.dismiss ();
-					if (result.equals ("SUCCESS"))
-					{
-						App.getAlertDialog (SputumResultActivity.this, AlertType.INFO, getResources ().getString (R.string.success_screening)).show ();
-						initView (views);
-					}
-					else
-					{
-						App.getAlertDialog (SputumResultActivity.this, AlertType.ERROR, result).show ();
-					}
-				}
-			};
-			updateTask.execute ("");
-		}
+				updateTask.execute ("");
+			}
+	    
 		return true;
 	}
 
@@ -455,6 +581,52 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		super.onActivityResult (requestCode, resultCode, data);
 		// Retrieve barcode scan results or Search for ID
 		if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
+		{
+			if (resultCode == RESULT_OK)
+			{
+				String str = "";
+				if (requestCode == Barcode.BARCODE_RESULT){
+					str = data.getStringExtra (Barcode.SCAN_RESULT);
+					if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
+					{
+						patientId.setText (str);
+					}
+					else
+					{
+						App.getAlertDialog (this, AlertType.ERROR, patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
+					}
+				}
+				/*// Check for valid Id
+				if(patientIdRadioButton.isChecked())
+				{	
+					
+				}
+				else
+				{
+					if (str.length() <= 11)
+					{
+						testId.setText (str);
+					}
+					else
+					{
+						App.getAlertDialog (this, AlertType.ERROR, patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
+					}
+				}*/
+			}
+			else if (resultCode == RESULT_CANCELED)
+			{
+				// Handle cancel
+				App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.operation_cancelled)).show ();
+			}
+			// Set the locale again, since the Barcode app restores system's
+			// locale because of orientation
+			Locale.setDefault (App.getCurrentLocale ());
+			Configuration config = new Configuration ();
+			config.locale = App.getCurrentLocale ();
+			getApplicationContext ().getResources ().updateConfiguration (config, null);
+		}
+		
+		/*if (requestCode == Barcode.BARCODE_RESULT || requestCode == GET_PATIENT_ID)
 		{
 			if (requestCode == Barcode.BARCODE_RESULT_TEST_ID)
 			{
@@ -483,7 +655,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 				config.locale = App.getCurrentLocale ();
 				getApplicationContext ().getResources ().updateConfiguration (config, null);
 			   }
-		}
+		}*/
 	}
 
 	@Override
@@ -492,10 +664,6 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		if (view == formDateButton)
 		{
 			showDialog (DATE_DIALOG_ID);
-		}
-		else if (view == dateOfTestReportButton)
-		{
-			showDialog(TEST_DATE_DIALOG_ID);
 		}
 		else if (view == firstButton)
 		{
@@ -549,11 +717,88 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			});
 			confirmationDialog.show ();
 		}
-		else if (view == scanBarcodeLabTestId)
+		/*else if (view == patientIdRadioButton)
+		{
+			patientId.setEnabled(true);
+			testId.setEnabled(false);
+			patientId.requestFocus();
+			testId.clearFocus();
+			testId.setText("");
+		}
+		else if (view == nhlsIdRadioButton)
+		{
+			patientId.setEnabled(false);
+			testId.setEnabled(true);
+			testId.requestFocus();
+			patientId.clearFocus();
+			patientId.setText("");
+		}*/
+		else if (view == scanBarcode)
 		{
 			Intent intent = new Intent (Barcode.BARCODE_INTENT);
 			intent.putExtra (Barcode.SCAN_MODE, Barcode.QR_MODE);
-			startActivityForResult (intent, Barcode.BARCODE_RESULT_TEST_ID);
+			startActivityForResult (intent, Barcode.BARCODE_RESULT);
+		}
+		/*else if (view == noSputumAccepted || view == yesSputumAccepted){
+			
+			Boolean check = yesSputumAccepted.isChecked();
+			
+			if(check){
+				
+				rejectionReasonTextView.setVisibility(View.GONE);
+				rejectionReasonGroup.setVisibility(View.GONE);
+				genexpertResultTextView.setVisibility(View.VISIBLE);
+				genexpertResultGroup.setVisibility(View.VISIBLE);
+				check = positiveGenexpertResult.isChecked();
+				 if(check){
+					 rifResultTextView.setVisibility(View.VISIBLE);
+					 rifResultGroup.setVisibility(View.VISIBLE);
+				 }else{
+					 rifResultTextView.setVisibility(View.INVISIBLE);
+					 rifResultGroup.setVisibility(View.INVISIBLE);
+				 }
+				
+				
+				errorCodeTextView.setEnabled(check);
+				errorCode.setEnabled(check);
+				
+			}
+			else{
+				
+				rejectionReasonTextView.setVisibility(View.VISIBLE);
+				rejectionReasonGroup.setVisibility(View.VISIBLE);
+				genexpertResultTextView.setVisibility(View.GONE);
+				genexpertResultGroup.setVisibility(View.GONE);
+				
+				rifResultTextView.setVisibility(View.INVISIBLE);
+				rifResultGroup.setVisibility(View.INVISIBLE);
+				mtbBurdenTextView.setEnabled(false);
+				mtbBurden.setEnabled(false);
+				
+				errorCodeTextView.setEnabled(false);
+				errorCode.setEnabled(false);
+				
+			}
+			
+		}*/else if (view == negativeGenexpertResult || view == positiveGenexpertResult || view == errorGenexpertResult || view == invalidGenexpertResult || view == noResultGenexpertResult ){
+			
+			boolean check = positiveGenexpertResult.isChecked();
+			
+			if (check){
+				rifResultTextView.setVisibility(View.VISIBLE);
+				rifResultGroup.setVisibility(View.VISIBLE);
+			}
+			else{
+				rifResultTextView.setVisibility(View.INVISIBLE);
+				rifResultGroup.setVisibility(View.INVISIBLE);
+			}
+			/*mtbBurdenTextView.setEnabled(check);
+			mtbBurden.setEnabled(check);*/
+		
+			/*check = errorGenexpertResult.isChecked();*/
+			
+			/*errorCodeTextView.setEnabled(check);
+			errorCode.setEnabled(check);*/
 		}
 	}
 
@@ -568,42 +813,42 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	{
 		MySpinner spinner = (MySpinner) parent;
 		
-		if (spinner == sputumAccepted)
-		{
-			boolean check = spinner.getSelectedItemPosition () == 0;
-			
-			rejectionReason.setEnabled(!check);
-			rejectionReasonTextView.setEnabled(!check);
-			
-			genexpertResult.setEnabled(check);
-			genexpertResultTextView.setEnabled(check);
-			
-			rifResultTextView.setEnabled(check);
-			rifResult.setEnabled(check);
-			
-			mtbBurdenTextView.setEnabled(check);
-			mtbBurden.setEnabled(check);
-			
-			errorCodeTextView.setEnabled(check);
-			errorCode.setEnabled(check);
-			
-		}
-		else if (spinner == genexpertResult)
-		{
-			boolean check = spinner.getSelectedItemPosition () == 1;
-			
-			rifResultTextView.setEnabled(check);
-			rifResult.setEnabled(check);
-			
-			mtbBurdenTextView.setEnabled(check);
-			mtbBurden.setEnabled(check);
-			
-			check = spinner.getSelectedItemPosition () == 2;
-			
-			errorCodeTextView.setEnabled(check);
-			errorCode.setEnabled(check);
-			
-		}
+//		if (spinner == sputumAcceptedGroup)
+//		{
+//			boolean check = spinner.getSelectedItemPosition () == 0;
+//			
+//			rejectionReasonGroup.setEnabled(!check);
+//			rejectionReasonTextView.setEnabled(!check);
+//			
+//			genexpertResult.setEnabled(check);
+//			genexpertResultTextView.setEnabled(check);
+//			
+//			rifResultTextView.setEnabled(check);
+//			rifResult.setEnabled(check);
+//			
+//			mtbBurdenTextView.setEnabled(check);
+//			mtbBurden.setEnabled(check);
+//			
+//			errorCodeTextView.setEnabled(check);
+//			errorCode.setEnabled(check);
+//			
+//		}
+//		else if (spinner == genexpertResult)
+//		{
+//			boolean check = spinner.getSelectedItemPosition () == 1;
+//			
+//			rifResultTextView.setEnabled(check);
+//			rifResult.setEnabled(check);
+//			
+//			mtbBurdenTextView.setEnabled(check);
+//			mtbBurden.setEnabled(check);
+//			
+//			check = spinner.getSelectedItemPosition () == 2;
+//			
+//			errorCodeTextView.setEnabled(check);
+//			errorCode.setEnabled(check);
+//			
+//		}
 	
 	}
 

@@ -9,7 +9,8 @@
         android:id="@+login_id/usernameTableRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/tiny" >
+        android:padding="@dimen/tiny"
+        >
 
         <TextView
             android:id="@+login_id/textView1"
@@ -33,6 +34,17 @@
         </EditText>
     </TableRow>
 
+    <TextView
+        android:id="@+login_id/showPasswordTextView"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:gravity="right"
+        android:text="@string/show_pass"
+        android:textColor="@color/Chocolate" />
+    
     <TableRow
         android:id="@+login_id/passwordTableRow"
         android:layout_width="fill_parent"
@@ -60,7 +72,7 @@
             android:typeface="sans" />
 
     </TableRow>
-
+    
     <Button
         android:id="@+login_id/loginButton"
         style="@style/button"

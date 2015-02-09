@@ -98,9 +98,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		// Disable all forms that cannot be filled offline
 		if (App.isOfflineMode ())
 		{
-			sputumCollection.setEnabled(false);
-			patientReport.setEnabled(false);
-			sputumResult.setEnabled(false);
+			sputumCollection.setVisibility(View.GONE);
+			patientReport.setVisibility(View.GONE);
+			sputumResult.setVisibility(View.GONE);
 		}
 		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, 
 				 feedback};

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
+    <string name="submit_by">Submit by</string>
+    
     <string name="error_code">Error Code</string>
     
     <string name="mtb_burden">MTB Burden</string>
+    
+     <string name="mtb_neg">MTB Negative</string>
+     <string name="mtb_pos">MTB Positive</string>
+     <string name="error">Error</string>
+     <string name="invalid">Invalid</string>
+     <string name="no_result">No Result</string>
+     
+     <string name="not_detected">Not Detected</string>
+     <string name="detected">Detected</string>
+     <string name="indeterminate">Indeterminate</string>
     
     <string-array name="mtb_burden_option">
         <item>Very Low</item>
@@ -29,11 +41,13 @@
         <item>Invalid</item>
         <item>No Result</item>
     </string-array>
+   
     
-    
-    <string name="sputumResult_space">"\n\n"</string>
+    <string name="sputumResult_space">"\n\n\n\n\n"</string>
     <string name="sample_accepted">Sample accepted at lab?</string>
-    <string name="date_result_recieved">Date result received from sputum collection point</string>
+    <string name="date_result_recieved">Date result received (form Date)</string>
     <string name="date_test_report">Date of Test Report</string>
+    
+    
     
 </resources>

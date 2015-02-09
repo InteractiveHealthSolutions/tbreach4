@@ -34,7 +34,7 @@
     <string name="symptomsHeading">TB Symptoms</string>
     <string name="riskFactorHeading">Risk Factors</string>
     <string name="screenerInstructionHeading">Screener Instruction</string>
-    <string name="summary">TB Symptoms - Summary</string>
+    <string name="summary">TB Symptoms Duration</string>
     
     <!-- MINE Question -->
     <string name="workNowMine">Do you work on the mines now?</string>
@@ -51,14 +51,13 @@
     
     <!-- TB Symptoms strings -->
     <string name="cough">"Cough                   "</string>
-    <string name="cough_duration">Do you have cough that has lasted 2 weeks or more?</string>
     <string name="night_sweats">"Night Sweats      "</string>
     <string name="weight_loss">"Weight Loss        "</string>
     <string name="fever">"Fever                     "</string>
     <string name="haemoptysis">"Coughing Blood "</string>
     
     
-    <string name="symptom_question">For how long (days) have you had each of these symptoms?</string>
+    <string name="symptom_question">For how many days have you had each of these symptoms.</string>
     <string name="cough_checkbox">"Cough                  "</string>
     <string name="night_sweats_checkbox">"Night Sweats      "</string>
     <string name="weight_loss_checkbox">"Weight Loss        "</string>
@@ -66,9 +65,15 @@
     <string name="haemoptysis_checkbox">"Coughing Blood  "</string>
     <string name="day">" Day(s)"</string>
     
+    <string name="cough_duration">"Cough"</string>
+    <string name="night_sweats_duration">"Night Sweats"</string>
+    <string name="weight_loss_duration">"Weight Loss"</string>
+    <string name="fever_duration">"Fever"</string>
+    <string name="haemoptysis_duration">"Coughing Blood"</string>
+    
     <string name="symptoms_period">For how long (days) have you had each of these symptoms?</string>
     <string name="symptoms_question">Do you have any of the following symptoms?</string>
-    <string name="symptoms_period_hint">"        "</string>
+    <string name="symptoms_period_hint">"0       "</string>
     
      <string name="instructions">"(N = No , Y = Yes , R = Refuse)\n"</string>
     
@@ -114,7 +119,7 @@
     <string name="physical_address_hint">Enter Address</string>
     <string name="colony_address">Colony</string>
     <string name="colony_address_hint">Enter Colony</string>
-    <string name="town_address">Town</string>
+    <string name="town_address">Town/City</string>
     <string name="town_address_hint">Enter Town</string>
     <string name="landmark_address">Landmark</string>
     <string name="landmark_address_hint">Enter nearby Landmark</string>
@@ -136,6 +141,8 @@
     <string name="respiratory_rate">Respiratory rate (breaths per minute)</string>
     <string name="respiratory_rate_hint">Enter between 10 and 120</string>
 
+    <string name="zero">0</string>
+    
     <!-- Othe Disease History strings -->
     <string name="family_tb">Does anyone in the home have TB or had TB in the past?</string>
     <string name="active_breathing_shortness">Do you have shortness of breath while doing phsyical activity?</string>

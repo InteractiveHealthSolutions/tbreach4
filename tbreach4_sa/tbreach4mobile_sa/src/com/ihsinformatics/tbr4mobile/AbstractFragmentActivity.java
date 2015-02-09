@@ -78,7 +78,6 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	protected static ProgressDialog	loading;
 	protected ServerService			serverService;
 	protected Calendar				formDate;
-	protected Calendar				testDate = null;
 	// Layout view containing navigation bar and buttons
 	protected LinearLayout			navigatorLayout;
 	protected Button				firstButton;
@@ -185,19 +184,6 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 					}
 				};
 				return new TimePickerDialog (this, timeSetListener, formDate.get (Calendar.HOUR_OF_DAY), formDate.get (Calendar.MINUTE), true);
-			case TEST_DATE_DIALOG_ID :	
-				testDate = Calendar.getInstance ();
-				OnDateSetListener dateTestSetListener = new OnDateSetListener ()
-				{
-					@Override
-					public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth)
-					{
-						testDate.set (year, monthOfYear, dayOfMonth);
-						updateDisplay ();
-					}
-				};
-				return new DatePickerDialog (this, dateTestSetListener, testDate.get (Calendar.YEAR), testDate.get (Calendar.MONTH), testDate.get (Calendar.DAY_OF_MONTH));
-				
 		}
 		return null;
 	}

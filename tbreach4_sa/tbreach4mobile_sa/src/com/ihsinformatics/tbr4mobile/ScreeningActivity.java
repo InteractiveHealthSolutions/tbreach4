@@ -35,6 +35,9 @@ import com.ihsinformatics.tbr4mobile.util.RegexUtil;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,7 +54,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -78,6 +83,9 @@ import android.widget.Toast;
  */
 public class ScreeningActivity extends AbstractFragmentActivity implements
 		OnEditorActionListener {
+	
+	public static final int			DOB_DIALOG_ID	= 3;
+	
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 	MyTextView formDateTextView;
 	MyButton formDateButton;
@@ -92,10 +100,14 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton female;
 
 	MyTextView ageTextView;
-	MyEditText age;
-	MyTextView dobTextView;
+	MyTextView age;
+	
+	MyTextView dateOfBirthTextView;
+	MyButton dateOfBirthButton;
+	Calendar dateOfBirth;
+	/*MyTextView dobTextView;
 	DatePicker dobPicker;
-	Calendar dob;
+	Calendar dob;*/
 	/*
 	 * MyTextView LanguagesSpokenTextView; MyCheckBox english; MyCheckBox
 	 * afrikaans; MyCheckBox zulu; MyCheckBox xhosa; MyCheckBox swati;
@@ -391,13 +403,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.string.first_name);
 		firstName = new MyEditText(context, R.string.first_name,
 				R.string.first_name_hint,
-				InputType.TYPE_TEXT_VARIATION_PERSON_NAME, R.style.edit, 20,
+				InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_TEXT_FLAG_CAP_WORDS, R.style.edit, 20,
 				false);
 		surnameTextView = new MyTextView(context, R.style.text,
 				R.string.last_name);
 		surname = new MyEditText(context, R.string.last_name,
 				R.string.last_name_hint,
-				InputType.TYPE_TEXT_VARIATION_PERSON_NAME, R.style.edit, 20,
+				InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_TEXT_FLAG_CAP_WORDS, R.style.edit, 20,
 				false);
 
 		// Demographics
@@ -410,7 +422,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { male, female }, R.string.gender,
 				R.style.radio, App.isLanguageRTL(),1);
 
-		dobTextView = new MyTextView(context, R.style.text, R.string.dob);
+		dateOfBirthTextView = new MyTextView(context, R.style.text,
+				R.string.dob);
+		dateOfBirthButton = new MyButton(context, R.style.button,
+				R.drawable.custom_button_beige, R.string.dob,
+				R.string.dob);
+		
+		/*dobTextView = new MyTextView(context, R.style.text, R.string.dob);
 		dobPicker = new DatePicker(context);
 		ArrayList<View> touchables = dobPicker.getTouchables();
 		for (int i = 0; i < touchables.size(); i++) {
@@ -465,12 +483,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 						}
 						
 					}
-				});
+				});*/
 		
 		ageTextView = new MyTextView(context, R.style.text, R.string.age);
-		age = new MyEditText(context, R.string.age, R.string.age_hint,
-				InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
-		age.setEnabled(false);
+		age = new MyTextView(context, R.style.text, R.string.zero);
+		
 		/*
 		 * LanguagesSpokenTextView = new MyTextView(context, R.style.text,
 		 * R.string.language_spoken);
@@ -655,15 +672,15 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		screenerInstructionTextView1 = new MyTextView(context, R.style.text,
 				R.string.screenerInstructionHeading);
 		screenerInstructionTextView1.setTextColor(getResources().getColor(
-				R.color.BlueShade));
+				R.color.GreenShade));
 		screenerInstructionTextView1.setTypeface(null, Typeface.BOLD);
 		screenerInstructionRiskTextView = new MyTextView(context, R.style.text,
 				R.string.risk_instruction);
 		screenerInstructionRiskTextView.setGravity(Gravity.CENTER);
 		screenerInstructionRiskTextView.setTextColor(getResources().getColor(
-				R.color.White));
+				R.color.Green));
 		screenerInstructionRiskTextView
-				.setBackgroundResource(R.color.LightBlue);
+				.setBackgroundResource(R.color.White);
 		screenerInstructionRiskTextView.setTypeface(null, Typeface.ITALIC);
 
 		riskFactorHeadingTextView = new MyTextView(context, R.style.text,
@@ -805,27 +822,27 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		screenerInstructionTextView2 = new MyTextView(context, R.style.text,
 				R.string.screenerInstructionHeading);
 		screenerInstructionTextView2.setTextColor(getResources().getColor(
-				R.color.BlueShade));
+				R.color.GreenShade));
 		screenerInstructionTextView2.setTypeface(null, Typeface.BOLD);
 		screenerInstructionOneTextView = new MyTextView(context, R.style.text,
 				R.string.screener_instruction_one_yes);
 		screenerInstructionOneTextView.setGravity(Gravity.CENTER);
 		screenerInstructionOneTextView.setTextColor(getResources().getColor(
-				R.color.White));
-		screenerInstructionOneTextView.setBackgroundResource(R.color.LightBlue);
+				R.color.Green));
+		screenerInstructionOneTextView.setBackgroundResource(R.color.White);
 		screenerInstructionOneTextView.setTypeface(null, Typeface.ITALIC);
 
 		screenerInstructionTextView3 = new MyTextView(context, R.style.text,
 				R.string.screenerInstructionHeading);
 		screenerInstructionTextView3.setTextColor(getResources().getColor(
-				R.color.BlueShade));
+				R.color.GreenShade));
 		screenerInstructionTextView3.setTypeface(null, Typeface.BOLD);
 		screenerInstructionTwoTextView = new MyTextView(context, R.style.text,
 				R.string.screener_instruction_two);
 		screenerInstructionTwoTextView.setGravity(Gravity.CENTER);
 		screenerInstructionTwoTextView.setTextColor(getResources().getColor(
-				R.color.White));
-		screenerInstructionTwoTextView.setBackgroundResource(R.color.LightBlue);
+				R.color.Green));
+		screenerInstructionTwoTextView.setBackgroundResource(R.color.White);
 		screenerInstructionTwoTextView.setTypeface(null, Typeface.ITALIC);
 		
 		patientReferredTextView = new MyTextView(context, R.style.text,
@@ -860,8 +877,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT,
 				R.style.edit, RegexUtil.idLength, false);
 		scanBarcode = new MyButton(context, R.style.button,
-				R.drawable.custom_button_beige, R.string.scan_barcode,
-				R.string.scan_barcode);
+				R.drawable.custom_button_beige, R.string.scan_qr_code,
+				R.string.scan_qr_code);
 
 		providePhone1TextView = new MyTextView(context, R.style.text,
 				R.string.phone1_provided);
@@ -909,7 +926,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				App.isLanguageRTL(),0);
 		phone2TextView = new MyTextView(context, R.style.text, R.string.phone_2);
 		phone2 = new MyEditText(context, R.string.phone2, R.string.phone1_hint,
-				InputType.TYPE_CLASS_PHONE, R.style.edit, 20, false);
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 10, false);
 		phone2OwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone2_owner);
 		
@@ -937,17 +954,17 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		physicalAddressTextView = new MyTextView(context, R.style.text,
 				R.string.physical_address);
 		physicalAddress = new MyEditText(context, R.string.physical_address,
-				R.string.physical_address_hint, InputType.TYPE_CLASS_TEXT,
+				R.string.physical_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
 				R.style.edit, 225, false);
 		townAddressTextView = new MyTextView(context, R.style.text,
 				R.string.town_address);
 		townAddress = new MyEditText(context, R.string.town_address,
-				R.string.town_address_hint, InputType.TYPE_CLASS_TEXT,
+				R.string.town_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
 				R.style.edit, 225, false);
 		landmarkAddressTextView = new MyTextView(context, R.style.text,
 				R.string.landmark_address);
 		landmarkAddress = new MyEditText(context, R.string.landmark_address,
-				R.string.landmark_address_hint, InputType.TYPE_CLASS_TEXT,
+				R.string.landmark_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
 				R.style.edit, 225, false);
 		sputumVideoInstructionTextView = new MyTextView(context, R.style.text,
 				R.string.sputum_video);
@@ -980,7 +997,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				{ formDateTextView, formDateButton, firstNameTextView,
 						firstName, surnameTextView, surname, genderTextView,
 						gender },
-				{ dobTextView, dobPicker, ageTextView, age },
+				{ dateOfBirthTextView, dateOfBirthButton, /*dobTextView, dobPicker,*/ ageTextView, age },
 				/*
 				 * { LanguagesSpokenTextView, english, afrikaans, zulu, xhosa,
 				 * swati, tswana, hindiUrdu, other, dontKnow, refuse },
@@ -1066,6 +1083,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		}
 		// Set event listeners
 		formDateButton.setOnClickListener(this);
+		dateOfBirthButton.setOnClickListener(this);
 		firstButton.setOnClickListener(this);
 		lastButton.setOnClickListener(this);
 		clearButton.setOnClickListener(this);
@@ -1093,6 +1111,37 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		yesHivTestNew.setOnClickListener(this);
 		noHivTestNew.setOnClickListener(this);
 		refuseHivTestNew.setOnClickListener(this);
+		/*phone1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				
+				String s = phone1.getText().toString();
+				int length = s.length();
+				
+				if(length == 4) {
+					phone1.setText(s.substring(0,3)+"-"+s.substring(4,1));
+				}
+				
+				int position = phone1.length();
+				phone1.setSelection(position);
+			}
+			   
+	});*/
 		
 		
 		/*cough.setOnItemSelectedListener(this);
@@ -1165,10 +1214,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	@Override
 	public void initView(View[] views) {
 
-		dob.setTime(new Date());
+		/*dob.setTime(new Date());
 		dobPicker.updateDate(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH),
-				dob.get(Calendar.DAY_OF_MONTH));
+				dob.get(Calendar.DAY_OF_MONTH));*/
 		formDate = Calendar.getInstance();
+		dateOfBirth = Calendar.getInstance();
 		updateDisplay();
 		male.setChecked(true);
 		yesPhone1.setChecked(true);
@@ -1189,6 +1239,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		noHivTest.setChecked(true);
 		unknownHivTestResult.setChecked(true);
 		yesHivTestNew.setChecked(true);
+		physicalAddressTextView.setEnabled(false);
+		landmarkAddressTextView.setEnabled(false);
+		townAddressTextView.setEnabled(false);	
+		physicalAddress.setEnabled(false);
+		landmarkAddress.setEnabled(false);
+		townAddress.setEnabled(false);		
 		patientIdTextView.setVisibility(View.GONE);
 		patientId.setVisibility(View.GONE);
 		scanBarcode.setVisibility(View.GONE);
@@ -1237,14 +1293,27 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			haemoptysisSymptomDuration.setHint("  0  ");
 		if(!feverSymptom.isEnabled())
 			feverSymptomDuration.setHint("  0  ");
-		
-	
 
 	}
 
 	@Override
 	public void updateDisplay() {
 		formDateButton.setText(DateFormat.format("dd-MMM-yyyy", formDate));
+		
+		dateOfBirthButton.setText(DateFormat.format("dd-MMM-yyyy", dateOfBirth));
+
+		int diff = formDate.get(Calendar.YEAR) - dateOfBirth.get(Calendar.YEAR);
+		if (dateOfBirth.get(Calendar.MONTH) > formDate.get(Calendar.MONTH) || (dateOfBirth.get(Calendar.MONTH) == formDate.get(Calendar.MONTH) && dateOfBirth.get(Calendar.DATE) > formDate.get(Calendar.DATE))) {
+			diff--;
+		}
+		
+		age.setText(Integer.toString(diff));
+		
+		if(diff < 0)
+			age.setTextColor(getResources().getColor(R.color.Red));
+		else
+			age.setTextColor(getResources().getColor(R.color.IRDTitle));
+			
 
 		boolean hasCough = yesCough.isChecked();
 		boolean hasNightSweats = yesNightSweats.isChecked();
@@ -1271,18 +1340,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		haemoptysisSymptomDuration.setEnabled(hasHaemoptysis);
 		//haemoptysisDays.setEnabled(hasHaemoptysis);
 		
-		if(!coughSymptom.isEnabled())
-			coughSymptomDuration.setText("0");
-		if(!nigtSweatsSymptom.isEnabled())
-			nightSweatsSymptomDuration.setText("0");
-		if(!weightLossSymptom.isEnabled())
-			weightLossSymptomDuration.setText("0");
-		if(!haemoptysisSymptom.isEnabled())
-			haemoptysisSymptomDuration.setText("0");
-		if(!feverSymptom.isEnabled())
-			feverSymptomDuration.setText("0");
-		
-		
 
 		boolean check = (lastHivResult | hasCough | hasFever | hasWeightLoss
 				| hasNightSweats | hasHaemoptysis | hasContactWithTb | hadTbTreatmentInPast);
@@ -1299,12 +1356,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		View[] mandatory = { firstName, surname, age, /*yearsWorkingNow,
 				yearsWorkingPreviously,*/ tbTreatmentPastDuration, patientId,
 				phone1, phone1OtherOwner, phone2, phone2OtherOwner,
-				physicalAddress, townAddress, landmarkAddress,
+				physicalAddress, 
 				coughSymptomDuration, nightSweatsSymptomDuration,
 				weightLossSymptomDuration, feverSymptomDuration,
 				haemoptysisSymptomDuration };
 		for (View v : mandatory) {
-			if (v.getVisibility() == View.VISIBLE) {
+			if (v.getVisibility() == View.VISIBLE && v.isEnabled()) {
 				if (App.get(v).equals("")) {
 					valid = false;
 					message.append(v.getTag().toString() + ". ");
@@ -1313,6 +1370,20 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				}
 			}
 		}
+		
+		if (townAddress.isEnabled()){
+			if(App.get(townAddress).equals("") && landmarkAddress.equals("")){
+				
+				valid = false;
+				message.append(townAddress.getTag().toString() + ". ");
+				((EditText) townAddress).setHintTextColor(getResources().getColor(
+						R.color.Red));
+				message.append(landmarkAddress.getTag().toString() + ". ");
+				((EditText) landmarkAddress).setHintTextColor(getResources().getColor(
+						R.color.Red));
+			}
+		}
+		
 		if (!valid) {
 			message.append(getResources().getString(R.string.empty_data) + "\n");
 		}
@@ -1357,13 +1428,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				int a = Integer.parseInt(App.get(age));
 				if (a < 0) {
 					valid = false;
-					message.append(dobPicker.getTag().toString() + ": "
+					message.append(dateOfBirthTextView.getTag().toString() + ": "
 							+ getResources().getString(R.string.out_of_range)
 							+ "\n");
 				}
 				if (a > 110) {
 					valid = false;
-					message.append(dobPicker.getTag().toString() + ": "
+					message.append(dateOfBirthTextView.getTag().toString() + ": "
 							+ getResources().getString(R.string.out_of_range)
 							+ "\n");
 				}
@@ -1402,33 +1473,41 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				}
 			} catch (NumberFormatException e) {
 			}
-			if (!RegexUtil.isValidAddress(App.get(physicalAddress))) {
-				valid = false;
-				message.append(physicalAddress.getTag().toString()
-						+ ": "
-						+ getResources().getString(
-								R.string.invalid_data) + "\n");
-				physicalAddress.setTextColor(getResources().getColor(
-						R.color.Red));
+			if (townAddress.isEnabled()){
+				if (!RegexUtil.isValidAddress(App.get(physicalAddress))) {
+					valid = false;
+					message.append(physicalAddress.getTag().toString()
+							+ ": "
+							+ getResources().getString(
+									R.string.invalid_data) + "\n");
+					physicalAddress.setTextColor(getResources().getColor(
+							R.color.Red));
+				}
+				
+				if(!App.get(townAddress).equals("")){
+					if (!RegexUtil.isValidAddress(App.get(townAddress))) {
+						valid = false;
+						message.append(townAddress.getTag().toString()
+								+ ": "
+								+ getResources().getString(
+										R.string.invalid_data) + "\n");
+						townAddress.setTextColor(getResources().getColor(
+								R.color.Red));
+					}
+				}
+				if(!App.get(landmarkAddress).equals("")){
+					if (!RegexUtil.isValidAddress(App.get(landmarkAddress))) {
+						valid = false;
+						message.append(landmarkAddress.getTag().toString()
+								+ ": "
+								+ getResources().getString(
+										R.string.invalid_data) + "\n");
+						landmarkAddress.setTextColor(getResources().getColor(
+								R.color.Red));
+					}
+				}
 			}
-			if (!RegexUtil.isValidAddress(App.get(townAddress))) {
-				valid = false;
-				message.append(townAddress.getTag().toString()
-						+ ": "
-						+ getResources().getString(
-								R.string.invalid_data) + "\n");
-				townAddress.setTextColor(getResources().getColor(
-						R.color.Red));
-			}
-			if (!RegexUtil.isValidAddress(App.get(landmarkAddress))) {
-				valid = false;
-				message.append(landmarkAddress.getTag().toString()
-						+ ": "
-						+ getResources().getString(
-								R.string.invalid_data) + "\n");
-				landmarkAddress.setTextColor(getResources().getColor(
-						R.color.Red));
-			}
+			
 			
 		}
 		if (!valid) {
@@ -1471,19 +1550,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			values.put("gender", male.isChecked() ? "M" : "F");
 			values.put("age", App.get(age));
 
-			int day = dobPicker.getDayOfMonth();
-			int month = dobPicker.getMonth();
-			int year = dobPicker.getYear();
-			Calendar date = Calendar.getInstance();
-			date.set(Calendar.DAY_OF_MONTH, day);
-			date.set(Calendar.MONTH, month);
-			date.set(Calendar.YEAR, year);
-
-			Date dateBirth = date.getTime();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String dateOfBirth = sdf.format(dateBirth);
-
-			values.put("dateOfBirth", dateOfBirth);
+			values.put("dateOfBirth", App.getSqlDate(dateOfBirth));
 
 			if (patientId.getVisibility() == View.VISIBLE) {
 				values.put("patientId", App.get(patientId));
@@ -1693,10 +1760,49 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	};
 
 	@Override
+	protected Dialog onCreateDialog (int id)
+	{
+		switch (id)
+		{
+			
+		// Show date dialog
+			case DATE_DIALOG_ID :
+				OnDateSetListener dateSetListener = new OnDateSetListener ()
+				{
+					@Override
+					public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth)
+					{
+						formDate.set (year, monthOfYear, dayOfMonth);
+						updateDisplay ();
+					}
+				};
+				return new DatePickerDialog (this, dateSetListener, formDate.get (Calendar.YEAR), formDate.get (Calendar.MONTH), formDate.get (Calendar.DAY_OF_MONTH));
+				// Show date dialog
+			case DOB_DIALOG_ID :
+				OnDateSetListener dobSetListener = new OnDateSetListener ()
+				{
+					@Override
+					public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth)
+					{
+						dateOfBirth.set (year, monthOfYear, dayOfMonth);
+						updateDisplay ();
+					}
+				};
+				return new DatePickerDialog (this, dobSetListener, dateOfBirth.get (Calendar.YEAR), dateOfBirth.get (Calendar.MONTH), dateOfBirth.get (Calendar.DAY_OF_MONTH));
+					
+		
+		}	
+		return null;
+	}			
+	
+	
+	@Override
 	public void onClick(View view) {
 		view.startAnimation(alphaAnimation);
 		if (view == formDateButton) {
 			showDialog(DATE_DIALOG_ID);
+		} else if (view == dateOfBirthButton) {
+			showDialog(DOB_DIALOG_ID);
 		} else if (view == firstButton) {
 			gotoFirstPage();
 		} else if (view == lastButton) {
@@ -1981,10 +2087,22 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				patientIdTextView.setVisibility(View.VISIBLE);
 				patientId.setVisibility(View.VISIBLE);
 				scanBarcode.setVisibility(View.VISIBLE);
+				physicalAddressTextView.setEnabled(true);
+				landmarkAddressTextView.setEnabled(true);
+				townAddressTextView.setEnabled(true);
+				physicalAddress.setEnabled(true);
+				landmarkAddress.setEnabled(true);
+				townAddress.setEnabled(true);
 			} else {
 				patientIdTextView.setVisibility(View.GONE);
 				patientId.setVisibility(View.GONE);
 				scanBarcode.setVisibility(View.GONE);
+				physicalAddressTextView.setEnabled(false);
+				landmarkAddressTextView.setEnabled(false);
+				townAddressTextView.setEnabled(false);
+				physicalAddress.setEnabled(false);
+				landmarkAddress.setEnabled(false);
+				townAddress.setEnabled(false);
 			}
 		}
 
@@ -1996,25 +2114,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	}
 
 	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (v == age) {
-			updateDob();
-		}
-		return true;
+	public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	/**
-	 * Updates the DOB picker date
-	 */
-	private void updateDob() {
-		// Calculate dob
-		if (!"".equals(App.get(age))) {
-			dob = Calendar.getInstance();
-			int a = dob.get(Calendar.YEAR) - Integer.parseInt(App.get(age));
-			int year = dob.get(Calendar.YEAR) - a;
-			dob.add(Calendar.YEAR, -year);
-			dobPicker.updateDate(dob.get(Calendar.YEAR),
-					dob.get(Calendar.MONTH), dob.get(Calendar.DAY_OF_MONTH));
-		}
-	}
+
+
 }
