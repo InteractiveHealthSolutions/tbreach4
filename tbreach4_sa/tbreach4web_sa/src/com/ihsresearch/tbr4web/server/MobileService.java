@@ -804,7 +804,7 @@ public class MobileService
 					Concept labTestIdConcept = Context.getConceptService ().getConceptByName ("Lab Test Id");
 					List<Obs> labTestIdObs = new LinkedList<Obs> ();
 					labTestIdObs = Context.getObsService ().getObservationsByPersonAndConcept (p, labTestIdConcept);
-					if (labTestIdObs != null)
+					if (labTestIdObs.size () != 0)
 					{
 						int size = labTestIdObs.size ();
 						Obs labTestIdO = labTestIdObs.get (size - 1);
