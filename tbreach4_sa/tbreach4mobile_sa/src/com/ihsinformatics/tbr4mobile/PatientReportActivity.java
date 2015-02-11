@@ -187,6 +187,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	@Override
 	public void createViews (final Context context)
 	{
+		FORM_NAME = "Patient Report";
 		TAG = "PatientReportActivity";
 		PAGE_COUNT = 5;
 		pager = (ViewPager) findViewById (R.template_id.pager);
