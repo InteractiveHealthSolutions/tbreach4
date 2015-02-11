@@ -374,7 +374,6 @@ public final class R {
         public static final int empty_selection=0x7f090010;
         public static final int empty_string=0x7f090157;
         public static final int english=0x7f09008e;
-        public static final int error=0x7f090110;
         public static final int error_code=0x7f09010c;
         public static final int error_title=0x7f090006;
         public static final int exit=0x7f090148;
@@ -437,7 +436,6 @@ public final class R {
         public static final int inserted=0x7f090055;
         public static final int instructions=0x7f0900bb;
         public static final int insufficient_quantity=0x7f090126;
-        public static final int invalid=0x7f090111;
         public static final int invalid_data=0x7f090015;
         public static final int invalid_date_or_time=0x7f090016;
         public static final int invalid_id=0x7f090024;
@@ -449,6 +447,7 @@ public final class R {
         public static final int language_spoken=0x7f09008d;
         public static final int last_name=0x7f090085;
         public static final int last_name_hint=0x7f090086;
+        public static final int leaked=0x7f090110;
         public static final int loading_message=0x7f090135;
         public static final int location=0x7f09003f;
         public static final int location_hint=0x7f090040;
@@ -471,6 +470,7 @@ public final class R {
         public static final int multi_select_hint=0x7f09014c;
         public static final int myself=0x7f090109;
         public static final int n=0x7f090103;
+        public static final int name=0x7f090112;
         public static final int negative=0x7f090107;
         public static final int nhls_id_radio=0x7f09006c;
         public static final int night_sweats=0x7f0900a8;
@@ -478,7 +478,6 @@ public final class R {
         public static final int night_sweats_duration=0x7f0900b4;
         public static final int night_sweats_symptom=0x7f0900e5;
         public static final int no=0x7f090142;
-        public static final int no_result=0x7f090112;
         public static final int non_pulmonary=0x7f0900f7;
         public static final int non_pulmonary_suspect=0x7f090046;
         public static final int non_suspect=0x7f090017;
@@ -640,6 +639,7 @@ public final class R {
         public static final int tswana=0x7f090093;
         public static final int unknown=0x7f090144;
         public static final int unknown_error=0x7f090020;
+        public static final int unsuccessful=0x7f090111;
         public static final int update_error=0x7f090021;
         public static final int update_metadata=0x7f090059;
         public static final int updated=0x7f09005a;

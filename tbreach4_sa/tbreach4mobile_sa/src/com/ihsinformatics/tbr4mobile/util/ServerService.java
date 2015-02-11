@@ -1008,8 +1008,12 @@ public class ServerService
 					else
 						gen = "Female";
 					String add = jsonResponse.get ("address").toString ();
-					String town = jsonResponse.get ("town").toString ();
-					String landmark = jsonResponse.get ("landmark").toString ();
+					String town = "";
+					if(jsonResponse.get ("town") == null)
+					    town = jsonResponse.get ("town").toString ();
+					String landmark = "";
+					if(jsonResponse.get ("landmark") == null)
+						landmark = jsonResponse.get ("landmark").toString ();
 					String city = jsonResponse.get ("city").toString ();
 					String country = jsonResponse.get ("country").toString ();
 					String phone1 = jsonResponse.get ("phone1").toString ();

@@ -9,9 +9,10 @@
     
      <string name="mtb_neg">MTB Negative</string>
      <string name="mtb_pos">MTB Positive</string>
-     <string name="error">Error</string>
-     <string name="invalid">Invalid</string>
-     <string name="no_result">No Result</string>
+     <string name="leaked">Leaked</string>
+     <string name="unsuccessful">unsuccessful</string>
+     
+      <string name="name">Patient\'s Name</string>
      
      <string name="not_detected">Not Detected</string>
      <string name="detected">Detected</string>
@@ -24,7 +25,7 @@
         <item>High</item>
     </string-array>
     
-    <string name="rif_result">RIF Result</string>
+    <string name="rif_result">MDR</string>
     
     <string-array name="rif_result_option">
         <item>Not Detected</item>
