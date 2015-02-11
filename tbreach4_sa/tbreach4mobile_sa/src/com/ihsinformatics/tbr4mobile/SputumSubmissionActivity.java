@@ -208,7 +208,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	@Override
 	public void createViews (final Context context)
 	{
-		FORM_NAME = "Sputum Submission";
+		FORM_NAME = "Sputum Submission Form";
 		TAG = "SputumSubmissionActivity";
 		PAGE_COUNT = 6;
 		pager = (ViewPager) findViewById (R.template_id.pager);
