@@ -119,6 +119,8 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 		createViews (this);
 		initView (views);
 		updateDisplay ();
+		
+		this.setTitle(FORM_NAME);
 	}
 
 	/**
