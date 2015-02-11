@@ -375,7 +375,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 
 	@Override
 	public void createViews(Context context) {
-		FORM_NAME = "Screening";
+		FORM_NAME = "Screening Form";
 		TAG = "ScreeningActivity";
 		PAGE_COUNT = 13;
 		pager = (ViewPager) findViewById(R.template_id.pager);
@@ -391,6 +391,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				fragmentManager);
 		pager.setAdapter(pagerAdapter);
 		pager.setOffscreenPageLimit(PAGE_COUNT);
+		
 		// Create views for pages
 		formDateTextView = new MyTextView(context, R.style.text,
 				R.string.form_date);
@@ -1221,8 +1222,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		dateOfBirth = Calendar.getInstance();
 		updateDisplay();
 		male.setChecked(true);
-		yesPhone1.setChecked(true);
-		yesPhone2.setChecked(true);
 		noPatientInformation.setChecked(true);
 		noCough.setChecked(true);
 		noNightSweats.setChecked(true);
@@ -1257,6 +1256,9 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		yearsWorkingOnMinePreviouslyTextView.setEnabled(false);
 		yearsWorkingPreviously.setEnabled(false);*/
 		/*hivTestResult.setEnabled(false);*/
+		
+		
+		
 		hivTestResultTextView.setVisibility(View.GONE);
 		hivTestResultGroup.setVisibility(View.GONE);
 		phone2OtherOwner.setVisibility(View.GONE);
@@ -1264,18 +1266,28 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		phone1OtherOwner.setVisibility(View.GONE);
 		phone1OtherOwnerTextView.setVisibility(View.GONE);
 		
-		phone1.setVisibility(View.VISIBLE);
-		phone1TextView.setVisibility(View.VISIBLE);
-		phone1OwnerTextView.setVisibility(View.VISIBLE);
-		phone1OwnerGroup.setVisibility(View.VISIBLE);
+		providePhone1.setEnabled(false);
+		providePhone2.setEnabled(false);
 		
-		phone2.setVisibility(View.VISIBLE);
-		phone2TextView.setVisibility(View.VISIBLE);
-		phone2OwnerTextView.setVisibility(View.VISIBLE);
-		phone2OwnerGroup.setVisibility(View.VISIBLE);
+
+		noPhone1.setChecked(true);
+		noPhone2.setChecked(true);
+		
+		phone1.setVisibility(View.GONE);
+		phone1TextView.setVisibility(View.GONE);
+		phone1OwnerTextView.setVisibility(View.GONE);
+		phone1OwnerGroup.setVisibility(View.GONE);
+		
+		phone2.setVisibility(View.GONE);
+		phone2TextView.setVisibility(View.GONE);
+		phone2OwnerTextView.setVisibility(View.GONE);
+		phone2OwnerGroup.setVisibility(View.GONE);
 		
 		hivTestNewTextView.setVisibility(View.VISIBLE);
 		hivTestNewGroup.setVisibility(View.VISIBLE);
+		
+		sputumVideoInstructionTextView.setVisibility(View.INVISIBLE);
+		sputumVideoInstructionGroup.setVisibility(View.INVISIBLE);
 		
 		/*hivTestResult.setSelection(2);*/
 		/*hivTestNew.setSelection(1);*/
@@ -2093,6 +2105,23 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				physicalAddress.setEnabled(true);
 				landmarkAddress.setEnabled(true);
 				townAddress.setEnabled(true);
+				yesPhone1.setChecked(true);
+				yesPhone2.setChecked(true);
+				phone1.setVisibility(View.VISIBLE);
+				phone1TextView.setVisibility(View.VISIBLE);
+				phone1OwnerTextView.setVisibility(View.VISIBLE);
+				phone1OwnerGroup.setVisibility(View.VISIBLE);
+				phone2.setVisibility(View.VISIBLE);
+				phone2TextView.setVisibility(View.VISIBLE);
+				phone2OwnerTextView.setVisibility(View.VISIBLE);
+				phone2OwnerGroup.setVisibility(View.VISIBLE);
+				
+				sputumVideoInstructionTextView.setVisibility(View.VISIBLE);
+				sputumVideoInstructionGroup.setVisibility(View.VISIBLE);
+				
+				providePhone1.setEnabled(true);
+				providePhone2.setEnabled(true);
+				
 			} else {
 				patientIdTextView.setVisibility(View.GONE);
 				patientId.setVisibility(View.GONE);
@@ -2103,6 +2132,22 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				physicalAddress.setEnabled(false);
 				landmarkAddress.setEnabled(false);
 				townAddress.setEnabled(false);
+				noPhone1.setChecked(true);
+				noPhone2.setChecked(true);
+				phone2.setVisibility(View.GONE);
+				phone2TextView.setVisibility(View.GONE);
+				phone2OwnerTextView.setVisibility(View.GONE);
+				phone2OwnerGroup.setVisibility(View.GONE);
+				phone1.setVisibility(View.GONE);
+				phone1TextView.setVisibility(View.GONE);
+				phone1OwnerTextView.setVisibility(View.GONE);
+				phone1OwnerGroup.setVisibility(View.GONE);
+				
+				sputumVideoInstructionTextView.setVisibility(View.INVISIBLE);
+				sputumVideoInstructionGroup.setVisibility(View.INVISIBLE);
+				
+				providePhone1.setEnabled(false);
+				providePhone2.setEnabled(false);
 			}
 		}
 
