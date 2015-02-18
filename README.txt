@@ -1,11 +1,12 @@
 === TB REACH 4 ===
-Contributors: IHS, IRD-South Africa
+Contributors: IHS, IRD-Pakistan, IRD-South Africa
 Software Type: Free, Open-source
 Requires: Microsoft Windows 7 or higher, Oracle Java Runtime Environment (JRE) v6.0 or higher, Eclipse Helios or higher, Apache Tomcat 6.0, MySQL Server 5.0 or higher
 License: GPLv3
 
 == Description ==
-TB REACH wave 4 aims to control TB and drug-resistant TB in rural areas of Sindh, Pakistan with the collaboration of local health facilities by contact tracing of Adult and reverse contact tracing of Paediatric TB cases.
+tbreach4_pk: TB REACH wave 4 aims to control TB and drug-resistant TB in rural areas of Sindh, Pakistan with the collaboration of local health facilities by contact tracing of Adult and reverse contact tracing of Paediatric TB cases
+tbreach4_sa: Also called MINE-TB, the project focuses on reducing TB burden in several locations of Port Shepstone, South Africa by involving community mobilizers
 
 == Installation ==
 1. Install Oracle Java v6.0.x or higher 
