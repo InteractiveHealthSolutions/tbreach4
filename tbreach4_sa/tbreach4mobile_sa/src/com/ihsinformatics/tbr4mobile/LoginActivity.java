@@ -58,6 +58,9 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	TextView						showPassword;
 	View[]							views;
 	Animation						alphaAnimation;
+	
+	String                          tempUsername;
+	String							tempPassword;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState)
@@ -212,9 +215,14 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						}
 						return "FAIL";
 					}
+					
+					tempUsername = App.getUsername();
+					tempPassword = App.getPassword();
+					
 					App.setUsername (App.get (username));
 					App.setPassword (App.get (password));
-					String exists = serverService.authenticate ();
+					
+					String exists = serverService.authenticate (App.get (username));
 					return exists;
 					//return "SUCCESS";
 				}
@@ -232,6 +240,10 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					if (result.equals("SUCCESS"))
 					{
 						serverService.setCurrentUser (App.get (username));
+						
+						App.setUsername (App.get (username));
+						App.setPassword (App.get (password));
+						
 						// Save username and password in preferences
 						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (LoginActivity.this);
 						SharedPreferences.Editor editor = preferences.edit ();
@@ -244,24 +256,36 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					}
 					else if(result.equals("FAIL"))
 					{
-						App.setUsername ("");
-						App.setPassword ("");
+						/*App.setUsername ("");
+						App.setPassword ("");*/
+						
+						App.setUsername (tempUsername);
+						App.setPassword (tempPassword);
+						
 						Toast toast = Toast.makeText (LoginActivity.this, getResources ().getString (R.string.authentication_error), App.getDelay ());
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
 					}
 					else if(result.equals("CONNECTION_ERROR"))
 					{
-						App.setUsername ("");
-						App.setPassword ("");
+						/*App.setUsername ("");
+						App.setPassword ("");*/
+						
+						App.setUsername (tempUsername);
+						App.setPassword (tempPassword);
+						
 						Toast toast = Toast.makeText (LoginActivity.this, getResources ().getString (R.string.data_connection_error), App.getDelay ());
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
 					}
 					else {
 						
-						App.setUsername ("");
-						App.setPassword ("");
+						/*App.setUsername ("");
+						App.setPassword ("");*/
+						
+						App.setUsername (tempUsername);
+						App.setPassword (tempPassword);
+						
 						Toast toast = Toast.makeText (LoginActivity.this, result, App.getDelay ());
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
