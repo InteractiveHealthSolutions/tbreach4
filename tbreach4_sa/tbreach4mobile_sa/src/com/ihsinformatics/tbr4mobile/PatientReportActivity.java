@@ -284,8 +284,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		pid = new MyEditText (context, R.string.patient_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
 		pid.setKeyListener(null);
 		
-		nhlsIdTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
-		nhlsId = new MyEditText (context, R.string.lab_test_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
+		nhlsIdTextView = new MyTextView (context, R.style.text, R.string.test_id);
+		nhlsId = new MyEditText (context, R.string.test_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		nhlsId.setKeyListener(null);
 		
 		//saveButton.setText("Search");

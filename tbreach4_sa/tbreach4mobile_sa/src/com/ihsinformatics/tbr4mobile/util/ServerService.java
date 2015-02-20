@@ -176,10 +176,10 @@ public class ServerService
 	 * 
 	 * @return status
 	 */
-	public String authenticate ()
+	public String authenticate (String username)
 	{
 		//return true;
-		return getUser (App.getUsername ());
+		return getUser (username);
 		
 	}
 
@@ -1009,10 +1009,10 @@ public class ServerService
 						gen = "Female";
 					String add = jsonResponse.get ("address").toString ();
 					String town = "";
-					if(jsonResponse.get ("town") == null)
+					if(jsonResponse.get ("town") != null)
 					    town = jsonResponse.get ("town").toString ();
 					String landmark = "";
-					if(jsonResponse.get ("landmark") == null)
+					if(jsonResponse.get ("landmark") != null)
 						landmark = jsonResponse.get ("landmark").toString ();
 					String city = jsonResponse.get ("city").toString ();
 					String country = jsonResponse.get ("country").toString ();

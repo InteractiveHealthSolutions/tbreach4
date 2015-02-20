@@ -10,7 +10,8 @@
      <string name="mtb_neg">MTB Negative</string>
      <string name="mtb_pos">MTB Positive</string>
      <string name="leaked">Leaked</string>
-     <string name="unsuccessful">unsuccessful</string>
+     <string name="unsuccessful">Unsuccessful</string>
+     <string name="rejected">Rejected</string>
      
       <string name="name">Patient\'s Name</string>
      

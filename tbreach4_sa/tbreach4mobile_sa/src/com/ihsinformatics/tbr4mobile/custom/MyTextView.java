@@ -58,10 +58,12 @@ public class MyTextView extends TextView
 		if (enabled)
 		{
 			setTextColor (getResources ().getColor (R.color.Black));
+			setFocusable(true);
 		}
 		else
 		{
 			setTextColor (getResources ().getColor (R.color.DarkGray));
+			setFocusable(false);
 		}
 	}
 }

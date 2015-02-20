@@ -12,8 +12,8 @@
     <string name="spirometry">Spirometry</string>
     <string name="oximetry">Oximetry</string>
 
-    <string name="patient_id_radio">Patient Id</string>
-    <string name="nhls_id_radio">NHLS Id</string>
+    <string name="patient_id_radio">Patient ID</string>
+    <string name="nhls_id_radio">NHLS ID</string>
     <string name="city_address">City</string>
     <string name="country_address">Country</string>
     <string name="phone_number">Phone number</string>

@@ -135,7 +135,7 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 	public void setEnabled (boolean state)
 	{
 		super.setEnabled (state);
-		
+		/*
 		if(state == false){
 			for (RadioButton r : buttons)
 			{
@@ -150,7 +150,18 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 				    r.setEnabled(true);
 				    r.setTextAppearance(getContext (), R.style.radio);
 			}
+		}*/
+		
+	}
+	
+	public String getSelectedValue (){
+		
+		for (int i = 0 ; i < buttons.length; i++){
+			if(buttons[i].isChecked()){
+				return buttons[i].getText().toString();
+			}
 		}
 		
+		return "";
 	}
 }

@@ -892,7 +892,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				App.isLanguageRTL(),0);
 		phone1TextView = new MyTextView(context, R.style.text, R.string.phone_1);
 		phone1 = new MyEditText(context, R.string.phone1, R.string.phone1_hint,
-				InputType.TYPE_CLASS_PHONE, R.style.edit, 20, false);
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 10, false);
 		phone1OwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone1_owner);
 		
@@ -956,17 +956,17 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.string.physical_address);
 		physicalAddress = new MyEditText(context, R.string.physical_address,
 				R.string.physical_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-				R.style.edit, 225, false);
+				R.style.edit, 30, false);
 		townAddressTextView = new MyTextView(context, R.style.text,
 				R.string.town_address);
 		townAddress = new MyEditText(context, R.string.town_address,
 				R.string.town_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-				R.style.edit, 225, false);
+				R.style.edit, 30, false);
 		landmarkAddressTextView = new MyTextView(context, R.style.text,
 				R.string.landmark_address);
 		landmarkAddress = new MyEditText(context, R.string.landmark_address,
 				R.string.landmark_address_hint, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS,
-				R.style.edit, 225, false);
+				R.style.edit, 30, false);
 		sputumVideoInstructionTextView = new MyTextView(context, R.style.text,
 				R.string.sputum_video);
 		
@@ -1151,26 +1151,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		fever.setOnItemSelectedListener(this);
 		haemoptysis.setOnItemSelectedListener(this);*/
 		
-		TextView[] textViews = new TextView[]{
-				/* yearsWorkingNow     
-				,yearsWorkingPreviously */  
-				coughSymptomDuration  
-				,nightSweatsSymptomDuration 
-				,weightLossSymptomDuration
-				,feverSymptomDuration
-				,haemoptysisSymptomDuration
-				,tbTreatmentPastDuration
-				,phone2OtherOwner
-				,phone1OtherOwner
-				,phone2
-				,phone1
-				,patientId
-				};
-		
-		for (TextView v : textViews) {
-			v.isFocusableInTouchMode();
-		}
-		
 
 		views = new View[] { /*
 							 * english, afrikaans, zulu, xhosa, swati, tswana,
@@ -1218,8 +1198,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		/*dob.setTime(new Date());
 		dobPicker.updateDate(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH),
 				dob.get(Calendar.DAY_OF_MONTH));*/
+	
+		
 		formDate = Calendar.getInstance();
 		dateOfBirth = Calendar.getInstance();
+		
+		formDate.setTime(new Date());
+		dateOfBirth.setTime(new Date());
 		updateDisplay();
 		male.setChecked(true);
 		noPatientInformation.setChecked(true);
@@ -1305,6 +1290,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			haemoptysisSymptomDuration.setHint("  0  ");
 		if(!feverSymptom.isEnabled())
 			feverSymptomDuration.setHint("  0  ");
+		
+		skipValue = true;
 
 	}
 
@@ -1338,18 +1325,23 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		
 		coughSymptom.setEnabled(hasCough);
 		coughSymptomDuration.setEnabled(hasCough);
+		//coughSymptomDuration.setFocusable(hasCough);
 		//coughDays.setEnabled(hasCough);
 		nigtSweatsSymptom.setEnabled(hasNightSweats);
 		nightSweatsSymptomDuration.setEnabled(hasNightSweats);
+		//nightSweatsSymptomDuration.setFocusable(hasNightSweats);
 		//nightSweatsDays.setEnabled(hasNightSweats);
 		weightLossSymptom.setEnabled(hasWeightLoss);
 		weightLossSymptomDuration.setEnabled(hasWeightLoss);
+		//weightLossSymptomDuration.setFocusable(hasWeightLoss);
 		//weightLossDays.setEnabled(hasWeightLoss);
 		feverSymptom.setEnabled(hasFever);
 		feverSymptomDuration.setEnabled(hasFever);
+		//feverSymptomDuration.setFocusable(hasFever);
 		//feverDays.setEnabled(hasFever);
 		haemoptysisSymptom.setEnabled(hasHaemoptysis);
 		haemoptysisSymptomDuration.setEnabled(hasHaemoptysis);
+		//haemoptysisSymptomDuration.setFocusable(hasHaemoptysis);
 		//haemoptysisDays.setEnabled(hasHaemoptysis);
 		
 
@@ -1418,7 +1410,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			}
 			if (!RegexUtil.isNumeric(App.get(age), false)) {
 				valid = false;
-				message.append(age.getTag().toString() + ": "
+				message.append("Date Of Birth: "
 						+ getResources().getString(R.string.invalid_data)
 						+ "\n");
 				age.setTextColor(getResources().getColor(R.color.Red));
@@ -1906,6 +1898,11 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		} else if (view == noPhone2 || view == yesPhone2) {
 			boolean check = yesPhone2.isChecked();
 			
+			/*String value = phone1OwnerGroup.getSelectedValue();
+			
+			Toast.makeText(ScreeningActivity.this,
+	                value, Toast.LENGTH_SHORT).show();*/
+			
 			if(check){
 				
 				phone2.setVisibility(View.VISIBLE);
@@ -2122,6 +2119,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				providePhone1.setEnabled(true);
 				providePhone2.setEnabled(true);
 				
+				skipValue = false;
+				
 			} else {
 				patientIdTextView.setVisibility(View.GONE);
 				patientId.setVisibility(View.GONE);
@@ -2148,6 +2147,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				
 				providePhone1.setEnabled(false);
 				providePhone2.setEnabled(false);
+				
+				skipValue = true;
 			}
 		}
 

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="error_title">Error!</string>
-    <string name="authentication_error">Authentication failed! Please enter valid id and password</string>
+    <string name="authentication_error">Authentication failed! Please enter valid id and password.</string>
     <string name="data_access_error">Access to data failed! You may not have sufficient rights</string>
     <string name="data_connection_error">Could not connect to Server! Please check your connection settings or contact Admin</string>
     <string name="data_mismatch">Data or value(s) did not match!</string>

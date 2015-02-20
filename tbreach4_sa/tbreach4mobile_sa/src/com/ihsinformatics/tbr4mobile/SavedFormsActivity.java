@@ -259,11 +259,11 @@ public class SavedFormsActivity extends Activity implements OnCheckedChangeListe
 						emailIntent.putExtra (Intent.EXTRA_SUBJECT, subject.toString ());
 						emailIntent.setType ("plain/text");
 						emailIntent.putExtra (Intent.EXTRA_TEXT, formsData.toString ());
-						for (String[] form : forms)
+						/*for (String[] form : forms)
 						{
 							Long timestamp = Long.parseLong (form[0]);
 							serverService.deleteSavedForm (timestamp);
-						}
+						}*/
 						Toast.makeText (SavedFormsActivity.this, getResources ().getString (R.string.deleted), App.getDelay ()).show ();
 						startActivity (emailIntent);
 						formsRadioGroup.removeAllViews ();

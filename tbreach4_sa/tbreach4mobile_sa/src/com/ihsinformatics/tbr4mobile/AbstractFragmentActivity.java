@@ -92,6 +92,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	protected ArrayList<ViewGroup>	groups;
 	protected View[]				views;
 	protected Animation				alphaAnimation;
+	protected Boolean 				skipValue;
 
 	/**
 	 * Set theme, create and initialize members on Activity Create
@@ -99,6 +100,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	@Override
 	protected void onCreate (Bundle savedInstanceState)
 	{
+		skipValue = false;
 		setTheme (App.getTheme ());
 		super.onCreate (savedInstanceState);
 		setContentView (R.layout.template);
@@ -264,6 +266,16 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	 */
 	protected void gotoPage (int pageNo)
 	{
+		
+		if(skipValue){
+			if(pageNo == 9){
+				pageNo = 12;
+			}else
+			if(pageNo == 11 || pageNo == 10){
+				pageNo = 8;
+			}
+		}
+		
 		pager.setCurrentItem (pageNo);
 		if (App.isLanguageRTL ())
 		{
@@ -312,7 +324,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	public void onProgressChanged (SeekBar seekbar, int progress, boolean isByUser)
 	{
 		// Move to page at the index of progress
-		pager.setCurrentItem (progress);
+		pager.setCurrentItem (progress);	
 	}
 
 	@Override
