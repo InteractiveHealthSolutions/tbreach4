@@ -30,6 +30,8 @@ import android.os.StrictMode;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -259,7 +261,7 @@ public class App
 		else if (view instanceof Spinner)
 		{
 			str = ((Spinner) view).getSelectedItem ().toString ();
-		}
+		}	
 		return (str == null ? "" : str);
 	}
 
