@@ -228,10 +228,10 @@ public class MobileService
 			JSONObject jsonObject = JsonUtil.getJSONObject (json);
 			String appVer = jsonObject.getString ("app_ver");
 			String s = App.appVersion;
-			/*if (!App.validateVersion (appVer))
+			if (!App.validateVersion (appVer))
 			{
 				return JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.VERSION_MISMATCH_ERROR)).toString ();
-			}*/
+			}
 			String formType = jsonObject.getString ("form_name");
 			System.out.println (formType);
 			if (formType.equals (FormType.GET_USER))
