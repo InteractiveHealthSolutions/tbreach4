@@ -98,10 +98,15 @@ public class ImportIncomingMessages
 		MobileService.getService ().execute (insertScreenerDataQuery);
 		
 		String insertInboundMessagesQuery
+					= "Select * from openmrs_rpt.temporarytable tt, openmrs_rpt.data_screener ds " +
+							"where tt.referenceNumber NOT IN (Select referenceNumber from openmrs_rpt.inboundmessages) and  " +
+							"(tt.originator = concat("+",ds.secondaryNumber) or tt.originator = concat("+",ds.primaryNumber));";
+		
+		/*String insertInboundMessagesQuery
 		              = "insert into openmrs_rpt.inboundmessages(originator, referenceNumber, recieveDate, message, dateText, username, name , location, primaryNumber, secondaryNumber) " +
 		              		"Select * from openmrs_rpt.temporarytable tt, openmrs_rpt.data_screener sd " +
 		              		"where ( tt.originator = sd.primaryNumber OR tt.originator = sd.secondaryNumber) and tt.referenceNumber NOT IN (Select referenceNumber from openmrs_rpt.inboundmessages);";
-		
+		*/
 		MobileService.getService ().execute (insertInboundMessagesQuery);
 		
 		String dropTemporarayTableQuery = "drop table openmrs_rpt.temporarytable;";
