@@ -86,8 +86,7 @@ public class MobileService
 	private HttpServletRequest		request;
 
 	// OpenMRS-related
-	// static final String propFilePath =
-	// "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	//static final String				propFilePath	=  "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	static final String				propFilePath	= "C:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
 	private static File				propsFile;
 	private static Properties		props;
@@ -229,10 +228,10 @@ public class MobileService
 			JSONObject jsonObject = JsonUtil.getJSONObject (json);
 			String appVer = jsonObject.getString ("app_ver");
 			String s = App.appVersion;
-			if (!appVer.equals (App.appVersion))
+			/*if (!App.validateVersion (appVer))
 			{
 				return JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.VERSION_MISMATCH_ERROR)).toString ();
-			}
+			}*/
 			String formType = jsonObject.getString ("form_name");
 			System.out.println (formType);
 			if (formType.equals (FormType.GET_USER))
@@ -763,9 +762,18 @@ public class MobileService
 					json.put ("age", p.getAge ());
 					json.put ("dob", p.getBirthdate ().toString ());
 					json.put ("address", p.getPersonAddress ().getAddress1 ());
-					json.put ("colony", p.getPersonAddress ().getAddress2 ());
-					json.put ("town", p.getPersonAddress ().getAddress3 ());
-					json.put ("landmark", p.getPersonAddress ().getAddress4 ());
+					if (p.getPersonAddress ().getAddress2 () != null)
+						json.put ("colony", p.getPersonAddress ().getAddress2 ());
+					else
+						json.put ("colony", "");
+					if (p.getPersonAddress ().getAddress3 () != null)
+						json.put ("town", p.getPersonAddress ().getAddress3 ());
+					else
+						json.put ("town", "");
+					if (p.getPersonAddress ().getAddress4 () != null)
+						json.put ("landmark", p.getPersonAddress ().getAddress4 ());
+					else
+						json.put ("landmark", "");
 					json.put ("city", p.getPersonAddress ().getCityVillage ());
 					json.put ("country", p.getPersonAddress ().getCountry ());
 					json.put ("pid", p.getPatientIdentifier ());
