@@ -25,5 +25,32 @@ package com.ihsresearch.tbr4web.shared;
 
 public class App
 {
-	public static final String	appVersion	= "1.0.1 - beta";
+	public static final String	appVersion	= "1.1.0";
+	
+	
+	public static boolean validateVersion(String version){
+		
+		boolean flag = true;
+		
+		String mobileVersionComponents[] = version.split ("\\.");
+		
+		if(mobileVersionComponents.length !=  3)
+			return false;
+		
+
+		String webVersionComponents[] = version.split ("\\.");
+		
+		if(!mobileVersionComponents[0].equals (webVersionComponents[0]))
+			return false;
+		
+		if(!mobileVersionComponents[1].equals (webVersionComponents[0]))
+			return false;
+		
+		
+		return flag;
+		
+	}
+	
 }
+
+
