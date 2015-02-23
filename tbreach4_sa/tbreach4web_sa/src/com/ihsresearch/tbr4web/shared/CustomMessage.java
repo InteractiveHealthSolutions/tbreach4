@@ -79,7 +79,7 @@ public class CustomMessage
 		switch (errorType)
 		{
 			case AUTHENTICATION_ERROR :
-				error = "Authentication failed! Please enter valid password/code.";
+				error = "Authentication failed! Please enter valid id and password.";
 				break;
 			case DATA_ACCESS_ERROR :
 				error = "Access to data failed! You may not have sufficient rights.";
