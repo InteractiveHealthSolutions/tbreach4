@@ -216,7 +216,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_code, R.string.scan_code);
 		
 		testIdMyTextView = new MyTextView (context, R.style.text, R.string.test_id);
-		testId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
+		testId = new MyEditText (context, R.string.test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		
 		searchButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.fetch_name, R.string.fetch_name);
 		
@@ -360,6 +360,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		
 		patientIdRadioButton.setChecked(true);
 		testId.setEnabled(false);
+		testIdMyTextView.setEnabled(false);
 		
 		patientId.setEnabled(true);
 		patientId.requestFocus();
@@ -467,7 +468,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		else if (view == patientIdRadioButton)
 		{
 			patientId.setEnabled(true);
+			patientIdMyTextView.setEnabled(true);
 			testId.setEnabled(false);
+			testIdMyTextView.setEnabled(false);
 			patientId.requestFocus();
 			testId.clearFocus();
 			testId.setText("");
@@ -475,7 +478,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		else if (view == nhlsIdRadioButton)
 		{
 			patientId.setEnabled(false);
+			patientIdMyTextView.setEnabled(false);
 			testId.setEnabled(true);
+			testIdMyTextView.setEnabled(true);
 			testId.requestFocus();
 			patientId.clearFocus();
 			patientId.setText("");
