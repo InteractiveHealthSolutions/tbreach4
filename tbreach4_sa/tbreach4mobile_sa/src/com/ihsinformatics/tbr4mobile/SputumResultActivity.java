@@ -73,10 +73,10 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 	
 	
-	/*MyTextView          submitByTextView;
+	MyTextView          submitByTextView;
 	MyRadioGroup		submitOption;
 	MyRadioButton		patientIdRadioButton;
-	MyRadioButton		nhlsIdRadioButton;*/
+	MyRadioButton		nhlsIdRadioButton;
 	
 	MyTextView			patientIdMyTextView;
 	MyEditText			patientId;
@@ -234,17 +234,17 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		pager.setOffscreenPageLimit (PAGE_COUNT);
 		// Create views for pages
 		
-		/*submitByTextView = new MyTextView (context, R.style.text, R.string.search_option);
+		submitByTextView = new MyTextView (context, R.style.text, R.string.search_option);
 		patientIdRadioButton = new MyRadioButton (context, R.string.patient_id_radio, R.style.radio, R.string.patient_id_radio);
 		nhlsIdRadioButton = new MyRadioButton (context, R.string.nhls_id_radio, R.style.radio, R.string.nhls_id_radio);
 		submitOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL (),0);
-	*/
+	
 		patientIdMyTextView = new MyTextView (context, R.style.text, R.string.patient_id);
 		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
-		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_qr_code, R.string.scan_qr_code);
+		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_qr_code, R.string.scan_code);
 		
-		testIdMyTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
-		testId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
+		testIdMyTextView = new MyTextView (context, R.style.text, R.string.test_id);
+		testId = new MyEditText (context, R.string.test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
 		
 		firstNameTextView = new MyTextView (context, R.style.text, R.string.name);
 		firstName = new MyTextView (context, R.style.text, R.string.empty_string);
@@ -305,7 +305,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		unsuccessfulGenexpertResult = new MyRadioButton(context, R.string.unsuccessful, R.style.radio,
 				R.string.unsuccessful);
 		rejectedGenexpertResult = new MyRadioButton(context, R.string.rejected, R.style.radio,
-				R.string.other); 
+				R.string.rejected); 
 		
 		genexpertResultGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { negativeGenexpertResult, positiveGenexpertResult, leakedGenexpertResult, insufficientGenexpertResult, unsuccessfulGenexpertResult, rejectedGenexpertResult }, R.string.gxp_result,
@@ -316,6 +316,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		
 		yesDetectedRifResult = new MyRadioButton(context, R.string.yes, R.style.radio,
 				R.string.yes);
+		
 		noDetectedRifResult = new MyRadioButton(context, R.string.no, R.style.radio,
 				R.string.no);
 		unknownRifResult = new MyRadioButton(context, R.string.unknown, R.style.radio,
@@ -341,8 +342,8 @@ public class SputumResultActivity extends AbstractFragmentActivity
 				R.string.submit_form);
 		
 		View[][] viewGroups = { 
-				    {formDateTextView, formDateButton, /*submitByTextView, submitOption,*/  patientIdMyTextView, patientId, scanBarcode/*, testIdMyTextView, testId*/,firstNameTextView, firstName, searchPatientButton},
-				    {/*sputumAcceptedTextView, sputumAcceptedGroup,*/ /*sputumAccepted,*/ /*rejectionReasonTextView, rejectionReasonGroup,*/ /*rejectionReason,*/ genexpertResultTextView, genexpertResultGroup,/* genexpertResult*/},
+				    { submitByTextView, submitOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId,firstNameTextView, firstName, searchPatientButton},
+				    {formDateTextView, formDateButton, /*sputumAcceptedTextView, sputumAcceptedGroup,*/ /*sputumAccepted,*/ /*rejectionReasonTextView, rejectionReasonGroup,*/ /*rejectionReason,*/ genexpertResultTextView, genexpertResultGroup,/* genexpertResult*/},
 					{rifResultTextView, rifResultGroup, /*rifResult,*/ /*mtbBurdenTextView, mtbBurden, errorCodeTextView, errorCode,*/ sputumResultSpace,saveButton },
 					};
 		// Create layouts and store in ArrayList
@@ -376,6 +377,9 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		insufficientGenexpertResult.setOnClickListener(this);
 		unsuccessfulGenexpertResult.setOnClickListener(this);
 		rejectedGenexpertResult.setOnClickListener(this);
+		
+		patientIdRadioButton.setOnClickListener(this);
+		nhlsIdRadioButton.setOnClickListener(this);
 		
 		
 		views = new View[] {testId, patientId, /*labTestId,*/ /*sputumAccepted, rejectionReason, genexpertResult,*/ /*rifResult,*/ /*mtbBurden, errorCode*/};
@@ -417,7 +421,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		formDate = Calendar.getInstance ();
 		updateDisplay ();
 		
-		/*patientIdRadioButton.setChecked(true);*/
+		patientIdRadioButton.setChecked(true);
 		testIdMyTextView.setEnabled(false);
 		testId.setEnabled(false);
 		/*yesSputumAccepted.setChecked(true);
@@ -493,15 +497,23 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		    }
 				
 		}*/
-		// Validate range
-		if (formDate.getTime ().after (new Date ()))
-		{
-			valid = false;
-			message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
-		}
-		if (!valid)
-		{
-			App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+		if(valid){
+			// Validate range
+			if (formDate.getTime ().after (new Date ()))
+			{
+				valid = false;
+				message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
+			}
+			if (!RegexUtil.isValidId (App.get (patientId)))
+			{
+				valid = false;
+				message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+				patientId.setTextColor (getResources ().getColor (R.color.Red));
+			}
+			if (!valid)
+			{
+				App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+			}
 		}
 		return valid;
 	}
@@ -602,8 +614,13 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			if (resultCode == RESULT_OK)
 			{
 				String str = "";
-				if (requestCode == Barcode.BARCODE_RESULT){
+				if (requestCode == Barcode.BARCODE_RESULT)
 					str = data.getStringExtra (Barcode.SCAN_RESULT);
+				else if (requestCode == GET_PATIENT_ID)
+					str = data.getStringExtra (PatientSearchActivity.SEARCH_RESULT);
+				// Check for valid Id
+				if(patientIdRadioButton.isChecked())
+				{	
 					if (RegexUtil.isValidId (str) && !RegexUtil.isNumeric (str, false))
 					{
 						patientId.setText (str);
@@ -612,11 +629,6 @@ public class SputumResultActivity extends AbstractFragmentActivity
 					{
 						App.getAlertDialog (this, AlertType.ERROR, patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
 					}
-				}
-				/*// Check for valid Id
-				if(patientIdRadioButton.isChecked())
-				{	
-					
 				}
 				else
 				{
@@ -628,7 +640,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 					{
 						App.getAlertDialog (this, AlertType.ERROR, patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data)).show ();
 					}
-				}*/
+				}
 			}
 			else if (resultCode == RESULT_CANCELED)
 			{
@@ -684,7 +696,38 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		}
 		else if (view == searchPatientButton)
 		{
-			searchPatient ();
+			String id = "";
+			String type = "";
+			StringBuffer message = new StringBuffer ();
+			
+			if(patientIdRadioButton.isChecked())
+			{	
+				type = "pid";
+			    id  = App.get(patientId);
+			    
+			    if(id.equals ("")){
+			    
+						message.append (patientId.getTag () + ": " + getResources ().getString (R.string.empty_data) + "\n");
+						App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();	
+						return;
+			    }
+			    else{
+			    	if(!RegexUtil.isValidId (id))
+			    	{
+			    		message.append (patientId.getTag () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+						App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+						return;
+			    	}
+			    }
+			    
+			}
+			else
+			{	
+				type = "tid";
+				id = App.get(testId);
+			}
+			
+			searchPatient (id,type);
 		}	
 		else if (view == firstButton)
 		{
@@ -738,10 +781,12 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			});
 			confirmationDialog.show ();
 		}
-		/*else if (view == patientIdRadioButton)
+		else if (view == patientIdRadioButton)
 		{
 			patientId.setEnabled(true);
+			patientIdMyTextView.setEnabled(true);
 			testId.setEnabled(false);
+			testIdMyTextView.setEnabled(false);
 			patientId.requestFocus();
 			testId.clearFocus();
 			testId.setText("");
@@ -749,11 +794,13 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		else if (view == nhlsIdRadioButton)
 		{
 			patientId.setEnabled(false);
+			patientIdMyTextView.setEnabled(false);
 			testId.setEnabled(true);
+			testIdMyTextView.setEnabled(true);
 			testId.requestFocus();
 			patientId.clearFocus();
 			patientId.setText("");
-		}*/
+		}
 		else if (view == scanBarcode)
 		{
 			Intent intent = new Intent (Barcode.BARCODE_INTENT);
@@ -873,13 +920,12 @@ public class SputumResultActivity extends AbstractFragmentActivity
 	
 	}
 	
-	public boolean searchPatient ()
+	public boolean searchPatient (String id, String type)
 	{
-		final String patient = App.get(patientId);
-		StringBuffer message = new StringBuffer ();
-		if(!patient.equals ("")){
-			if(RegexUtil.isValidId (patient))
-			{	
+		final String ids = id;
+		final String types = type;
+		
+	
 				AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
 					{
 						@Override
@@ -897,7 +943,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 								}
 							});
 							//TODO: Uncomment when live
-							String[][] result = serverService.getPatientName (patient);
+							String[][] result = serverService.getPatientName (ids,types);
 							firstNameValue = "";
 							lastNameValue = "";
 							if(result == null)
@@ -933,18 +979,9 @@ public class SputumResultActivity extends AbstractFragmentActivity
 					};
 				updateTask.execute ("");
 				
-			}
-			else
-			{
-				message.append (patientId.getTag () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-				App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
-			}
-		}
-		else
-		{
-			message.append (patientId.getTag () + ": " + getResources ().getString (R.string.empty_data) + "\n");
-			App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();		
-		}
+			
+			
+		
 		return true;
 	}
 
