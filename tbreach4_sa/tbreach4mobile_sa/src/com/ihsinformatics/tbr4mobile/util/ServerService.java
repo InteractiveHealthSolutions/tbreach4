@@ -60,7 +60,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -842,46 +842,89 @@ public class ServerService
 		return details;
 	}
 	
-	public String[][] getPatientName (String patientId)
+	public String[][] getPatientName (String id, String type)
 	{
-		String response = "";
-		String[][] details = null;
-		JSONObject json = new JSONObject ();
-		try
-		{
-			json.put ("app_ver", App.getVersion ());
-			json.put ("form_name", FormType.GET_PATIENT_NAME);
-			json.put ("patient_id", patientId);
-			response = get ("?content=" + JsonUtil.getEncodedJson (json));
-			if (response == null)
+		if(type.equals("pid")){
+			String response = "";
+			String[][] details = null;
+			JSONObject json = new JSONObject ();
+			try
 			{
-				return details;
+				json.put ("app_ver", App.getVersion ());
+				json.put ("form_name", FormType.GET_PATIENT_NAME);
+				json.put ("patient_id", id);
+				response = get ("?content=" + JsonUtil.getEncodedJson (json));
+				if (response == null)
+				{
+					return details;
+				}
+				JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+				{
+					try
+					{
+						String firstName = jsonResponse.get ("first_name").toString ();
+						String lastName = jsonResponse.get ("last_name").toString ();
+						details = new String[2][];
+						details[0] = new String[] {"FirstName", firstName};
+						details[1] = new String[] {"LastName", lastName};
+					}
+					catch (JSONException e)
+					{
+						Log.e (TAG, e.getMessage ());
+					}
+				}
 			}
-			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			catch (JSONException e)
 			{
-				try
+				Log.e (TAG, e.getMessage ());
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				Log.e (TAG, e.getMessage ());
+			}
+			return details;
+		}
+		else{
+			String response = "";
+			String[][] details = null;
+			JSONObject json = new JSONObject ();
+			try
+			{
+				json.put ("app_ver", App.getVersion ());
+				json.put ("form_name", FormType.GET_PATIENT_NAME_FROM_TESTID);
+				json.put ("test_id", id);
+				json.put ("result", "Y");
+				response = get ("?content=" + JsonUtil.getEncodedJson (json));
+				if (response == null)
 				{
-					String firstName = jsonResponse.get ("first_name").toString ();
-					String lastName = jsonResponse.get ("last_name").toString ();
-					details = new String[2][];
-					details[0] = new String[] {"FirstName", firstName};
-					details[1] = new String[] {"LastName", lastName};
+					return details;
 				}
-				catch (JSONException e)
+				JSONObject jsonResponse = JsonUtil.getJSONObject (response);
 				{
-					Log.e (TAG, e.getMessage ());
+					try
+					{
+						String firstName = jsonResponse.get ("first_name").toString ();
+						String lastName = jsonResponse.get ("last_name").toString ();
+						details = new String[2][];
+						details[0] = new String[] {"FirstName", firstName};
+						details[1] = new String[] {"LastName", lastName};
+					}
+					catch (JSONException e)
+					{
+						Log.e (TAG, e.getMessage ());
+					}
 				}
 			}
+			catch (JSONException e)
+			{
+				Log.e (TAG, e.getMessage ());
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				Log.e (TAG, e.getMessage ());
+			}
+			return details;
 		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		return details;
 	}
 
 	/**
@@ -1244,7 +1287,7 @@ public class ServerService
 	{
 		String response = "";
 		// Demographics
-		String id = values.getAsString ("TestId");
+		String id = values.getAsString ("LabTestId");
 		String patientId = values.getAsString ("PatientId");
 		String formDate = values.getAsString ("formDate");
 		
