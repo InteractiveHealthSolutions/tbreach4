@@ -25,7 +25,7 @@ package com.ihsresearch.tbr4web.shared;
 
 public class App
 {
-	public static final String	appVersion	= "1.1.0";
+	public static final String	appVersion	= "1.2.1";
 	
 	
 	public static boolean validateVersion(String version){
