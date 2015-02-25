@@ -94,6 +94,8 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
 		locationSetup = (ImageButton) findViewById (R.main_id.locationSetupButton);
 		
+		this.setTitle("   "+getResources ().getString (R.string.version_no) + "                     username: "+App.getUsername());
+		
 
 		// Disable all forms that cannot be filled offline
 		if (App.isOfflineMode ())
