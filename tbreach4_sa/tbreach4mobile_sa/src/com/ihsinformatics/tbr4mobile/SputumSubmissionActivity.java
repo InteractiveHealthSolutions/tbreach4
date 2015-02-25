@@ -544,7 +544,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 								}
 							});
 							//TODO: Uncomment when live
-							String[][] result = serverService.getPatientName (patient);
+							String[][] result = serverService.getPatientName (patient,"pid");
 							firstNameValue = "";
 							lastNameValue = "";
 							if(result == null)
