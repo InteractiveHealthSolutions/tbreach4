@@ -248,6 +248,8 @@ public class MobileService
 				response = getPatient (formType, jsonObject);
 			else if (formType.equals (FormType.GET_PATIENT_NAME))
 				response = getPatientName (formType, jsonObject);
+			else if (formType.equals (FormType.GET_PATIENT_NAME_FROM_TESTID))
+				response = getPatientNameFromTestId (formType, jsonObject);
 			else if (formType.equals (FormType.GET_PATIENT_DETAIL))
 				response = getPatientDetail (formType, jsonObject);
 			else if (formType.equals (FormType.GET_PATIENT_REPORT))
@@ -436,6 +438,67 @@ public class MobileService
 		return json.toString ();
 	}
 
+	private String getPatientNameFromTestId (String formType, JSONObject values){
+		
+		JSONObject json = new JSONObject ();
+		try
+		{
+			String id = values.getString ("test_id");
+			String result = values.getString ("result");
+			List<Patient> patients = new ArrayList<Patient> ();
+
+			String patientId = null;
+			Collection<EncounterType> encounterType = Context.getEncounterService ().findEncounterTypes ("Sputum Submission");
+
+			/*
+			 * 1-Patient who, 2-Location loc, 3-Date fromDate, 4-Date toDate,
+			 * 5-Collection<Form> enteredViaForms, 6-Collection<EncounterType>
+			 * encounterTypes, 7-Collection<Provider> providers,
+			 * 8-Collection<VisitType> visitTypes, 9-Collection<Visit> visits,
+			 * 10-boolean includeVoided)
+			 */
+
+			// 1 2 3 4 5 6 7 8 9 10
+			List<Encounter> encounters = Context.getEncounterService ().getEncounters (null, null, null, null, null, encounterType, null, null, null, false);
+			List<Concept> concepts = Context.getConceptService ().getConceptsByName ("Lab Test Id");
+			/*
+			 * 1 - whom 2 - encounters, 3 - questions, 4 - answers, 5 -
+			 * personTypes, 6 - locations, 7 - sort, 8 - mostRecentN, 9 -
+			 * obsGroupId, 10 - fromDate, 11 - toDate, 12 - includeVoidedObs
+			 */
+			// 1 2 3 4 5 6 7 8 9 10 11 12
+			List<Obs> observations = Context.getObsService ().getObservations (null, encounters, concepts, null, null, null, null, null, null, null, null, false);
+			for (Obs obs : observations)
+			{
+				String testId = obs.getValueText ();
+				if (testId.equals (id))
+				{
+					patientId = obs.getPatient ().getPatientIdentifier ().toString ();
+				}
+			}
+			
+			if(patientId!=null){
+				
+				patients = Context.getPatientService ().getPatients (patientId);
+				if (patients != null)
+				{
+					Patient p = patients.get (0);
+					json.put ("first_name", p.getPersonName ().getGivenName ());
+					json.put ("last_name", p.getPersonName ().getFamilyName ());
+				}
+				
+			}
+			
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace ();
+		}
+		return json.toString ();
+		
+	}
+	
+	
 	public HttpServletRequest getRequest ()
 	{
 		return request;
