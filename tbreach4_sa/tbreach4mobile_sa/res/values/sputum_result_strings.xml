@@ -47,7 +47,7 @@
     
     <string name="sputumResult_space">"\n\n\n\n\n"</string>
     <string name="sample_accepted">Sample accepted at lab?</string>
-    <string name="date_result_recieved">Date result received (form Date)</string>
+    <string name="date_result_recieved">Date result received</string>
     <string name="date_test_report">Date of Test Report</string>
     
     
