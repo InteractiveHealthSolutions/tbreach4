@@ -50,9 +50,10 @@ public class FormType
 	public static final String	TEST_INDICATION			= "Test Indication";
 	public static final String  GET_SCREENING_STRATEGIES = "Get Screening Strategies";
 	public static final String  GET_STRATEGY  			=  "Get Strategy";
-	public static final String  GET_PATIENT_NAME 		=  "Get Patient Name";
+	public static final String  GET_PATIENT_NAME 		=  "Get Patient Name from pid";
 	public static final String	SPUTUM_SUBMISSION		= "Sputum Submission";
 	public static final String	SPUTUM_RESULT			= "Sputum Result";
 	public static final String  GET_PATIENT_REPORT      = "Get Patient Report";
 	public static final String  GET_PATIENT_FROM_TEST_ID = "Get Patient from Test Id";
+	public static final String GET_PATIENT_NAME_FROM_TESTID = "Get Patient Name from Test Id";
 }
