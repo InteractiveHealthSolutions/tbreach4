@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -1024,19 +1024,28 @@ public class ServerService
 	
 	public String[][] getPatientReport (String id, int value)
 	{
+		
 		String response = "";
-		String[][] details = null;
+		String[][] details = new String[16][2];
 		JSONObject json = new JSONObject ();
 		try
 		{
+			
+			if(value == 2){
+				// Check if the test Id exists
+				id = getPatientIdFromTestId (id,"N");
+				if (id == null)
+					return null;
+			}
+			
+			
 			json.put ("app_ver", App.getVersion ());
 			json.put ("form_name", FormType.GET_PATIENT_REPORT);
 			json.put ("id", id);
-			json.put ("value", value);
 			response = get ("?content=" + JsonUtil.getEncodedJson (json));
 			if (response == null)
 			{
-				return details;
+				return null;
 			}
 			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
 			{
@@ -1071,7 +1080,7 @@ public class ServerService
 					String testId = jsonResponse.get ("test_lab_id").toString ();
 					String pid = jsonResponse.get ("pid").toString ();
 					
-					details = new String[17][];
+					
 					details[0] = new String[] {"First_Name", firstName};
 					details[1] = new String[] {"Last_Name", lastName};
 					details[2] = new String[] {"DOB", dob};
