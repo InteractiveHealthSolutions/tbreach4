@@ -610,7 +610,10 @@ public class PatientReportActivity extends AbstractFragmentActivity
 						if (!result.equals ("SUCCESS"))
 						{
 							Toast toast = Toast.makeText (PatientReportActivity.this, "", App.getDelay ());
-							toast.setText (R.string.patient_id_missing);
+							if(patientIdRadioButton.isChecked())
+								toast.setText (R.string.patient_id_missing);
+							else
+								toast.setText (R.string.test_id_missing);
 							toast.setGravity (Gravity.CENTER, 0, 0);
 							toast.show ();
 							return;
