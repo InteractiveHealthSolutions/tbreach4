@@ -482,21 +482,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 		{
 			message.append (getResources ().getString (R.string.empty_data) + "\n");
 		}
-		// Validate data
-		/*if (valid)
-		{
-			  
-		    if(testId.isEnabled())
-		    {
-		    	 if (!(App.get (testId).length() <= 11))
-				{
-					valid = false;
-					message.append (testId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-					testId.setTextColor (getResources ().getColor (R.color.Red));
-				}
-		    }
-				
-		}*/
+		
 		if(valid){
 			// Validate range
 			if (formDate.getTime ().after (new Date ()))
@@ -504,15 +490,18 @@ public class SputumResultActivity extends AbstractFragmentActivity
 				valid = false;
 				message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
 			}
-			if (!RegexUtil.isValidId (App.get (patientId)))
-			{
-				valid = false;
-				message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-				patientId.setTextColor (getResources ().getColor (R.color.Red));
-			}
-			if (!valid)
-			{
-				App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+			
+			if(patientId.isEnabled()){
+				if (!RegexUtil.isValidId (App.get (patientId)))
+				{
+					valid = false;
+					message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
+					patientId.setTextColor (getResources ().getColor (R.color.Red));
+				}
+				if (!valid)
+				{
+					App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+				}
 			}
 		}
 		return valid;
@@ -725,6 +714,13 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			{	
 				type = "tid";
 				id = App.get(testId);
+				
+				if(id.equals ("")){
+				    
+					message.append (testId.getTag () + ": " + getResources ().getString (R.string.empty_data) + "\n");
+					App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();	
+					return;
+				}
 			}
 			
 			searchPatient (id,type);
@@ -790,6 +786,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			patientId.requestFocus();
 			testId.clearFocus();
 			testId.setText("");
+			firstName.setText("");
 		}
 		else if (view == nhlsIdRadioButton)
 		{
@@ -800,6 +797,7 @@ public class SputumResultActivity extends AbstractFragmentActivity
 			testId.requestFocus();
 			patientId.clearFocus();
 			patientId.setText("");
+			firstName.setText("");
 		}
 		else if (view == scanBarcode)
 		{
@@ -970,7 +968,10 @@ public class SputumResultActivity extends AbstractFragmentActivity
 							if (!result.equals ("SUCCESS"))
 							{
 								Toast toast = Toast.makeText (SputumResultActivity.this, "", App.getDelay ());
-								toast.setText (R.string.patient_id_missing);
+								if(patientIdRadioButton.isChecked())
+									toast.setText (R.string.patient_id_missing);
+								else
+									toast.setText (R.string.test_id_missing);
 								toast.setGravity (Gravity.CENTER, 0, 0);
 								toast.show ();
 								return;
