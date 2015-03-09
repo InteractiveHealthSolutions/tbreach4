@@ -1,3 +1,15 @@
+/* Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+
+Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors.
+
+Contributors: Tahira Niazi */
 /**
  * Search Activity to search for Patients using Patient ID and Personal Information 
  */
@@ -9,10 +21,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
 import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
 import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -102,8 +116,9 @@ public class PatientSearchActivity extends Activity implements OnCheckedChangeLi
 	public void onBackPressed ()
 	{
 		finish ();
-		Intent loginIntent = new Intent (getApplicationContext (), LoginActivity.class);
-		startActivity (loginIntent);
+		//changed from login to MainMenu
+		Intent mainMenuIntent = new Intent (getApplicationContext (), MainMenuActivity.class);
+		startActivity (mainMenuIntent);
 	}
 
 	@Override
