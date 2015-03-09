@@ -66,6 +66,8 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	Button							sputumCollection;
 	Button							patientReport;
 	Button							sputumResult;
+	Button							treatment;
+	Button							quickScreening;
 	Button							feedback;
 	ImageButton						locationSetup;
 	Animation						alphaAnimation;
@@ -90,6 +92,8 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		sputumCollection = (Button) findViewById (R.main_id.sputumSubmissionButton);
 		patientReport = (Button) findViewById (R.main_id.patientReportButton);
 		sputumResult = (Button) findViewById (R.main_id.sputumResultButton);
+		treatment = (Button) findViewById (R.main_id.treatmentButton);
+		quickScreening = (Button) findViewById (R.main_id.quickScreeningButton);
 		feedback = (Button) findViewById (R.main_id.feedbackButton);
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
 		locationSetup = (ImageButton) findViewById (R.main_id.locationSetupButton);
@@ -103,8 +107,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			sputumCollection.setVisibility(View.GONE);
 			patientReport.setVisibility(View.GONE);
 			sputumResult.setVisibility(View.GONE);
+			treatment.setVisibility(View.GONE);
 		}
-		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, 
+		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, treatment, quickScreening,
 				 feedback};
 		for (View v : views)
 		{
@@ -120,7 +125,10 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		
 		locationSetup.setOnClickListener(this);
 		
+		//treatment.setVisibility(View.GONE);
 		initView (views);
+		
+		
 	}
 
 	public void initView (View[] views)
@@ -519,6 +527,14 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			case R.main_id.sputumResultButton :
 				Intent sputumResultIntent = new Intent (this, SputumResultActivity.class);
 				startActivity (sputumResultIntent);
+				break;	
+			case R.main_id.treatmentButton :
+				Intent treatmentIntent = new Intent (this, TreatmentActivity.class);
+				startActivity (treatmentIntent);
+				break;
+			case R.main_id.quickScreeningButton :
+				Intent quickScreeningIntent = new Intent (this, QuickScreeningActivity.class);
+				startActivity (quickScreeningIntent);
 				break;	
 			case R.main_id.feedbackButton :
 				Intent feedbackIntent = new Intent (this, FeedbackActivity.class);
