@@ -87,12 +87,17 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	@Override
 	public void initView (View[] views)
 	{
-		if (App.isAutoLogin ())
-		{
-			serverService.setCurrentUser (App.get (username));
-			Intent intent = new Intent (this, MainMenuActivity.class);
-			startActivity (intent);
-			finish ();
+		
+		Boolean status = serverService.renewLoginStatus();
+		
+		if(!status){
+			if (App.isAutoLogin ())
+			{
+				serverService.setCurrentUser (App.get (username));
+				Intent intent = new Intent (this, MainMenuActivity.class);
+				startActivity (intent);
+				finish ();
+			}
 		}
 		username.setText (App.getUsername ());
 	}
@@ -241,8 +246,19 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 					{
 						serverService.setCurrentUser (App.get (username));
 						
+						serverService.updateLoginTime();
+						
 						App.setUsername (App.get (username));
 						App.setPassword (App.get (password));
+						
+						
+						
+						/*
+						ContentValues values = new ContentValues();
+						values.put ("name", newTimeStamp);
+						
+						dbUtil.update(Metadata.METADATA_TABLE, values, "type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'", null);*/
+						
 						
 						// Save username and password in preferences
 						SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (LoginActivity.this);
