@@ -44,5 +44,8 @@ public class FormType
 	public static final String  GET_STRATEGY  			=  "Get Strategy";
 	public static final String  GET_PATIENT_NAME 		=  "Get Patient Name from pid";
 	public static final String  GET_PATIENT_FROM_TEST_ID = "Get Patient from Test Id";
-	public static final String GET_PATIENT_NAME_FROM_TESTID = "Get Patient Name from Test Id";
+	public static final String  GET_PATIENT_NAME_FROM_TESTID = "Get Patient Name from Test Id";
+	public static final String  TREATMENT_INITIATION 	= "Treatment Initiation";
+	public static final String  TREATMENT_FOLLOWUP 		= "Treatment Followup";
+	public static final String  TREATMENT_OUTCOME 		= "Treatment Outcome";
 }

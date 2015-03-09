@@ -66,6 +66,16 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
+            android:name=".TreatmentActivity"
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
+            android:name=".QuickScreeningActivity"
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
             android:name=".FeedbackActivity"
             android:configChanges="keyboardHidden|orientation" 
             android:windowSoftInputMode="stateHidden">
@@ -88,7 +98,7 @@
         <activity
             android:name=".Barcode"
             android:configChanges="keyboardHidden|orientation" 
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" android:label="@string/app_name">
         </activity>
     </application>
 

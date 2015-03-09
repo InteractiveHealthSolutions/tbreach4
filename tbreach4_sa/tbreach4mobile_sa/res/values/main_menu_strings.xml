@@ -9,6 +9,8 @@
     <string name="sputum_submission">Sputum Submission Form</string>
     <string name="patient_report">Patient Report</string>
     <string name="sputum_result">Sputum Result Form</string>
+    <string name="treatment">Treatment Form</string>
+    <string name="quick_screening">Quick Screening Form</string>
     <string name="paediatric_screening">Child Screen</string>
     <string name="non_pulmonary_suspect">Non-Pulmonary Suspect</string>
     <string name="customer_info">Client Information</string>

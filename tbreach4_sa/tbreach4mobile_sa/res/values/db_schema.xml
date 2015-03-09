@@ -6,7 +6,8 @@
             id INT NOT NULL COLLATE NOCASE, 
             type TEXT NOT NULL COLLATE NOCASE, 
             name TEXT NOT NULL COLLATE NOCASE,
-            PRIMARY KEY (id, type))		</item>
+            PRIMARY KEY (id, type))
+		</item>
 		<item>CREATE TABLE IF NOT EXISTS forms (
             form_date DATETIME,
             timestamp DATETIME NOT NULL,

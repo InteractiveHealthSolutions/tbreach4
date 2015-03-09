@@ -25,38 +25,44 @@
 
         <RadioButton
             android:id="@+location_id/communityRadio"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/community" />
+            android:text="@string/community"
+            android:textColor="@color/IRDTitle"
+            android:textStyle="bold" />
 
         <RadioButton
             android:id="@+location_id/facilityRadio"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/facility" />
+            android:text="@string/facility"
+            android:textColor="@color/IRDTitle"
+            android:textStyle="bold" />
+
     </RadioGroup>
 
 <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <ImageButton
+            android:id="@+location_id/districtButton"
+            style="@style/BeigeTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/search_screening_Strategy"
+            android:src="@drawable/search_orange" />
+
         <TextView
             android:id="@+location_id/districtTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:text="@string/district"
             android:textSize="25sp" />
-
-        <ImageButton
-            android:id="@+location_id/districtButton"
-            style="@style/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/search_screening_Strategy"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/search_orange" />
 
     </RelativeLayout>
 
@@ -71,21 +77,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+location_id/screeningStrategyButton"
+            style="@style/BeigeTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/search_screening_Strategy"
+            android:src="@drawable/search_orange" />
+
         <TextView
             android:id="@+location_id/screeningStrategyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             android:text="@string/screening_Strategy"
             android:textSize="25sp" />
-
-        <ImageButton
-            android:id="@+location_id/screeningStrategyButton"
-            style="@style/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_orange"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/search_screening_Strategy" />
 
     </RelativeLayout>
 
@@ -101,21 +109,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+location_id/facilityButton"
+            style="@style/BeigeTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/search_facility"
+            android:src="@drawable/search_orange" />
+
         <TextView
             android:id="@+location_id/facilityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             android:text="@string/facility"
             android:textSize="25sp" />
-
-        <ImageButton
-        android:id="@+location_id/facilityButton"
-        style="@style/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/search_facility"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/search_orange" />
 
     </RelativeLayout>
     

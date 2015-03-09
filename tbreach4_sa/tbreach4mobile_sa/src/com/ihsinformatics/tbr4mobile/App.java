@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.ihsinformatics.tbr4mobile.custom.MyRadioButton;
 import com.ihsinformatics.tbr4mobile.model.OpenMrsObject;
 import com.ihsinformatics.tbr4mobile.shared.AlertType;
 
@@ -262,6 +263,7 @@ public class App
 		{
 			str = ((Spinner) view).getSelectedItem ().toString ();
 		}	
+		
 		return (str == null ? "" : str);
 	}
 

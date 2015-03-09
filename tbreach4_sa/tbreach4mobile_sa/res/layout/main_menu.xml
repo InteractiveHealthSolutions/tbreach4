@@ -108,6 +108,39 @@
             
             
             <TableRow
+                android:id="@+main_id/treatmentTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/micro" >
+
+                <Button
+                    android:id="@+main_id/treatmentButton"
+                    style="@style/button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/menu_drugs"
+                    android:tag="@string/treatment"
+                    android:text="@string/treatment" />
+            </TableRow>
+            
+            <TableRow
+                android:id="@+main_id/quickScreeningTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/micro" >
+
+                <Button
+                    android:id="@+main_id/quickScreeningButton"
+                    style="@style/button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/menu_non_pulmonary_suspect"
+                    android:tag="@string/quick_screening"
+                    android:text="@string/quick_screening" />
+            </TableRow>
+            
+            
+            <TableRow
                 android:id="@+main_id/feedbackTableRow"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -122,6 +155,7 @@
                     android:tag="@string/feedback"
                     android:text="@string/feedback" />
             </TableRow>
+            
         </LinearLayout>
     </ScrollView>
 

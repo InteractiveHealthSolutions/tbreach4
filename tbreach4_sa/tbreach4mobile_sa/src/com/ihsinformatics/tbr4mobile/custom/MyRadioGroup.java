@@ -15,7 +15,9 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbr4mobile.custom;
 
 import com.ihsinformatics.tbr4mobile.R;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 {
 	MyRadioButton[]	buttons;
 	
+	private static final String	TAG			= "MyRadioGroup";
 	public int HORIZONTAL = 0;
 	public int VERTICAL = 1;
 
@@ -154,14 +157,18 @@ public class MyRadioGroup extends RadioGroup implements android.widget.CompoundB
 		
 	}
 	
+	
+	//NOT WORKING
 	public String getSelectedValue (){
+		
+		String selectedValue = "";
 		
 		for (int i = 0 ; i < buttons.length; i++){
 			if(buttons[i].isChecked()){
-				return buttons[i].getText().toString();
+				Log.i (TAG, buttons[i].getTag().toString()+"YES!");
 			}
 		}
+		return selectedValue;
 		
-		return "";
 	}
 }

@@ -23,7 +23,7 @@
     <string name="out_of_range">Value out of range!</string>
     <string name="parameter_missing">One or more Parameters are invalid or missing. Please make sure you have defined valid parameters</string>
     <string name="parsing_error">Data cannot be parsed. Please make sure data is in valid format</string>
-    <string name="patient_id_missing">Patient ID does not exist. Please make sure you have entered correct Patient ID</string>
+    <string name="patient_id_missing">Patient ID does not exist. Please make sure you have entered correct ID</string>
     <string name="session_expired">Session expired! Please re-login to continue operation</string>
     <string name="similar_form_submitted">This form has already been submitted for same ID/code</string>
     <string name="test_id_missing">NHLS ID does not exist or result for the Id already exists. Please make sure you have entered correct NHLS ID</string>

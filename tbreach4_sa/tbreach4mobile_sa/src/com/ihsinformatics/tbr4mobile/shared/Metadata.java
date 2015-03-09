@@ -25,5 +25,6 @@ public class Metadata
 	public static final String	DISTRICT				= "district";
 	public static final String	FACILITY				= "facility";
 	public static final String	SCREENING_STRATEGY		= "screeningstrategy";
+	public static final String  TIME_STAMP              = "timestamp";
 
 }
