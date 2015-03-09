@@ -15,6 +15,8 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbr4mobile.util;
 
 import java.io.UnsupportedEncodingException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -1283,6 +1286,86 @@ public class ServerService
 		return response;
 	}
 	
+	
+	public String saveTreatment (String encounterType, ContentValues values, String[][] observations)
+	{
+		String response = "";
+		// Demographics
+		String id = values.getAsString ("LabTestId");
+		String patientId = values.getAsString ("PatientId");
+		String formDate = values.getAsString ("formDate");
+		
+		try
+		{
+			if(patientId == null || patientId.equals("")){
+				// Check if the test Id exists
+				patientId = getPatientIdFromTestId (id,"N");
+				if (patientId == null)
+					return context.getResources ().getString (R.string.test_id_missing);
+			}
+			// Save Form
+			JSONObject json = new JSONObject ();
+			json.put ("app_ver", App.getVersion ());
+			json.put ("form_name", encounterType);
+			json.put ("username", App.getUsername ());
+			json.put ("location", App.getLocation ());
+			if(patientId == null || patientId =="")
+				json.put ("patient_id", "");
+			else
+				json.put ("patient_id", patientId);
+			
+			JSONArray obs = new JSONArray ();
+			for (int i = 0; i < observations.length; i++)
+			{
+				if ("".equals (observations[i][0]) || "".equals (observations[i][1]))
+					continue;
+				JSONObject obsJson = new JSONObject ();
+				obsJson.put ("concept", observations[i][0]);
+				obsJson.put ("value", observations[i][1]);
+				obs.put (obsJson);
+			}
+			
+			json.put ("encounter_type", encounterType);
+			json.put ("form_date", formDate);
+			json.put ("encounter_location", App.getLocation());
+			json.put ("provider", App.getUsername ());
+			json.put ("obs", obs.toString ());
+			
+			// Save form locally if in offline mode
+			if (App.isOfflineMode ())
+			{
+				saveOfflineForm (encounterType, json.toString ());
+				return "SUCCESS";
+			}
+			
+			response = post ("?content=" + JsonUtil.getEncodedJson (json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			if (jsonResponse == null)
+			{
+				return response;
+			}
+			if (jsonResponse.has ("result"))
+			{
+				String result = jsonResponse.getString ("result");
+				return result;
+			}
+			return response;
+		}
+		catch (JSONException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.invalid_data);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.unknown_error);
+		}
+		
+		return response;
+	}
+	
+	
 	public String saveSputumResult (String encounterType, ContentValues values, String[][] observations)
 	{
 		String response = "";
@@ -1528,6 +1611,32 @@ public class ServerService
 			Log.e (TAG, e.getMessage ());
 		}
 		return patients;
+	}
+	
+	public Boolean renewLoginStatus () {
+		
+		String lastTimeStamp = dbUtil.getObject(Metadata.METADATA_TABLE,"name","type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'");
+		
+		Date date = new Date();
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String newTimeStamp = formatter.format(date);
+		
+		if (lastTimeStamp == null){
+			
+			ContentValues values = new ContentValues();
+			values.put ("id", App.getUsername());
+			values.put ("type", Metadata.TIME_STAMP);
+			values.put ("name", newTimeStamp);
+			
+			dbUtil.insert(Metadata.METADATA_TABLE, values);
+		}
+			
+		if(newTimeStamp.equals(lastTimeStamp)){
+			return false;
+		}
+		
+		return true;
+		
 	}
 
 	public String saveScreening (String encounterType, ContentValues values, String[][] observations)
@@ -2223,4 +2332,19 @@ public class ServerService
 		}
 		return response;
 	}
+	
+	public void updateLoginTime(){
+		
+		Date date = new Date();
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String newTimeStamp = formatter.format(date);
+		
+		ContentValues values = new ContentValues();
+		values.put ("name", newTimeStamp);
+		
+		dbUtil.update(Metadata.METADATA_TABLE, values, "type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'", null);
+		
+	}
+	
+	
 }
