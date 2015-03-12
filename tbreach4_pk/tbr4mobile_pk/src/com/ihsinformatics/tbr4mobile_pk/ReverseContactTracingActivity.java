@@ -69,12 +69,15 @@ import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
 import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 
 public class ReverseContactTracingActivity extends AbstractFragmentActivity
-		implements OnEditorActionListener, OnFocusChangeListener
+		implements OnEditorActionListener
 {
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 	MyTextView formDateTextView;
 	MyButton formDateButton;
 
+	MyTextView contactTracingStrategyTextView;
+	MySpinner contactTracingStrategy;
+	
 	MyTextView indexCaseIdTextView;
 	MyEditText indexCaseId;
 
@@ -83,15 +86,35 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 
 	MyTextView diagnosisTextView;
 	MySpinner diagnosis;
+	
+	//
+	MyTextView totalNumberAdultMembersTextView;
+	MyEditText totalNumberAdultMembers;
+	//
+	MyTextView totalNumberAdultMembersWithSymptomsTextView;
+	MyEditText totalNumberAdultMembersWithSymptoms;
+	
+	MyTextView namesAdultSymptomaticMembersTextView;
+	MyEditText namesAdultSymptomaticMembers;
+	//
+	MyTextView totalNumberPaediatricMembersTextView;
+	MyEditText totalNumberPaediatricMembers;
+	//
+	MyTextView totalNumberPaediatricMembersWithSymptomsTextView;
+	MyEditText totalNumberPaediatricMembersWithSymptoms;
+	
+	MyTextView namesPaediatricSymptomaticMembersTextView;
+	MyEditText namesPaediatricSymptomaticMembers;
 
 	MyTextView totalNumberMembersTextView;
-	MyEditText totalNumberMembers;
+	MyTextView totalNumberMembers;
 
 	MyTextView totalNumberMembersWithSymptomsTextView;
-	MyEditText totalNumberMembersWithSymptoms;
+	MyTextView totalNumberMembersWithSymptoms;
+	
 
-	MyTextView namesSymptomaticMembersTextView;
-	MyEditText namesSymptomaticMembers;
+	//MyTextView namesSymptomaticMembersTextView;
+	//MyEditText namesSymptomaticMembers;
 
 	MyButton scanBarcode;
 
@@ -166,7 +189,7 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 	public void createViews(Context context)
 	{
 		TAG = "ReverseContactTracingActivity";
-		PAGE_COUNT = 2;
+		PAGE_COUNT = 4;
 		pager = (ViewPager) findViewById(R.template_id.pager);
 		navigationSeekbar.setMax(PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById(R.template_id.navigatorLayout);
@@ -187,6 +210,9 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 		formDateButton = new MyButton(context, R.style.button,
 				R.drawable.custom_button_beige, R.string.form_date,
 				R.string.form_date);
+		
+		contactTracingStrategyTextView = new MyTextView(context, R.style.text, R.string.contact_tracing_strategy);
+		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
 
 		indexCaseIdTextView = new MyTextView(context, R.style.text,
 				R.string.index_case_id);
@@ -206,42 +232,56 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 		diagnosis = new MySpinner(context, getResources().getStringArray(
 				R.array.diagnosis_options), R.string.diagnosis,
 				R.string.option_hint);
+		
+		totalNumberAdultMembersTextView = new MyTextView(context, R.style.text, R.string.total_adult_household_members);
+		totalNumberAdultMembers = new MyEditText(context, R.string.total_adult_household_members, R.string.total_adult_household_members_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		
+		totalNumberAdultMembersWithSymptomsTextView = new MyTextView(context, R.style.text, R.string.adult_members_with_symptoms);
+		totalNumberAdultMembersWithSymptoms = new MyEditText(context, R.string.adult_members_with_symptoms, R.string.adult_members_with_symptoms_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		
+		totalNumberPaediatricMembersTextView = new MyTextView(context, R.style.text, R.string.total_paediatric_household_members);
+		totalNumberPaediatricMembers = new MyEditText(context, R.string.total_paediatric_household_members, R.string.total_paediatric_household_members_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		
+		totalNumberPaediatricMembersWithSymptomsTextView = new MyTextView(context, R.style.text, R.string.paediatric_members_with_symptoms);
+		totalNumberPaediatricMembersWithSymptoms = new MyEditText(context, R.string.adult_members_with_symptoms, R.string.adult_members_with_symptoms_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
 
 		totalNumberMembersTextView = new MyTextView(context, R.style.text,
 				R.string.total_household_members);
-		totalNumberMembers = new MyEditText(context,
-				R.string.total_household_members,
-				R.string.total_household_members_hint,
-				InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		totalNumberMembers = new MyTextView(context, R.style.text, R.string.total_members_count);
+		
+//		totalNumberMembers = new MyEditText(context,
+//				R.string.total_household_members,
+//				R.string.total_household_members_hint,
+//				InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
 
-		totalNumberMembersWithSymptomsTextView = new MyTextView(context,
-				R.style.text, R.string.total_household_members_with_symptoms);
-		totalNumberMembersWithSymptoms = new MyEditText(context,
-				R.string.total_household_members_with_symptoms,
-				R.string.total_household_members_with_symptoms_hint,
-				InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
-
-		namesSymptomaticMembersTextView = new MyTextView(context, R.style.text,
-				R.string.names_symptomatic_members);
-		namesSymptomaticMembers = new MyEditText(context,
-				R.string.names_symptomatic_members,
-				R.string.names_symptomatic_members_hint,
-				InputType.TYPE_CLASS_TEXT, R.style.edit, 100, false);
-
+		totalNumberMembersWithSymptomsTextView = new MyTextView(context, R.style.text, R.string.total_household_members_with_symptoms);
+		
+		totalNumberMembersWithSymptoms = new MyTextView(context, R.style.text, R.string.total_members_count);
+		
+//		totalNumberMembersWithSymptoms = new MyEditText(context,
+//				R.string.total_household_members_with_symptoms,
+//				R.string.total_household_members_with_symptoms_hint,
+//				InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		
+		namesAdultSymptomaticMembersTextView = new MyTextView(context, R.style.text, R.string.names_adult_symptomatic_members);
+		namesAdultSymptomaticMembers = new MyEditText(context, R.string.names_adult_symptomatic_members, R.string.names_adult_symptomatic_members_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 100, false);
+		
+		namesPaediatricSymptomaticMembersTextView = new MyTextView(context, R.style.text, R.string.names_paediatric_symptomatic_members);
+		namesPaediatricSymptomaticMembers = new MyEditText(context, R.string.names_paediatric_symptomatic_members, R.string.names_paediatric_symptomatic_members_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 100, false);
+		
 		scanBarcode = new MyButton(context, R.style.button,
 				R.drawable.custom_button_beige, R.string.scan_barcode,
 				R.string.scan_barcode);
 
 		View[][] viewGroups = {
-				{ formDateTextView, formDateButton, indexCaseIdTextView,
-						indexCaseId, scanBarcode,
-						indexDistrictTbNumberTextView, indexDistrictTbNumber,
-						diagnosisTextView, diagnosis,
-						totalNumberMembersTextView, totalNumberMembers },
-				{ totalNumberMembersWithSymptomsTextView,
-						totalNumberMembersWithSymptoms,
-						namesSymptomaticMembersTextView,
-						namesSymptomaticMembers } };
+				{ formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, indexCaseIdTextView,
+						indexCaseId, scanBarcode, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis },
+				{ totalNumberAdultMembersTextView, totalNumberAdultMembers, totalNumberAdultMembersWithSymptomsTextView,
+				  totalNumberAdultMembersWithSymptoms, namesAdultSymptomaticMembersTextView, namesAdultSymptomaticMembers },
+				{ totalNumberPaediatricMembersTextView, totalNumberPaediatricMembers, 
+					  totalNumberPaediatricMembersWithSymptomsTextView, totalNumberPaediatricMembersWithSymptoms,
+					  namesPaediatricSymptomaticMembersTextView, namesPaediatricSymptomaticMembers},
+			    { totalNumberMembersTextView, totalNumberMembers, totalNumberMembersWithSymptomsTextView, totalNumberMembersWithSymptoms } };
 
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup>();
@@ -268,8 +308,40 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 		saveButton.setOnClickListener(this);
 		scanBarcode.setOnClickListener(this);
 		navigationSeekbar.setOnSeekBarChangeListener(this);
-		totalNumberMembers.setOnFocusChangeListener(this);
-		totalNumberMembersWithSymptoms.addTextChangedListener(new TextWatcher()
+		totalNumberAdultMembersWithSymptoms.addTextChangedListener(new TextWatcher()
+		{
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count)
+			{
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after)
+			{
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s)
+			{
+				if(!"".equals(App.get(totalNumberAdultMembersWithSymptoms)))
+				{
+					boolean hasSymptomaticMembers = Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) > 0;
+					namesAdultSymptomaticMembersTextView.setEnabled(hasSymptomaticMembers);
+					namesAdultSymptomaticMembers.setEnabled(hasSymptomaticMembers);
+				}
+				else
+				{
+					namesAdultSymptomaticMembersTextView.setEnabled(false);
+					namesAdultSymptomaticMembers.setEnabled(false);
+				}
+			}
+		});
+		
+		totalNumberPaediatricMembersWithSymptoms.addTextChangedListener(new TextWatcher()
 		{
 			
 			@Override
@@ -290,22 +362,90 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 			@Override
 			public void afterTextChanged(Editable s)
 			{
-				if(!"".equals(App.get(totalNumberMembersWithSymptoms)))
+				if(!"".equals(App.get(totalNumberPaediatricMembersWithSymptoms)))
 				{
-					boolean hasSymptomaticMembers = Integer.parseInt(App.get(totalNumberMembersWithSymptoms)) > 0;
-					namesSymptomaticMembersTextView.setEnabled(hasSymptomaticMembers);
-					namesSymptomaticMembers.setEnabled(hasSymptomaticMembers);
+					boolean hasSymptomaticMembers = Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms)) > 0;
+					namesPaediatricSymptomaticMembersTextView.setEnabled(hasSymptomaticMembers);
+					namesPaediatricSymptomaticMembers.setEnabled(hasSymptomaticMembers);
 				}
 				else
 				{
-					namesSymptomaticMembersTextView.setEnabled(false);
-					namesSymptomaticMembers.setEnabled(false);
+					namesPaediatricSymptomaticMembersTextView.setEnabled(false);
+					namesPaediatricSymptomaticMembers.setEnabled(false);
+				}
+				
+			}
+		});
+		
+		totalNumberAdultMembers.addTextChangedListener(new TextWatcher()
+		{
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count)
+			{
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after)
+			{
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s)
+			{
+				if(!"".equals(App.get(totalNumberAdultMembers)))
+				{
+					boolean hasMembers = Integer.parseInt(App.get(totalNumberAdultMembers)) > 0 ;
+					totalNumberAdultMembersWithSymptomsTextView.setEnabled(hasMembers);
+					totalNumberAdultMembersWithSymptoms.setEnabled(hasMembers);
+				}
+				else
+				{
+					totalNumberAdultMembersWithSymptomsTextView.setEnabled(false);
+					totalNumberAdultMembersWithSymptoms.setEnabled(false);
 				}
 			}
 		});
-		views = new View[] { indexCaseId, indexDistrictTbNumber, diagnosis,
-				totalNumberMembers, totalNumberMembersWithSymptoms,
-				namesSymptomaticMembers };
+		
+		totalNumberPaediatricMembers.addTextChangedListener(new TextWatcher()
+		{
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count)
+			{
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after)
+			{
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s)
+			{
+				if(!"".equals(App.get(totalNumberPaediatricMembers)))
+				{
+					boolean hasMembers = Integer.parseInt(App.get(totalNumberPaediatricMembers)) > 0 ;
+					totalNumberPaediatricMembersWithSymptomsTextView.setEnabled(hasMembers);
+					totalNumberPaediatricMembersWithSymptoms.setEnabled(hasMembers);
+				}
+				else
+				{
+					totalNumberPaediatricMembersWithSymptomsTextView.setEnabled(false);
+					totalNumberPaediatricMembersWithSymptoms.setEnabled(false);
+				}
+			}
+		});
+		
+		views = new View[] { contactTracingStrategy, indexCaseId, indexDistrictTbNumber, diagnosis, totalNumberAdultMembers,
+				totalNumberAdultMembersWithSymptoms, totalNumberPaediatricMembers, totalNumberPaediatricMembersWithSymptoms,
+				namesAdultSymptomaticMembers, namesPaediatricSymptomaticMembers};
 
 		for (View v : views)
 		{
@@ -354,10 +494,17 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 	{
 		super.initView(views);
 		formDate = Calendar.getInstance();
-		totalNumberMembersWithSymptomsTextView.setEnabled(false);
-		totalNumberMembersWithSymptoms.setEnabled(false);
-		namesSymptomaticMembersTextView.setEnabled(false);
-		namesSymptomaticMembers.setEnabled(false);
+		
+		totalNumberAdultMembersWithSymptomsTextView.setEnabled(false);
+		totalNumberAdultMembersWithSymptoms.setEnabled(false);
+		
+		totalNumberPaediatricMembersWithSymptomsTextView.setEnabled(false);
+		totalNumberPaediatricMembersWithSymptoms.setEnabled(false);
+		
+//		totalNumberMembersWithSymptomsTextView.setEnabled(false);
+//		totalNumberMembersWithSymptoms.setEnabled(false);
+//		namesSymptomaticMembersTextView.setEnabled(false);
+//		namesSymptomaticMembers.setEnabled(false);
 		updateDisplay();
 	}
 
@@ -404,14 +551,12 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 	@Override
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean onLongClick(View arg0)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -420,7 +565,42 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 	{
 		formDateButton.setText(DateFormat.format("dd-MMM-yyyy", formDate));
 		
-		// Auto-populate TB suspect logic
+		int totalMembersCount = 0;
+		
+		int totalSymptomaticMembersCount= 0;
+		
+		// calculating of total of both Adult and Paediatric Members
+		
+		if(!"".equals(App.get(totalNumberAdultMembers)) && !"".equals(App.get(totalNumberPaediatricMembers)))
+		{
+			totalMembersCount = Integer.parseInt(App.get(totalNumberAdultMembers)) + Integer.parseInt(App.get(totalNumberPaediatricMembers));
+		}
+		else if(!"".equals(App.get(totalNumberAdultMembers)))
+		{
+			totalMembersCount = Integer.parseInt(App.get(totalNumberAdultMembers));
+		}
+		else if(!"".equals(App.get(totalNumberPaediatricMembers)))
+		{
+			totalMembersCount = Integer.parseInt(App.get(totalNumberPaediatricMembers));
+		}
+		
+		// calculating total of Symptomatic Members 
+		
+		if(!"".equals(App.get(totalNumberAdultMembersWithSymptoms)) && !"".equals(App.get(totalNumberPaediatricMembersWithSymptoms)))
+		{
+			totalSymptomaticMembersCount = Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) + Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms));
+		}
+		else if(!"".equals(App.get(totalNumberAdultMembersWithSymptoms)))
+		{
+			totalSymptomaticMembersCount = Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms));
+		}
+		else if(!"".equals(App.get(totalNumberPaediatricMembersWithSymptoms)))
+		{
+			totalSymptomaticMembersCount = Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms));
+		}
+		
+		totalNumberMembers.setText(String.valueOf(totalMembersCount));
+		totalNumberMembersWithSymptoms.setText(String.valueOf(totalSymptomaticMembersCount));
 
 	}
 
@@ -430,7 +610,7 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 		boolean valid = true;
 		StringBuffer message = new StringBuffer();
 		// Validate mandatory controls
-		View[] mandatory = { indexCaseId, totalNumberMembers };
+		View[] mandatory = { indexCaseId, totalNumberAdultMembers, totalNumberPaediatricMembers };
 		for (View v : mandatory)
 		{
 			if (App.get(v).equals(""))
@@ -441,29 +621,38 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 						R.color.Red));
 			}
 		}
-		if(!"".equals(App.get(totalNumberMembers)))
+//		if(!"".equals(App.get(totalNumberMembers)))
+//		{
+//			if (Integer.parseInt(App.get(totalNumberMembers)) > 0
+//					&& App.get(totalNumberMembersWithSymptoms).equals(""))
+//			{
+//				valid = false;
+//				message.append(totalNumberMembersWithSymptoms.getTag().toString() + ". ");
+//				totalNumberMembersWithSymptoms.setHintTextColor(getResources().getColor(R.color.Red));
+//			}
+//		}
+		if(!"".equals(App.get(totalNumberAdultMembersWithSymptoms)))
 		{
-			if (Integer.parseInt(App.get(totalNumberMembers)) > 0
-					&& App.get(totalNumberMembersWithSymptoms).equals(""))
+			if (Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) > 0
+					&& App.get(namesAdultSymptomaticMembers).equals(""))
 			{
 				valid = false;
-				message.append(totalNumberMembersWithSymptoms.getTag().toString()
-						+ ". ");
-				totalNumberMembersWithSymptoms.setHintTextColor(getResources()
-						.getColor(R.color.Red));
+				message.append(namesAdultSymptomaticMembers.getTag().toString() + ". ");
+				namesAdultSymptomaticMembers.setHintTextColor(getResources().getColor(R.color.Red));
 			}
 		}
-		if(!"".equals(App.get(totalNumberMembersWithSymptoms)))
+		
+		if(!"".equals(App.get(totalNumberPaediatricMembersWithSymptoms)))
 		{
-			if (Integer.parseInt(App.get(totalNumberMembersWithSymptoms)) > 0
-					&& App.get(namesSymptomaticMembers).equals(""))
+			if (Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms)) > 0
+					&& App.get(namesPaediatricSymptomaticMembers).equals(""))
 			{
 				valid = false;
-				message.append(namesSymptomaticMembers.getTag().toString() + ". ");
-				namesSymptomaticMembers.setHintTextColor(getResources().getColor(
-						R.color.Red));
+				message.append(namesPaediatricSymptomaticMembers.getTag().toString() + ". ");
+				namesPaediatricSymptomaticMembers.setHintTextColor(getResources().getColor(R.color.Red));
 			}
 		}
+		
 		if (!valid)
 		{
 			message.append(getResources().getString(R.string.empty_data) + "\n");
@@ -493,26 +682,43 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 				indexCaseId.setTextColor(getResources().getColor(R.color.Red));
 			}
 
-			if (!RegexUtil.isNumeric(App.get(totalNumberMembers), false))
+			if (!RegexUtil.isNumeric(App.get(totalNumberAdultMembers), false))
 			{
 				valid = false;
-				message.append(totalNumberMembers.getTag().toString() + ": "
+				message.append(totalNumberAdultMembers.getTag().toString() + ": "
 						+ getResources().getString(R.string.invalid_data)
 						+ "\n");
-				totalNumberMembers.setTextColor(getResources().getColor(
+				totalNumberAdultMembers.setTextColor(getResources().getColor(
+						R.color.Red));
+			}
+			
+			if (!RegexUtil.isNumeric(App.get(totalNumberAdultMembersWithSymptoms), false))
+			{
+				valid = false;
+				message.append(totalNumberAdultMembersWithSymptoms.getTag().toString() + ": "
+						+ getResources().getString(R.string.invalid_data)
+						+ "\n");
+				totalNumberAdultMembersWithSymptoms.setTextColor(getResources().getColor(
+						R.color.Red));
+			}
+			
+			if (!RegexUtil.isNumeric(App.get(totalNumberPaediatricMembers), false))
+			{
+				valid = false;
+				message.append(totalNumberPaediatricMembers.getTag().toString() + ": "
+						+ getResources().getString(R.string.invalid_data)
+						+ "\n");
+				totalNumberPaediatricMembers.setTextColor(getResources().getColor(
 						R.color.Red));
 			}
 
-			if (!RegexUtil.isNumeric(App.get(totalNumberMembersWithSymptoms),
-					false))
+			if (!RegexUtil.isNumeric(App.get(totalNumberPaediatricMembersWithSymptoms), false))
 			{
 				valid = false;
-				message.append(totalNumberMembersWithSymptoms.getTag()
-						.toString()
-						+ ": "
+				message.append(totalNumberPaediatricMembersWithSymptoms.getTag().toString() + ": "
 						+ getResources().getString(R.string.invalid_data)
 						+ "\n");
-				totalNumberMembersWithSymptoms.setTextColor(getResources()
+				totalNumberPaediatricMembersWithSymptoms.setTextColor(getResources()
 						.getColor(R.color.Red));
 			}
 
@@ -538,12 +744,42 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 			values.put("patientId", App.get(indexCaseId));
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
+			observations.add(new String[] {"Contact Tracing Strategy",App.get(contactTracingStrategy)});
+			
 			observations.add(new String[] { "Index Case District TB Number",
 					App.get(indexDistrictTbNumber) });
 			observations.add(new String[] { "Index Case Diagnosis",
 					App.get(diagnosis) });
+			
+			observations.add(new String[] {"Total Adult Household Members", App.get(totalNumberAdultMembers)});
+			
+			if(Integer.parseInt(App.get(totalNumberAdultMembers)) > 0)
+			{
+				observations.add(new String[] {"Total Adult Symptomatic Members", App.get(totalNumberAdultMembersWithSymptoms)});
+			}
+			
+			if(Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) > 0)
+			{
+				observations.add(new String[] {"Symptomatic Adult Members Names", App.get(namesAdultSymptomaticMembers)});
+			}
+			
+			//-----------------------------------------------------------------------
+			
+			observations.add(new String[] {"Total Paediatric Household Members", App.get(totalNumberPaediatricMembers)});
+			
+			if(Integer.parseInt(App.get(totalNumberPaediatricMembers)) > 0)
+			{
+				observations.add(new String[] {"Total Paediatric Symptomatic Members", App.get(totalNumberPaediatricMembersWithSymptoms)});
+			}
+			
+			if(Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms)) > 0)
+			{
+				observations.add(new String[] {"Symptomatic Paediatric Members Names", App.get(namesPaediatricSymptomaticMembers)});
+			}
+			
 			observations.add(new String[] { "Total Household Members",
 					App.get(totalNumberMembers) });
+			
 
 			if (Integer.parseInt(App.get(totalNumberMembers)) > 0)
 			{
@@ -552,12 +788,12 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 						App.get(totalNumberMembersWithSymptoms) });
 			}
 
-			if (Integer.parseInt(App.get(totalNumberMembersWithSymptoms)) > 0)
-			{
-				observations.add(new String[] {
-						"Symptomatic Household Members Names",
-						App.get(namesSymptomaticMembers) });
-			}
+//			if (Integer.parseInt(App.get(totalNumberMembersWithSymptoms)) > 0)
+//			{
+//				observations.add(new String[] {
+//						"Symptomatic Household Members Names",
+//						App.get(namesSymptomaticMembers) });
+//			}
 
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String>()
 			{
@@ -593,7 +829,6 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 				@Override
 				protected void onPostExecute(String result)
 				{
-					// TODO: check this method
 
 					super.onPostExecute(result);
 					loading.dismiss();
@@ -665,29 +900,5 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 	public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2)
 	{
 		return false;
-	}
-
-	@Override
-	public void onFocusChange(View v, boolean hasFocus)
-	{
-		if (v == totalNumberMembers)
-		{
-			if (!hasFocus && !App.get(totalNumberMembers).equals(""))
-			{
-				boolean hasMembers = Integer.parseInt(App.get(totalNumberMembers)) > 0 ;
-				totalNumberMembersWithSymptomsTextView.setEnabled(hasMembers);
-				totalNumberMembersWithSymptoms.setEnabled(hasMembers);
-			
-			}
-		}
-//		else if (v == totalNumberMembersWithSymptoms)
-//		{
-//			if (!hasFocus && !App.get(totalNumberMembersWithSymptoms).equals(""))
-//			{
-//				boolean hasSymptomaticMembers = Integer.parseInt(App.get(totalNumberMembersWithSymptoms)) > 0;
-//				namesSymptomaticMembersTextView.setEnabled(hasSymptomaticMembers);
-//				namesSymptomaticMembers.setEnabled(hasSymptomaticMembers);
-//			}
-//		}
 	}
 }

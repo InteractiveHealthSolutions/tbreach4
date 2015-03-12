@@ -257,8 +257,10 @@ public class MobileService
 				response = getPersonDetail(formType, jsonObject);
 			else if(formType.equals(FormType.PATIENT_REGISTRATION))
 				response = doPatientRegistration(formType, jsonObject);
+			// change from Reverse Contact tracing to Contact Tracing  
 			else if(formType.equals(FormType.REVERSE_CONTACT_TRACING))
 				response = doReverseContactTracing(formType, jsonObject);
+			
 			else if(formType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
 				response = doAdultReverseContactTracing(formType, jsonObject);
 			else if(formType.equals(FormType.PAEDIATRIC_CONTACT_TRACING))
