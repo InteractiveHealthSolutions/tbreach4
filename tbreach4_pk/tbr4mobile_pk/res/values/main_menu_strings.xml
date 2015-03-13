@@ -21,7 +21,7 @@ Contributors: Tahira Niazi -->
     <string name="screening">Lung Health Screen</string>
     <string name="paediatric_screening">Pediatrics Screening</string>
     <string name="adult_screening">Adult Screening</string>
-    <string name="reverse_contact_tracing">Reverse Contact Tracing</string>
+    <string name="contact_tracing">Contact Tracing</string>
     <string name="paediatric_contact_tracing">Paediatric Contact Tracing</string>
     <string name="adult_reverse_contact_tracing">Adult Reverse Contact Tracing</string>
     <string name="non_pulmonary_suspect">Non-Pulmonary Suspect</string>

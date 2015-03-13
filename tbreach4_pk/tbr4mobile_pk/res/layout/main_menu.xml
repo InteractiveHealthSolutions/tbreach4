@@ -171,8 +171,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/menu_clinical_evaluation"
-                android:tag="@string/reverse_contact_tracing"
-                android:text="@string/reverse_contact_tracing" />
+                android:tag="@string/contact_tracing"
+                android:text="@string/contact_tracing" />
             
             <Button
                 android:id="@+main_id/paediatricContactTracingButton"

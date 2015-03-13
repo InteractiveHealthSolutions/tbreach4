@@ -18,6 +18,8 @@ Contributors: Tahira Niazi */
 package com.ihsinformatics.tbr4web_pk.server;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -94,8 +96,10 @@ public class MobileService
 	static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 	private static File				propsFile;
 	private static Properties		props;
+	private static Properties		tbreachProps;
+	private static InputStream		tbreachPropertiesInput = null;		
 	private static Connection		conn;
-	private static String			url, username, password;
+	private static String			url, username, password, appMajorMinorVersion;
 	private static MobileService	service			= new MobileService ();
 
 	// Singleton. Called only once to fire up Open MRS
@@ -105,6 +109,14 @@ public class MobileService
 		{
 			propsFile = new File (propFilePath);
 			props = new Properties ();
+			
+			// TODO : start from here
+			tbreachProps = new Properties();
+			tbreachPropertiesInput = MobileService.class.getClassLoader().getResourceAsStream("/tbreach4.properties");
+			tbreachProps.load(tbreachPropertiesInput);
+			
+			appMajorMinorVersion = (String) tbreachProps.get("major.minor");
+			
 			OpenmrsUtil.loadProperties (props, propsFile);
 			url = (String) props.get ("connection.url");
 			username = (String) props.get ("connection.username");
@@ -209,7 +221,10 @@ public class MobileService
 				throw new JSONException ("JSON Content not found in the request.");
 			JSONObject jsonObject = JsonUtil.getJSONObject (json);
 			String appVer = jsonObject.getString ("app_ver");
-			if (!appVer.equals (App.appVersion))
+			String mobileMajorMinor = appVer.split("\\.")[0].concat(appVer.split("\\.")[1]);
+			System.out.println(mobileMajorMinor);
+			System.out.println(mobileMajorMinor);
+			if (!mobileMajorMinor.equals(appMajorMinorVersion))
 			{
 				return JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.VERSION_MISMATCH_ERROR)).toString ();
 			}

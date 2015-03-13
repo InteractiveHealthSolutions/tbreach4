@@ -74,6 +74,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		MyTextView		formDateTextView;
 		MyButton		formDateButton;
 		
+		MyTextView 		contactTracingStrategyTextView;
+		MySpinner 		contactTracingStrategy;
+		
 		MyTextView		screenedBeforeTextView;
 		MySpinner		screenedBefore;
 		
@@ -300,6 +303,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		formDateTextView = new MyTextView (context, R.style.text, R.string.form_date);
 		formDateButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.form_date, R.string.form_date);
 		
+		contactTracingStrategyTextView = new MyTextView(context, R.style.text, R.string.contact_tracing_strategy);
+		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
+		
 		screenedBeforeTextView = new MyTextView(context, R.style.text, R.string.screened_before);
 		screenedBefore = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.screened_before, R.string.option_hint);
 		
@@ -456,7 +462,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		
 		//TODO: complete it and remove the fields from the Pediatiric Screening forms
 		
-		View[][] viewGroups = { {formDateTextView, formDateButton, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
+		View[][] viewGroups = { {formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
 								{genderTextView, gender,ageTextView, age, ageModifier}, 
 								{dobTextView, dobPicker},
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis, weightTextView, weight, weightPercentileTextView, weightPercentile},
@@ -498,7 +504,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
 				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, ageModifier, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, contactAppetite, chestExamination, 
+				views = new View[] {age, ageModifier, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, contactAppetite, chestExamination, 
 						lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, confirmSputumSmearPositiveTB, 
 						exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, sourceCaseHasPulmonaryTB,
 						sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId};
@@ -942,6 +948,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			values.put ("patientId", App.get (patientId));
 			final ArrayList<String[]> observations = new ArrayList<String[]> ();
 			
+			observations.add(new String[] {"Contact Tracing Strategy",App.get(contactTracingStrategy)});
+			observations.add(new String[] {"Screened Before", App.get(screenedBefore)});
 			
 			observations.add(new String[] {"Index Case ID", App.get(indexCaseId)});
 			observations.add(new String[] {"Age", App.get(age)});

@@ -318,6 +318,7 @@ public final class R {
         public static final int contact_history=0x7f070089;
         public static final int contact_night_sweats=0x7f070067;
         public static final int contact_provided=0x7f07000b;
+        public static final int contact_tracing=0x7f070041;
         public static final int contact_tracing_strategy=0x7f0700b1;
         public static final int contact_weight_loss=0x7f070068;
         public static final int cough_blood=0x7f070003;
@@ -447,7 +448,6 @@ public final class R {
         public static final int primary_phone_hint=0x7f07000d;
         public static final int refresh_database=0x7f0700e5;
         public static final int reporting=0x7f0700ab;
-        public static final int reverse_contact_tracing=0x7f070041;
         public static final int save=0x7f0700d9;
         public static final int saved_forms=0x7f0700b0;
         public static final int scan_barcode=0x7f0700e7;

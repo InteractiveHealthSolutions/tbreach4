@@ -68,7 +68,7 @@ import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
 import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
 import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 
-public class ReverseContactTracingActivity extends AbstractFragmentActivity
+public class ContactTracingActivity extends AbstractFragmentActivity
 		implements OnEditorActionListener
 {
 	// Views displayed in pages, sorted w.r.t. appearance on pager
@@ -834,7 +834,7 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 					loading.dismiss();
 					if (result.equals("SUCCESS"))
 					{
-						App.getAlertDialog(ReverseContactTracingActivity.this,
+						App.getAlertDialog(ContactTracingActivity.this,
 								AlertType.INFO,
 								getResources().getString(R.string.inserted))
 								.show();
@@ -842,7 +842,7 @@ public class ReverseContactTracingActivity extends AbstractFragmentActivity
 					}
 					else
 					{
-						App.getAlertDialog(ReverseContactTracingActivity.this,
+						App.getAlertDialog(ContactTracingActivity.this,
 								AlertType.ERROR, result).show();
 					}
 				}

@@ -527,7 +527,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 				break;
 				
 			case R.main_id.reverseContactTracingButton:
-				Intent reverseContactTracingIntent = new Intent(this, ReverseContactTracingActivity.class);
+				Intent reverseContactTracingIntent = new Intent(this, ContactTracingActivity.class);
 				startActivity(reverseContactTracingIntent);
 				break;
 				
