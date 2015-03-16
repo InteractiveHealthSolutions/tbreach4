@@ -89,11 +89,11 @@ public class MobileService
 
 	// OpenMRS-related
 	
-	//static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	//static final String propFilePath = "c:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
 	
 	//static final String				propFilePath	= "C:\\workspace\\tbreach3web\\openmrs-runtime.properties";
-	static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+	//static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 	private static File				propsFile;
 	private static Properties		props;
 	private static Properties		tbreachProps;
@@ -221,9 +221,7 @@ public class MobileService
 				throw new JSONException ("JSON Content not found in the request.");
 			JSONObject jsonObject = JsonUtil.getJSONObject (json);
 			String appVer = jsonObject.getString ("app_ver");
-			String mobileMajorMinor = appVer.split("\\.")[0].concat(appVer.split("\\.")[1]);
-			System.out.println(mobileMajorMinor);
-			System.out.println(mobileMajorMinor);
+			String mobileMajorMinor = appVer.split("\\.")[0].concat(".").concat(appVer.split("\\.")[1]);
 			if (!mobileMajorMinor.equals(appMajorMinorVersion))
 			{
 				return JsonUtil.getJsonError (CustomMessage.getErrorMessage (ErrorType.VERSION_MISMATCH_ERROR)).toString ();
