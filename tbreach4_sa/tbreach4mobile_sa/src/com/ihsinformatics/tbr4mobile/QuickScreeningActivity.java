@@ -10,12 +10,20 @@ You can also access the license on the internet at the address: http://www.gnu.o
 Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors. */
 package com.ihsinformatics.tbr4mobile;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import com.ihsinformatics.tbr4mobile.shared.AlertType;
+import com.ihsinformatics.tbr4mobile.shared.FormType;
+import com.ihsinformatics.tbr4mobile.util.GPSTracker;
 import com.ihsinformatics.tbr4mobile.util.ServerService;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +56,7 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 	TextView						screenerInstructionTextView;
 	EditText						ageEditText;
 	
+	Calendar						formDate;
 	String							FORM_NAME;
 	View[]							views;
 	Animation						alphaAnimation;
@@ -75,6 +84,8 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 		screenerInstructionHeadingTextView = (TextView) findViewById(R.quickscreening_id.textViewscreenerInstructionHeading);
 		screenerInstructionTextView = (TextView) findViewById(R.quickscreening_id.textViewinstruction);
 		ageEditText = (EditText) findViewById(R.quickscreening_id.editTextAge);
+		ageEditText.setTag("Age");
+		ageEditText.setHint(R.string.age_hint);
 				
 		femaleRadioButton.setOnClickListener(this);
 		maleRadioButton.setOnClickListener(this);
@@ -98,12 +109,10 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 		if(button == coughCheckBox || button == nightSweatsCheckBox || button == weightLossCheckBox || button == feverCheckBox ){
 			
 			if( coughCheckBox.isChecked() == true || nightSweatsCheckBox.isChecked() == true || weightLossCheckBox.isChecked() == true || feverCheckBox.isChecked() == true){
-					saveButton.setVisibility(View.GONE);
 					screenerInstructionHeadingTextView.setVisibility(View.VISIBLE);
 					screenerInstructionTextView.setVisibility(View.VISIBLE);
 			}
 			else{
-				saveButton.setVisibility(View.VISIBLE);
 				screenerInstructionHeadingTextView.setVisibility(View.GONE);
 				screenerInstructionTextView.setVisibility(View.GONE);
 			}
@@ -128,6 +137,12 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 
 	@Override
 	public void initView(View[] views) {
+		ageEditText.setText("");
+		coughCheckBox.setChecked(false);
+		nightSweatsCheckBox.setChecked(false);
+		weightLossCheckBox.setChecked(false);
+		feverCheckBox.setChecked(false);
+		formDate = Calendar.getInstance ();
 		maleRadioButton.setChecked(true);
 		femaleRadioButton.setChecked(false);
 		saveButton.setVisibility(View.VISIBLE);
@@ -145,11 +160,50 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 	@Override
 	public boolean validate() {
 		
-		if (App.get (ageEditText).equals ("")){
-			
-			ageEditText.setHintTextColor (getResources ().getColor (R.color.Red));
+		Boolean valid = true;
+		StringBuffer message = new StringBuffer ();
+		
+		View[] mandatory = {ageEditText};
+		for (View v : mandatory)
+		{
+			if(v.isEnabled())
+			{	
+				if (App.get (v).equals (""))
+				{
+					valid = false;
+					message.append (v.getTag () + ". ");
+					((EditText) v).setTextColor (getResources ().getColor (R.color.Red));
+				}
+			}
 		}
-		return true;
+		
+		if (!valid)
+		{
+			message.append (getResources ().getString (R.string.empty_data) + "\n");
+		}
+		else{
+			
+			String age = App.get(ageEditText);
+			int a = Integer.parseInt(age);
+			
+			if(a<=0 || a>120 ){
+				valid = false;
+				message.append (ageEditText.getTag () + ". ");
+				ageEditText.setTextColor (getResources ().getColor (R.color.Red));
+			}
+			
+		}
+		
+		if (!valid)
+		{
+			message.append (getResources ().getString (R.string.invalid_data) + "\n");
+		}
+		
+		if (!valid)
+		{
+			App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
+		}
+		return valid;
 	}
 
 	@Override
@@ -157,6 +211,102 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 		if (validate ())
 		{
 			
+			double latitude = 0;
+			double longitude = 0;
+
+			GPSTracker gps = new GPSTracker(QuickScreeningActivity.this);
+
+			// check if GPS enabled
+			if (gps.canGetLocation()) {
+
+				latitude = gps.getLatitude();
+				longitude = gps.getLongitude();
+
+			} else {
+				// can't get location
+				// GPS or Network is not enabled
+				// Ask user to enable GPS/network in settings
+				gps.showSettingsAlert();
+				return false;
+			}
+			
+			final ContentValues values = new ContentValues();
+			final ArrayList<String[]> observations = new ArrayList<String[]>();
+
+			values.put("firstName", "Quick");
+			values.put("lastName", "Screen");
+			values.put("formDate", App.getSqlDate(formDate));
+			values.put("gender", maleRadioButton.isChecked() ? "M" : "F");
+			values.put("age", App.get(ageEditText));
+			Calendar dateOfBirth =  Calendar.getInstance ();
+			dateOfBirth.add(Calendar.YEAR, -Integer.parseInt(App.get(ageEditText)));
+			values.put("dob", App.getSqlDate(dateOfBirth));
+			
+			if(coughCheckBox.isChecked() || nightSweatsCheckBox.isChecked() || weightLossCheckBox.isChecked() || feverCheckBox.isChecked())
+				values.put("TB Suspect", "Suspect");
+			else
+				values.put("TB Suspect", "Non-Suspect");
+
+			observations.add(new String[] { "Cough",  coughCheckBox.isChecked() ? "Yes" : "No" });
+			observations.add(new String[] { "Night Sweats", nightSweatsCheckBox.isChecked() ? "Yes" : "No" });
+			observations.add(new String[] { "Weight Loss", weightLossCheckBox.isChecked() ? "Yes" : "No" });
+			observations.add(new String[] { "Fever", feverCheckBox.isChecked() ? "Yes" : "No" });
+			
+			observations.add(new String[] { "Screening Type",App.getScreeningType() });
+
+			observations.add(new String[] { "District", App.getDistrict() });
+
+			if (App.getScreeningType().equals("Community")) {
+				String screeningStrategy = App.getScreeningStrategy().substring(6, App.getScreeningStrategy().length());
+				observations.add(new String[] { "Screening Strategy",screeningStrategy });
+			} else
+				observations.add(new String[] { "Facility name",App.getFacility() });
+			
+			observations.add(new String[] { "Latitude",String.valueOf(latitude) });
+			observations.add(new String[] { "Longitude",String.valueOf(longitude) });
+			
+			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String>() {
+				@Override
+				protected String doInBackground(String... params) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							loading.setIndeterminate(true);
+							loading.setCancelable(false);
+							loading.setMessage(getResources().getString(
+									R.string.loading_message));
+							loading.show();
+						}
+					});
+
+					String result = "";
+
+					result = serverService.saveQuickScreening(FormType.QUICK_SCREENING,
+							values, observations.toArray(new String[][] {}));
+
+					return result;
+				}
+
+				@Override
+				protected void onProgressUpdate(String... values) {
+				};
+
+				@Override
+				protected void onPostExecute(String result) {
+					super.onPostExecute(result);
+					loading.dismiss();
+					if (result.contains ("SUCCESS"))
+					{
+						result = result.replace("SUCCESS","");
+						App.getAlertDialog (QuickScreeningActivity.this, AlertType.INFO, getResources ().getString (R.string.success_screening)).show ();
+						initView (views);
+					} else {
+						App.getAlertDialog(QuickScreeningActivity.this,
+								AlertType.ERROR, result).show();
+					}
+				}
+			};
+			updateTask.execute("");		
 		}
 		return true;
 	}
