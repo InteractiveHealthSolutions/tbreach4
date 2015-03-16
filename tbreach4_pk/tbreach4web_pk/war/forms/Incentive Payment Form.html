@@ -60,12 +60,24 @@ Contributors: Tahira Niazi -->
 	<section headerLabel="2. Incentive Payment Information">
 		<div>
                         <p>
+                                 <lookup expression="fn.getConcept('601').description"/><br/>
+                                 <obs conceptId="601" id="district_tb_number" />
+                        </p>
+                        <p>
                                  <lookup expression="fn.getConcept('630').description"/><br/>
                                  <obs conceptId="630" id="incentive_payment_date" />
                         </p>
                         <p>
                                  Amount Paid<br/>
                                  <obs conceptId="631" id="amount_paid"/>
+                        </p>
+                        <p>
+                                <lookup expression="fn.getConcept('643').description"/><br/>
+                                <obs conceptId="643" id="cnic_patient" />
+                        </p> 
+                        <p>
+                                <lookup expression="fn.getConcept('644').description"/><br/>
+                                <obs conceptId="644" id="family_number_cnic" />
                         </p>
                         <p>
                                 <lookup expression="fn.getConcept('632').description"/><br/>
