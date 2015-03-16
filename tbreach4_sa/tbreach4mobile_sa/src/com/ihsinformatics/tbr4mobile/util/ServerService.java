@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -1295,7 +1295,6 @@ public class ServerService
 		return response;
 	}
 	
-	
 	public String saveTreatment (String encounterType, ContentValues values, String[][] observations)
 	{
 		String response = "";
@@ -1312,6 +1311,7 @@ public class ServerService
 				if (patientId == null)
 					return context.getResources ().getString (R.string.test_id_missing);
 			}
+			
 			// Save Form
 			JSONObject json = new JSONObject ();
 			json.put ("app_ver", App.getVersion ());
@@ -1374,6 +1374,39 @@ public class ServerService
 		return response;
 	}
 	
+	public Boolean acceptSputumSubmissionForm(String pid){
+	try
+	{
+		JSONObject json = new JSONObject ();
+		json.put ("app_ver", App.getVersion ());
+		json.put ("form_name", FormType.GET_SPUTUM_SUBMISSION_STATUS);
+		json.put ("p_id", pid);
+		String response = get ("?content=" + JsonUtil.getEncodedJson (json));
+		JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+		if (response != null)
+		{
+			if (jsonResponse == null)
+			{
+				return null;
+			}
+			if (jsonResponse.has ("status"))
+			{
+				String val = jsonResponse.getString ("status");
+				if(val.equals("YES"))
+					return true;
+				else
+					return false;
+			}	
+		}
+		return null;
+	}
+	catch (Exception e)
+	{
+		Log.e (TAG, e.getMessage ());
+	}
+		
+		return true;
+	}
 	
 	public String saveSputumResult (String encounterType, ContentValues values, String[][] observations)
 	{
@@ -1391,6 +1424,11 @@ public class ServerService
 				if (patientId == null)
 					return context.getResources ().getString (R.string.test_id_missing);
 			}
+			/*else{
+				boolean check = acceptSputumSubmissionForm(patientId); 
+				if(!check)
+					return context.getResources ().getString (R.string.test_id_missing);
+			}*/
 			// Save Form
 			JSONObject json = new JSONObject ();
 			json.put ("app_ver", App.getVersion ());
@@ -1791,6 +1829,112 @@ public class ServerService
 		return response;
 	}
 
+	
+	public String saveQuickScreening (String encounterType, ContentValues values, String[][] observations){
+
+		
+		String response = "";
+		// Demographics
+		
+		int age = values.getAsInteger ("age");
+		String gender = values.getAsString ("gender");
+		String formDate = values.getAsString ("formDate");
+		String tbSuspect = values.getAsString("TB Suspect");
+		String dob = values.getAsString("dob");
+		
+		
+		try
+		{
+			/*String id = null;
+			if (!App.isOfflineMode () && !(patientId == null || patientId ==""))
+			{	
+				id = getPatientId (patientId);
+				if (id != null)
+					return context.getResources ().getString (R.string.duplication);
+			}	
+			// Save Patient
+*/			JSONObject json = new JSONObject ();
+			json.put ("app_ver", App.getVersion ());
+			json.put ("form_name", encounterType);
+			json.put ("username", App.getUsername ());
+			json.put ("patient_id", "");
+			json.put ("given_name", "QUICK");
+			json.put ("family_name", "SCREENING");
+			json.put ("gender", gender);
+			json.put ("age", age);
+			json.put ("dob", dob);
+			json.put ("location",App.getLocation());
+			
+			json.put ("address1","");
+			json.put ("colony","");
+			json.put ("town","");
+			json.put ("landmark","");
+			json.put ("city","");
+			json.put ("country","");
+			
+            // Add contacts as array of person attributes
+			JSONArray attributes = new JSONArray ();
+			JSONObject attributeJson = new JSONObject ();
+			
+			attributeJson = new JSONObject ();
+			attributeJson.put ("attribute", "Suspect/Non-Suspect");
+			attributeJson.put ("value", tbSuspect);
+			attributes.put (attributeJson);
+			json.put ("attributes", attributes.toString ());
+			
+			JSONArray obs = new JSONArray ();
+			for (int i = 0; i < observations.length; i++)
+			{
+				if ("".equals (observations[i][0]) || "".equals (observations[i][1]))
+					continue;
+				JSONObject obsJson = new JSONObject ();
+				obsJson.put ("concept", observations[i][0]);
+				obsJson.put ("value", observations[i][1]);
+				obs.put (obsJson);
+			}
+			
+			json.put ("encounter_type", encounterType);
+			json.put ("form_date", formDate);
+			json.put ("encounter_location", App.getLocation());
+			json.put ("provider", App.getUsername ());
+			json.put ("obs", obs.toString ());
+			
+			
+			// Save form locally if in offline mode
+			if (App.isOfflineMode ())
+			{
+				saveOfflineForm (encounterType, json.toString ());
+				return "SUCCESS";
+			}
+			
+			response = post ("?content=" + JsonUtil.getEncodedJson (json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			if (jsonResponse == null)
+			{
+				return response;
+			}
+			if (jsonResponse.has ("result"))
+			{
+				String result = jsonResponse.getString ("result");
+				String pid = jsonResponse.getString ("pid");
+				return result+"\n"+pid;
+			}
+			return response;
+		}
+		catch (JSONException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.invalid_data);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.unknown_error);
+		}
+		return response;
+	
+	}
+	
 	public String saveCustomerInfo (String encounterType, ContentValues values)
 	{
 		String response = "";
