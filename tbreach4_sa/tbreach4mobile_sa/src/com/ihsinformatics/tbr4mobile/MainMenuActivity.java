@@ -124,8 +124,6 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		}
 		
 		locationSetup.setOnClickListener(this);
-		
-		//treatment.setVisibility(View.GONE);
 		initView (views);
 		
 		
@@ -145,14 +143,21 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 					String ss[] = App.getScreeningStrategy().split("-");
 					location = location.concat(" - ");
 					location = location.concat(ss[1]);
+
+					screening.setVisibility(View.VISIBLE);
+					quickScreening.setVisibility(View.VISIBLE);
 				}
 				
 				else{
 					location = App.getFacility();
+					quickScreening.setVisibility(View.GONE);
 				}
 			locationTextView.setText (location);
 			}
 		}
+		
+		
+		
 		// When online, check if there are offline forms for current user
 		if (!App.isOfflineMode ())
 		{
