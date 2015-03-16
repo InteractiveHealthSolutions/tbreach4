@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="cough_quick_screening">"Cough             "</string>
+    <string name="night_sweats_quick_screening">"Night Sweats"</string>
+    <string name="weight_loss_quick_screening">"Weight Loss   "</string>
+    <string name="fever_quick_screening">"Fever"</string>
+    <string name="quick_screening_question">"Check, if you have:"</string>
+    <string name="screening_instruction">Collect Sample and fill Screening Form and Sputum Submission Form.</string>
+    
+    
+</resources>
