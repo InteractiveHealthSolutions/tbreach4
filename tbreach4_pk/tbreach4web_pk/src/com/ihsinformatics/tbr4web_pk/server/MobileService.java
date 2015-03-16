@@ -89,11 +89,11 @@ public class MobileService
 
 	// OpenMRS-related
 	
-	static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	//static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	//static final String propFilePath = "c:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
 	
 	//static final String				propFilePath	= "C:\\workspace\\tbreach3web\\openmrs-runtime.properties";
-	//static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+	static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 	private static File				propsFile;
 	private static Properties		props;
 	private static Properties		tbreachProps;
