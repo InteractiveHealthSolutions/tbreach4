@@ -41,6 +41,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+             <TableRow
+                android:id="@+main_id/quickScreeningTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/micro" >
+
+                <Button
+                    android:id="@+main_id/quickScreeningButton"
+                    style="@style/button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/menu_non_pulmonary_suspect"
+                    android:tag="@string/quick_screening"
+                    android:text="@string/quick_screening" />
+            </TableRow>
+            
             <TableRow
                 android:id="@+main_id/screeningTableRow"
                 android:layout_width="fill_parent"
@@ -57,7 +73,7 @@
                     android:text="@string/screening" />
 
             </TableRow>
-
+            
             <TableRow
                 android:id="@+main_id/sputumSubmissionTableRow"
                 android:layout_width="fill_parent"
@@ -122,23 +138,6 @@
                     android:tag="@string/treatment"
                     android:text="@string/treatment" />
             </TableRow>
-            
-            <TableRow
-                android:id="@+main_id/quickScreeningTableRow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/micro" >
-
-                <Button
-                    android:id="@+main_id/quickScreeningButton"
-                    style="@style/button"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/menu_non_pulmonary_suspect"
-                    android:tag="@string/quick_screening"
-                    android:text="@string/quick_screening" />
-            </TableRow>
-            
             
             <TableRow
                 android:id="@+main_id/feedbackTableRow"
