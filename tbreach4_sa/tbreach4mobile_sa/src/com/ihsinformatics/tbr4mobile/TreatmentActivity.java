@@ -326,6 +326,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		transferOutDateTextView = new MyTextView (context, R.style.text, R.string.tranfer_out_date);
 		transferDate = Calendar.getInstance ();
 		transferOutDatePicker = new DatePicker(context);
+		transferOutDatePicker.setTag("Transfer Out Date");
 		transferOutDatePicker.init(transferOutDatePicker.getYear(), transferOutDatePicker.getMonth(), transferOutDatePicker.getDayOfMonth(),new OnDateChangedListener() {
 			    
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -339,6 +340,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		treatmentInitiationDateTextView = new MyTextView (context, R.style.text, R.string.treatment_initiation_date);
 		initiationDate = Calendar.getInstance ();
 		treatmentInitiationDatePicker = new DatePicker(context);
+		treatmentInitiationDatePicker.setTag("Treatment Initiation Date");
 		treatmentInitiationDatePicker.init(treatmentInitiationDatePicker.getYear(), treatmentInitiationDatePicker.getMonth(), treatmentInitiationDatePicker.getDayOfMonth(),new OnDateChangedListener() {
 		    
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -352,6 +354,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		followUpDateTextView = new MyTextView (context, R.style.text, R.string.followup_date);
 		followUpDate = Calendar.getInstance ();
 		followUpDatePicker = new DatePicker(context);
+		followUpDatePicker.setTag("Followup Date");
 		followUpDatePicker.init(followUpDatePicker.getYear(), followUpDatePicker.getMonth(), followUpDatePicker.getDayOfMonth(),new OnDateChangedListener() {
 		    
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -369,8 +372,10 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		outcomeDateTextView = new MyTextView (context, R.style.text, R.string.outcome_date);
 		outcomeDate = Calendar.getInstance ();
 		outcomeDatePicker = new DatePicker(context);
+		outcomeDatePicker.setTag("Treatment Outcome Date");
 		outcomeDatePicker.init(outcomeDatePicker.getYear(), outcomeDatePicker.getMonth(), outcomeDatePicker.getDayOfMonth(),new OnDateChangedListener() {
-		    
+		
+			
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				outcomeDate.set (year, monthOfYear, dayOfMonth);
 			   }
@@ -553,6 +558,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 			message.append (getResources ().getString (R.string.empty_data) + "\n");
 		}
 		if(valid){
+			
 			// Validate range
 			if (formDate.getTime ().after (new Date ()))
 			{
@@ -560,6 +566,41 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
 			}
 			
+			if(treatmentInitiationDatePicker.getVisibility() == View.VISIBLE){
+				// Validate range
+				if (initiationDate.getTime ().after (new Date ()))
+				{
+					valid = false;
+					message.append (treatmentInitiationDatePicker.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
+				}
+			}
+			
+			if(transferOutDatePicker.getVisibility() == View.VISIBLE){
+				// Validate range
+				if (transferDate.getTime ().after (new Date ()))
+				{
+					valid = false;
+					message.append (transferOutDatePicker.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
+				}
+			}
+			
+			if(followUpDatePicker.getVisibility() == View.VISIBLE){
+				// Validate range
+				if (followUpDate.getTime ().after (new Date ()))
+				{
+					valid = false;
+					message.append (followUpDatePicker.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
+				}
+			}
+			
+			if(outcomeDatePicker.getVisibility() == View.VISIBLE){
+				// Validate range
+				if (outcomeDate.getTime ().after (new Date ()))
+				{
+					valid = false;
+					message.append (outcomeDatePicker.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
+				}
+			}			
 			
 			if(patientId.isEnabled()){
 				if (!RegexUtil.isValidId (App.get (patientId)))
@@ -568,11 +609,13 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
 					patientId.setTextColor (getResources ().getColor (R.color.Red));
 				}
-				if (!valid)
-				{
-					App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
-				}
+				
 			}
+		}
+		
+		if (!valid)
+		{
+			App.getAlertDialog (this, AlertType.ERROR, message.toString ()).show ();
 		}
 		
 		return valid;
@@ -956,7 +999,16 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				treatmentInitiationLocation.setVisibility(View.GONE);
 				treatmentInitiationDateTextView.setVisibility(View.GONE);
 				treatmentInitiationDatePicker.setVisibility(View.GONE);
-								
+				
+				if (refusedReasonTreatmentNotInitiated.isChecked() || notFoundReasonTreatmentNotInitiated.isChecked() || contactMissingReasonTreatmentNotInitiated.isChecked()){
+					treatmentInitiatedSpace.setVisibility(View.VISIBLE);
+					treatmentInitiatedSpace.setText(getResources ().getString (R.string.initiated_no_space));
+					saveButton.setVisibility(View.VISIBLE);
+				}
+				else{
+					saveButton.setVisibility(View.GONE);
+					treatmentInitiatedSpace.setVisibility(View.GONE);
+				}				
 			}
 			else {
 				reasonTreatmentNotInitiatedTextView.setVisibility(View.GONE);
