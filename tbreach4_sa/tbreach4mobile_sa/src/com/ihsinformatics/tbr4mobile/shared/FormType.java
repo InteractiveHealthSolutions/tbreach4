@@ -48,4 +48,6 @@ public class FormType
 	public static final String  TREATMENT_INITIATION 	= "Treatment Initiation";
 	public static final String  TREATMENT_FOLLOWUP 		= "Treatment Followup";
 	public static final String  TREATMENT_OUTCOME 		= "Treatment Outcome";
+	public static final String  QUICK_SCREENING 		= "Quick Screening";
+	public static final String  GET_SPUTUM_SUBMISSION_STATUS = "Get Sputum Submission Status";
 }
