@@ -14,7 +14,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="age">Age (in years)</string>
-    <string name="age_hint">Enter age</string>
+    <string name="age_hint">Enter age (1 - 120)</string>
     <string name="dob">Date of Birth</string>
     <string name="language_spoken">Languages Spoken at Home</string>
     <string name="english">English</string>
