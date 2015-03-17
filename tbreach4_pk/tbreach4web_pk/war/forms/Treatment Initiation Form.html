@@ -65,10 +65,16 @@ Contributors: Tahira Niazi -->
                         </p>
                         
                         <div id="eptb_site_div">
-                        <p>
-                                 <lookup expression="fn.getConcept('627').description"/><br/>
-                                 <obs conceptId="627" id="eptb_site"/>
-                        </p>
+                               <p>
+                                       <lookup expression="fn.getConcept('652').description"/><br/>
+                                       <obs conceptId="652" id="eptb_site" defaultValue="645" answerConceptIds="645, 646, 647, 648, 649, 650, 470"/>
+                               </p>
+                        </div>
+                        <div id="other_eptb_site">
+                               <p>
+                                      <lookup expression="fn.getConcept('653').description"/><br/>
+                                      <obs conceptId="653" id="other_site"/>   
+                               </p>
                         </div>
                         <p>
                                 <lookup expression="fn.getConcept('290').description"/><br/>
@@ -85,30 +91,41 @@ Contributors: Tahira Niazi -->
                 
                 </div>
 	</section>
-
 	<submit/>
        
         <script>
 		if(jQuery) {
 		$j(document).ready(function() {
 			//if tb_type is EPTB, show EPTB_site 
-                        <ifMode mode="View">
+                        <ifMode mode="ENTER">
 			$j("#tb_type").change(function() {
 				var eptbSiteDiv = $j("#eptb_site_div");
+                                var otherEptbSiteDiv = $j("#other_eptb_site");
 				var tbTypeValue = getValue('tb_type.value');
 				if (tbTypeValue == 161) {
 					eptbSiteDiv.show();
 				}
 				else {
 					eptbSiteDiv.hide();
+                                        otherEptbSiteDiv.hide();
 				}
 			});
 			$j("#tb_type").change();
-                        </ifMode>
-                        
+   
+                        $j("#eptb_site").change(function() {
+				var otherEptbSiteDiv = $j("#other_eptb_site");
+				var eptbSiteValue = getValue('eptb_site.value');
+				if (eptbSiteValue == 470) {
+					otherEptbSiteDiv.show();
+				}
+				else {
+					otherEptbSiteDiv.hide();
+				}
+			});
+			$j("#eptb_site").change();
+ 
+                       </ifMode> 
                });
 	}
 	</script>
-
-
 </htmlform>
