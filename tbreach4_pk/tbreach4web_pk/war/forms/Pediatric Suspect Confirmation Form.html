@@ -234,6 +234,21 @@ Contributors: Tahira Niazi -->
 				}
 			});
 			$j("#histopathology").change();
+			
+			$j("#exposure_score").click(function() {
+                var values = [getValue('source_case_child_mother.value'), getValue('source_case_care_giver.value'), getValue('source_case_sleep.value') , getValue('source_case_sleep_room.value') , getValue('source_case_living.value'), getValue('source_case_see.value') , getValue('source_case_cough.value') , getValue('source_case_pulmonary_tb.value'), getValue('source_case_positive_smear.value'), getValue('more_source_cases.value')];
+                
+                var score = 0;
+                for(var i=0; i &lt; values.length; i++)
+                {
+                     if(values[i] == 1)
+                     {
+                          score++;
+                     }
+                }
+                setValue('exposure_score.value', score);
+           });
+           $j("#more_source_cases").change();
 		});
 	}
 	</script>
