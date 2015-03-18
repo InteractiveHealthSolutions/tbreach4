@@ -632,10 +632,10 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 										});
 										// Update database
 										publishProgress ("Searching...");
-										String district = serverService.getFacility (App.getDistrict().substring(0,2).concat(selected));
-										if (district != null)
+										String facility = serverService.getFacility (App.getDistrict().substring(0,2).concat(selected));
+										if (facility != null)
 										{
-											App.setFacility (district);
+											App.setFacility (facility);
 
 											// Save district in preferences
 											SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (getBaseContext());
