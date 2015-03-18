@@ -223,23 +223,23 @@ public final class R {
         public static final int nonPulmonaryTableRow=0x7f110017;
         public static final int paediatricButton=0x7f110016;
         public static final int paediatricTableRow=0x7f110015;
-        public static final int patientReportButton=0x7f11000a;
-        public static final int patientReportTableRow=0x7f110009;
-        public static final int quickScreeningButton=0x7f110010;
-        public static final int quickScreeningTableRow=0x7f11000f;
-        public static final int screeningButton=0x7f110006;
-        public static final int screeningTableRow=0x7f110005;
+        public static final int patientReportButton=0x7f11000c;
+        public static final int patientReportTableRow=0x7f11000b;
+        public static final int quickScreeningButton=0x7f110006;
+        public static final int quickScreeningTableRow=0x7f110005;
+        public static final int screeningButton=0x7f110008;
+        public static final int screeningTableRow=0x7f110007;
         public static final int scrollView=0x7f110004;
         public static final int selectLocationsButton=0x7f110013;
-        public static final int sputumResultButton=0x7f11000c;
-        public static final int sputumResultTableRow=0x7f11000b;
-        public static final int sputumSubmissionButton=0x7f110008;
-        public static final int sputumSubmissionTableRow=0x7f110007;
+        public static final int sputumResultButton=0x7f11000e;
+        public static final int sputumResultTableRow=0x7f11000d;
+        public static final int sputumSubmissionButton=0x7f11000a;
+        public static final int sputumSubmissionTableRow=0x7f110009;
         public static final int testIndicationButton=0x7f11001c;
         public static final int testIndicationTableRow=0x7f11001b;
         public static final int textView1=0x7f110001;
-        public static final int treatmentButton=0x7f11000e;
-        public static final int treatmentTableRow=0x7f11000d;
+        public static final int treatmentButton=0x7f110010;
+        public static final int treatmentTableRow=0x7f11000f;
     }
     public static final class menu {
         public static final int main_menu=0x7f0c0000;
