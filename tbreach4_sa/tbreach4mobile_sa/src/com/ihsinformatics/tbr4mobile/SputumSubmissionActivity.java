@@ -264,8 +264,10 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		
 		spotSputumTime = new MyRadioButton(context, R.string.spot, R.style.radio,
 				R.string.spot);
+		spotSputumTime.setPadding(0, 0, 0, 30);
 		secondDaySputumTime = new MyRadioButton(context, R.string.second_day, R.style.radio,
 				R.string.second_day);
+		secondDaySputumTime.setPadding(0, 0, 0, 30);
 		thirdDaySputumTime = new MyRadioButton(context, R.string.third_day, R.style.radio,
 				R.string.third_day);
 		moreThirdDaySputumTime = new MyRadioButton(context, R.string.after_third_day, R.style.radio,
