@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -456,7 +456,7 @@ public class ServerService
 	{
 		String id = dbUtil.getObject (Metadata.METADATA_TABLE, "name", "type='" + Metadata.SCREENING_STRATEGY + "' and name like '%" + value + "%'");
 		String location = null;
-		// If not found, fetch from server and save this user
+		// If not found, fetch from server and save this location
 		if (id == null)
 		{
 			try
@@ -470,13 +470,18 @@ public class ServerService
 				{
 					JSONObject locationObj = JsonUtil.getJSONObject (response);
 					ContentValues values = new ContentValues ();
-					name = locationObj.getString ("name");
-					// If location is found, then save it into local DB
-					values = new ContentValues ();
-					values.put ("id", locationObj.getInt ("id"));
-					values.put ("type", Metadata.SCREENING_STRATEGY);
-					values.put ("name", name);
-					dbUtil.insert (Metadata.METADATA_TABLE, values);	
+					String status = locationObj.getString ("status");
+					if(status.equals("OK")){
+						name = locationObj.getString ("name");
+						// If strategy is found, then save it into local DB
+						values = new ContentValues ();
+						values.put ("id", locationObj.getInt ("id"));
+						values.put ("type", Metadata.SCREENING_STRATEGY);
+						values.put ("name", name);
+						dbUtil.insert (Metadata.METADATA_TABLE, values);
+					}
+					else
+						name = null;
 				}
 			}
 			catch (JSONException e)
@@ -490,7 +495,7 @@ public class ServerService
 				name = null;
 			}
 			location = name;
-         }
+		}
 		
 		else
 			location = id;
