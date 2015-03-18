@@ -25,7 +25,7 @@ package com.ihsresearch.tbr4web.shared;
 
 public class App
 {
-	public static final String	appVersion	= "1.2.0";
+	public static final String	appVersion	= "1.3.0";
 	
 	
 	public static boolean validateVersion(String version){
@@ -38,12 +38,12 @@ public class App
 			return false;
 		
 
-		String webVersionComponents[] = version.split ("\\.");
+		String webVersionComponents[] = appVersion.split ("\\.");
 		
 		if(!mobileVersionComponents[0].equals (webVersionComponents[0]))
 			return false;
 		
-		if(!mobileVersionComponents[1].equals (webVersionComponents[0]))
+		if(!mobileVersionComponents[1].equals (webVersionComponents[1]))
 			return false;
 		
 		
