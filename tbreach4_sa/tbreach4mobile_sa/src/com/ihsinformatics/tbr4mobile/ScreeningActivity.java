@@ -1510,6 +1510,30 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 								R.color.Red));
 					}
 				}
+				
+				if(phone1.isEnabled()){
+					if(!RegexUtil.isContactNumber(App.get(phone1))){
+						valid = false;
+						message.append(phone1.getTag().toString()
+								+ ": "
+								+ getResources().getString(
+										R.string.invalid_data) + "\n");
+						phone1.setTextColor(getResources().getColor(
+								R.color.Red));
+					}
+				}
+				
+				if(phone2.isEnabled()){
+					if(!RegexUtil.isContactNumber(App.get(phone2))){
+						valid = false;
+						message.append(phone2.getTag().toString()
+								+ ": "
+								+ getResources().getString(
+										R.string.invalid_data) + "\n");
+						phone2.setTextColor(getResources().getColor(
+								R.color.Red));
+					}
+				}
 			}
 			
 			
