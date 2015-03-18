@@ -300,11 +300,15 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		
 		refusedReasonTreatmentNotInitiated = new MyRadioButton(context, R.string.refused_treatment, R.style.radio,
 				R.string.refused_treatment);
+		refusedReasonTreatmentNotInitiated.setPadding(0, 0, 0, 30);
 		
 		notFoundReasonTreatmentNotInitiated = new MyRadioButton(context, R.string.patient_not_found, R.style.radio,
 				R.string.patient_not_found);
+		notFoundReasonTreatmentNotInitiated.setPadding(0, 0, 0, 30);
+		
 		contactMissingReasonTreatmentNotInitiated = new MyRadioButton(context, R.string.missing_contacts, R.style.radio,
 				R.string.missing_contacts);
+		contactMissingReasonTreatmentNotInitiated.setPadding(0, 0, 0, 30);
 		
 		reasonTreatmentNotInitiatedGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { refusedReasonTreatmentNotInitiated, notFoundReasonTreatmentNotInitiated, contactMissingReasonTreatmentNotInitiated}, R.string.treament_initiated,
@@ -316,6 +320,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				R.string.transferred_out);
 		clinicTreatmentInitiation = new MyRadioButton(context, R.string.treatment_clinic, R.style.radio,
 				R.string.treatment_clinic);
+		clinicTreatmentInitiation.setPadding(0, 0, 0, 30);
 		
 		treatmentInitiationGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { transferredOutTreatmentInitiation, clinicTreatmentInitiation }, R.string.treatment_initiation,
