@@ -130,6 +130,12 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		MyTextView		contactAppetiteTextView;
 		MySpinner		contactAppetite;
 		
+		MyTextView		lymphNodeSwellingTextView;
+		MySpinner		lymphNodeSwelling;
+
+		MyTextView		jointSpineSwellingTextView;
+		MySpinner		jointSpineSwelling;
+		
 		MyTextView		chestExaminationTextView;
 		MySpinner		chestExamination;
 		
@@ -282,7 +288,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 	public void createViews(Context context)
 	{
 		TAG = "PaediatricContactTracingActivity";
-		PAGE_COUNT = 13;
+		PAGE_COUNT = 14;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -367,7 +373,13 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		weightLoss = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.contact_weight_loss, R.string.option_hint);
 		
 		contactAppetiteTextView = new MyTextView(context, R.style.text, R.string.contact_appetite);
-		contactAppetite = new MySpinner(context, getResources().getStringArray(R.array.child_appetite_options), R.string.contact_appetite, R.string.option_hint);
+		contactAppetite = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.contact_appetite, R.string.option_hint);
+		
+		lymphNodeSwellingTextView = new MyTextView(context, R.style.text, R.string.lymph_node_swelling);
+		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.lymph_node_swelling, R.string.option_hint);
+		
+		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
+		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
 		
 		chestExaminationTextView = new MyTextView(context, R.style.text, R.string.chest_examination);
 		chestExamination = new MySpinner(context, getResources().getStringArray(R.array.chest_exam_options), R.string.chest_examination, R.string.option_hint);
@@ -447,7 +459,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		moreThanOneSourceCase = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.more_than_one_source_case, R.string.option_hint);
 		
 		tbSuspect = new MyCheckBox(context, R.string.client_suspect, R.style.edit, R.string.client_suspect, false) ;
-//		tbSuspect.setClickable(false);
+		tbSuspect.setClickable(false);
 		
 		patientIdTextView = new MyTextView (context, R.style.text, R.string.patient_id);
 		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
@@ -467,7 +479,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 								{dobTextView, dobPicker},
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis, weightTextView, weight, weightPercentileTextView, weightPercentile},
 								{coughTextView, cough, coughDurationTextView, coughDuration, feverTextView, fever, nightSweatsTextView, nightSweats, weightLossTextView, weightLoss, contactAppetiteTextView, contactAppetite},
-								{chestExaminationTextView, chestExamination, lymphNodeExaminationTextView, lymphNodeExamination, abdominalExaminationTextView, abdominalExamination, otherExaminationTextView, otherExamination},
+								{lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling, chestExaminationTextView, chestExamination},
+								{lymphNodeExaminationTextView, lymphNodeExamination, abdominalExaminationTextView, abdominalExamination, otherExaminationTextView, otherExamination},
 								{childBcgScarTextView, childBcgScar, adultFamilyMemberTBTextView, adultFamilyMemberTB, memberFamilyTBTextView, memberFamilyTB, memberTBFormTextView, memberTBForm},
 								{memberTBTypeTextView, memberTBType, confirmSputumSmearPositiveTBTextView, confirmSputumSmearPositiveTB},
 								{sourceCaseMotherTextView, sourceCaseMother, sourceCasePrimaryCareGiverTextView, sourceCasePrimaryCareGiver, sourceCaseSleepSameBedTextView, sourceCaseSleepSameBed, exposureScoreTextView, exposureScore},
@@ -504,10 +517,10 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
 				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, ageModifier, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, contactAppetite, chestExamination, 
-						lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, confirmSputumSmearPositiveTB, 
-						exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, sourceCaseHasPulmonaryTB,
-						sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, ageModifier, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, 
+						contactAppetite, lymphNodeSwelling, jointSpineSwelling, chestExamination, lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, 
+						confirmSputumSmearPositiveTB, exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, 
+						sourceCaseHasPulmonaryTB, sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -567,7 +580,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		updateDisplay ();
 		dob.setTime (new Date ());
 		male.setChecked (true);
-		tbSuspect.setChecked(true);
+		tbSuspect.setChecked(true); // always true; Always assign patient id as even though the suspect was not confirmed, he/she was initially a suspect due to history of contact
 
 		memberFamilyTBTextView.setEnabled(false);
 		memberFamilyTB.setEnabled(false);
@@ -966,6 +979,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			observations.add(new String[] {"Night Sweats", App.get(nightSweats)});
 			observations.add(new String[] {"Weight Loss", App.get(weightLoss)});
 			observations.add(new String[] {"Child Appetite", App.get(contactAppetite)});
+			observations.add(new String[] {"Lymph Node Swelling", App.get(lymphNodeSwelling)});
+			observations.add(new String[] {"Joint Spine Swelling", App.get(jointSpineSwelling)});
 			observations.add(new String[] {"Chest Examination", App.get(chestExamination)});
 			observations.add(new String[] {"Lymph Node Examination", App.get(lymphNodeExamination)});
 			observations.add(new String[] {"Abdominal Examination", App.get(abdominalExamination) });
@@ -994,7 +1009,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No"});
 			
 //			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No" });
-						
+			
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
 			{
 				@Override

@@ -110,6 +110,15 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 		MyTextView		childAppetiteTextView;
 		MySpinner		childAppetite;
 		
+		MyTextView		positiveReportTextView;
+		MySpinner		positiveReport;
+		
+		MyTextView		lymphNodeSwellingTextView;
+		MySpinner		lymphNodeSwelling;
+		
+		MyTextView		jointSpineSwellingTextView;
+		MySpinner		jointSpineSwelling;
+		
 		MyTextView		contactHistoryTextView;
 		MySpinner		contactHistory;
 		
@@ -190,7 +199,7 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 	public void createViews(Context context)
 	{
 		TAG = "PaediatricScreeningActivity";
-		PAGE_COUNT = 5;
+		PAGE_COUNT = 6;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -253,11 +262,19 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 		weightLoss = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.child_weight_loss, R.string.option_hint);
 		
 		childAppetiteTextView = new MyTextView(context, R.style.text, R.string.child_appetite);
-		childAppetite = new MySpinner(context, getResources().getStringArray(R.array.child_appetite_options), R.string.child_appetite, R.string.option_hint);
+		childAppetite = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.child_appetite, R.string.option_hint);
+		
+		positiveReportTextView = new MyTextView(context, R.style.text, R.string.positive_report);
+		positiveReport = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.positive_report, R.string.option_hint);
+		
+		lymphNodeSwellingTextView = new MyTextView(context, R.style.text, R.string.lymph_node_swelling);
+		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.lymph_node_swelling, R.string.option_hint);
+		
+		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
+		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
 		
 		contactHistoryTextView = new MyTextView(context, R.style.text, R.string.contact_history);
 		contactHistory = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.contact_history, R.string.option_hint);
-		
 		
 		tbSuspect = new MyCheckBox(context, R.string.client_suspect, R.style.edit, R.string.client_suspect, false) ;
 		tbSuspect.setClickable(false);
@@ -270,7 +287,8 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 								{genderTextView, gender,ageTextView, age, ageModifier}, 
 								{dobTextView, dobPicker},
 								{coughTextView, cough, coughDurationTextView, coughDuration, feverTextView, fever, nightSweatsTextView, nightSweats, weightLossTextView, weightLoss },
-								{childAppetiteTextView, childAppetite, contactHistoryTextView, contactHistory, tbSuspect,  patientIdTextView, patientId, scanBarcode}};
+								{childAppetiteTextView, childAppetite, positiveReportTextView, positiveReport, lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling}, 
+								{contactHistoryTextView, contactHistory, tbSuspect,  patientIdTextView, patientId, scanBarcode}};
 
 		
 		// Create layouts and store in ArrayList
@@ -298,7 +316,7 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 				scanBarcode.setOnClickListener (this);
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
-				views = new View[] {age, ageModifier, screenedBefore, cough, coughDuration, fever,  nightSweats, weightLoss, childAppetite, contactHistory, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, ageModifier, screenedBefore, cough, coughDuration, fever,  nightSweats, weightLoss, childAppetite, positiveReport, lymphNodeSwelling, jointSpineSwelling, contactHistory, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -691,6 +709,10 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 			observations.add(new String[] {"Weight Loss", App.get(weightLoss)});
 			observations.add(new String[] {"Contact History", App.get(contactHistory)});
 			observations.add(new String[] {"Child Appetite", App.get(childAppetite)});
+			observations.add(new String[] {"Positive Report Possession", App.get(positiveReport) });
+			observations.add(new String[] {"Lymph Node Swelling", App.get(lymphNodeSwelling) });
+			observations.add(new String[] {"Joint Spine Swelling", App.get(jointSpineSwelling)});
+			
 			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No" });
 						
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()

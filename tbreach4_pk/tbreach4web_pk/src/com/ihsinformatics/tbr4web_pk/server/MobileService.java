@@ -992,6 +992,7 @@ public class MobileService
 	{
 		JSONObject json = new JSONObject ();
 		String patientStatus = "";
+		String indexCaseID = ""; // for Contact and Reverse Contact Tracing non-suspects
 		try
 		{
 			//int age = Integer.parseInt (values.get ("age").toString ());
@@ -1020,6 +1021,7 @@ public class MobileService
 			if(values.has("reverseNonSuspect"))
 			{
 				patientStatus = "REVERSE";
+				indexCaseID = values.getString("indexCaseId");
 			}
 			else
 				patientStatus = "SCREENED";
@@ -1031,8 +1033,8 @@ public class MobileService
 			{
 				query = new StringBuffer ();
 				//query.append ("insert into openmrs_rpt.patient (pid, patient_id, date_screened, suspected_by, treatment_centre, weight, height, patient_status) values (?, ?, ?, ?, ?, ?, ?, ?)");
-				query.append ("insert into openmrs_rpt.patient (pid, patient_id, date_screened, suspected_by, treatment_centre, patient_status) values (?, ?, ?, ?, ?, ?)");
-				params = new String[] {uuid, uuid, formDate, username, location, /* weight, height, */ patientStatus};
+				query.append ("insert into openmrs_rpt.patient (pid, patient_id, date_screened, suspected_by, treatment_centre, patient_status, treatment_supporter) values (?, ?, ?, ?, ?, ?, ?)");
+				params = new String[] {uuid, uuid, formDate, username, location, /* weight, height, */ patientStatus, indexCaseID};
 				if (executeUpdate (query.toString (), params))
 				{
 					json.put ("result", "SUCCESS");

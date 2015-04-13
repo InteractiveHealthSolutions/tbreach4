@@ -2253,7 +2253,11 @@ public class ServerService
 			json.put("dob", values.getAsString("dob"));
 			
 			if(values.getAsString("reverseNonSuspect") != null)
+			{
+				// coming from Adult Reverse Contact Tracing Form
+				json.put("indexCaseId", values.getAsString("indexCaseId"));
 				json.put("reverseNonSuspect", values.getAsString("reverseNonSuspect"));
+			}
 			else
 			{
 				// Save form locally if in offline mode

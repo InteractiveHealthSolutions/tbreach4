@@ -117,6 +117,12 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		
 		MyTextView		weightLossTextView;
 		MySpinner		weightLoss;
+		
+		MyTextView		lymphNodeSwellingTextView;
+		MySpinner		lymphNodeSwelling;
+
+		MyTextView		jointSpineSwellingTextView;
+		MySpinner		jointSpineSwelling;
 
 		MyTextView		tbBeforeTextView;
 		MySpinner		tbBefore;
@@ -266,6 +272,12 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		weightLossTextView = new MyTextView(context, R.style.text, R.string.adult_weight_loss);
 		weightLoss = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.adult_weight_loss, R.string.option_hint);
 		
+		lymphNodeSwellingTextView = new MyTextView(context, R.style.text, R.string.lymph_node_swelling);
+		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.lymph_node_swelling, R.string.option_hint);
+		
+		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
+		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
+		
 		tbBeforeTextView = new MyTextView(context, R.style.text, R.string.tb_before);
 		tbBefore = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.tb_before, R.string.option_hint);
 
@@ -285,8 +297,8 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 								{genderTextView, gender,ageTextView, age}, 
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId,  indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis},
 								{coughTextView, cough, coughDurationTextView, coughDuration, productiveCoughTextView, productiveCough, feverTextView, fever},
-								{nightSweatsTextView, nightSweats, weightLossTextView, weightLoss, tbBeforeTextView, tbBefore, tbMedicationTextView, tbMedication},
-								{tbSuspect,  patientIdTextView, patientId, scanBarcode}};
+								{nightSweatsTextView, nightSweats, weightLossTextView, weightLoss, lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling},
+								{tbBeforeTextView, tbBefore, tbMedicationTextView, tbMedication, tbSuspect,  patientIdTextView, patientId, scanBarcode}};
 
 		
 		// Create layouts and store in ArrayList
@@ -317,7 +329,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
 				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, lymphNodeSwelling, jointSpineSwelling, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -738,7 +750,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			values.put("age", App.get(age));
 			// values.put ("dob", App.getSqlDate (dob));
 			values.put("gender", male.isChecked() ? "M" : "F");
-			//values.put("indexCaseId", App.get(indexCaseId));
+			
 			values.put("patientId", App.get(patientId));
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
@@ -759,6 +771,8 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			observations.add(new String[] { "Fever", App.get(fever) });
 			observations.add(new String[] { "Night Sweats", App.get(nightSweats) });
 			observations.add(new String[] { "Weight Loss", App.get(weightLoss) });
+			observations.add(new String[] {"Lymph Node Swelling", App.get(lymphNodeSwelling)});
+			observations.add(new String[] {"Joint Spine Swelling", App.get(jointSpineSwelling)});
 			
 			observations.add(new String[] { "TB Past", App.get(tbBefore) });
 
@@ -772,7 +786,10 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			observations.add(new String[] { "Age Modifier", "Year(s)" });
 			
 			if(!tbSuspect.isChecked())
+			{
 				values.put("reverseNonSuspect", "Adult Reverse Non Suspect");
+				values.put("indexCaseId", App.get(indexCaseId));
+			}
 				
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String>()
 			{

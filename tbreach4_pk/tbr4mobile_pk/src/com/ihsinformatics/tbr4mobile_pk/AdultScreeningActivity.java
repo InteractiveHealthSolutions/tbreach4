@@ -24,7 +24,6 @@ import com.ihsinformatics.tbr4mobile_pk.R.drawable;
 import com.ihsinformatics.tbr4mobile_pk.R.string;
 import com.ihsinformatics.tbr4mobile_pk.R.style;
 import com.ihsinformatics.tbr4mobile_pk.R.template_id;
-
 import com.ihsinformatics.tbr4mobile_pk.custom.MyButton;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
@@ -130,6 +129,15 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 
 	MyTextView weightLossTextView;
 	MySpinner weightLoss;
+	
+	MyTextView		positiveReportTextView;
+	MySpinner		positiveReport;
+	
+	MyTextView		lymphNodeSwellingTextView;
+	MySpinner		lymphNodeSwelling;
+	
+	MyTextView		jointSpineSwellingTextView;
+	MySpinner		jointSpineSwelling;
 
 	MyTextView tbSuspectTextView;
 	MyCheckBox tbSuspect;
@@ -211,7 +219,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 	public void createViews(Context context)
 	{
 		TAG = "PaediatricScreeningActivity";
-		PAGE_COUNT = 6;
+		PAGE_COUNT = 7;
 		pager = (ViewPager) findViewById(R.template_id.pager);
 		navigationSeekbar.setMax(PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById(R.template_id.navigatorLayout);
@@ -302,6 +310,15 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 				R.array.four_options), R.string.adult_weight_loss,
 				R.string.option_hint);
 
+		positiveReportTextView = new MyTextView(context, R.style.text, R.string.positive_report);
+		positiveReport = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.positive_report, R.string.option_hint);
+		
+		lymphNodeSwellingTextView = new MyTextView(context, R.style.text, R.string.lymph_node_swelling);
+		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.lymph_node_swelling, R.string.option_hint);
+		
+		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
+		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
+		
 		tbBeforeTextView = new MyTextView(context, R.style.text,
 				R.string.tb_before);
 		tbBefore = new MySpinner(context, getResources().getStringArray(
@@ -341,6 +358,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 						coughProductiveTextView, coughProductive},
 				{ feverWeeksTextView, feverWeeks, nightSweatsTextView,
 					nightSweats, weightLossTextView, weightLoss },
+				{ positiveReportTextView, positiveReport, lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling},
 				{ tbBeforeTextView, tbBefore, tbMedicationTextView,
 						tbMedication, tbInFamilyTextView, tbInFamily },
 				{ tbSuspect, patientIdTextView, patientId, scanBarcode } };
@@ -373,7 +391,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 		age.setOnEditorActionListener(this);
 		views = new View[] { age, screenedBefore, cough, coughDuration,
 				coughProductive, tbBefore, tbMedication, tbInFamily, feverWeeks, nightSweats,
-				weightLoss, firstName, lastName, tbSuspect, patientId };
+				weightLoss, positiveReport, lymphNodeSwelling, jointSpineSwelling, firstName, lastName, tbSuspect, patientId };
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -720,10 +738,12 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 
 			observations.add(new String[] { "Family TB", App.get(tbInFamily) });
 			observations.add(new String[] { "Fever", App.get(feverWeeks) });
-			observations.add(new String[] { "Night Sweats",
-					App.get(nightSweats) });
-			observations
-					.add(new String[] { "Weight Loss", App.get(weightLoss) });
+			observations.add(new String[] { "Night Sweats",	App.get(nightSweats) });
+			observations.add(new String[] { "Weight Loss", App.get(weightLoss) });
+			observations.add(new String[] { "Positive Report Possession", App.get(positiveReport)});
+			observations.add(new String[] { "Lymph Node Swelling", App.get(lymphNodeSwelling)});
+			observations.add(new String[] { "Joint Spine Swelling", App.get(jointSpineSwelling)});
+			
 			observations.add(new String[] { "Age Modifier", "Year(s)" });
 
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String>()
