@@ -96,7 +96,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		MyEditText		indexCaseId;
 		
 		MyTextView		indexDistrictTbNumberTextView;
-		MyEditText		indexDistrictTbNumber;
+		MyTextView		indexDistrictTbNumber;
 		
 		MyTextView		diagnosisTextView;
 		MySpinner		diagnosis;
@@ -251,7 +251,8 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		indexCaseId = new MyEditText(context, R.string.index_case_id, R.string.index_case_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
 		
 		indexDistrictTbNumberTextView = new MyTextView(context, R.style.text, R.string.index_district_number);
-		indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
+		indexDistrictTbNumber = new MyTextView(context, R.style.text, R.string.empty_string);
+		//indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
 
 		diagnosisTextView = new MyTextView(context, R.style.text, R.string.diagnosis);
 		diagnosis = new MySpinner(context, getResources().getStringArray(R.array.diagnosis_options), R.string.diagnosis, R.string.option_hint);
@@ -487,9 +488,14 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 										diagnosis.setSelection(0);
 									else
 										diagnosis.setSelection(1);
+									
+									diagnosis.setClickable(false);
 								}
 								else
+								{
+									indexDistrictTbNumber.setTextColor(getResources().getColor(R.color.Chocolate));
 									indexDistrictTbNumber.setText(result[i][1]);
+								}
 							}
 						}
 						else

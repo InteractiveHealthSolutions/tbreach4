@@ -23,7 +23,7 @@ Contributors: Tahira Niazi -->
     <string name="ethnicity">Ethnicity</string>
     <string name="marital_status">Marital Status</string>
     <string name="phone1">Phone Number 1</string>
-    <string name="phone1_hint">Enter Phne Number 1</string>
+    <string name="phone1_hint">Enter Phone Number 1</string>
     <string name="phone2">Phone Number 2</string>
     <string name="phone2_hint">Enter Phone Number 2</string>
     <string name="address">Address</string>
