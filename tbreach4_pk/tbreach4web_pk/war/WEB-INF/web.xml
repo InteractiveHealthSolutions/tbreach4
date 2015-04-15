@@ -42,4 +42,27 @@ Contributors: Tahira Niazi -->
     <url-pattern>/NonSuspectDataServlet</url-pattern>
   </servlet-mapping>
 
+  <!-- This block makes sure that all the resources are accessed via HTTPS -->
+<security-constraint>
+ <web-resource-collection>
+  <web-resource-name>HTTPSOnly</web-resource-name>
+   <url-pattern>/*</url-pattern>
+ </web-resource-collection>
+ <user-data-constraint>
+  <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+ </user-data-constraint>
+</security-constraint>
+<!-- This block overrides the previous for certain resources and enables them on both HTTP and HTTPS -->
+<security-constraint>
+ <web-resource-collection>
+  <web-resource-name>HTTPSOrHTTP</web-resource-name>
+   <url-pattern>*.jpg</url-pattern>
+   <url-pattern>/img/*</url-pattern>
+   <url-pattern>/css/*</url-pattern>
+ </web-resource-collection>
+ <user-data-constraint>
+  <transport-guarantee>NONE</transport-guarantee>
+ </user-data-constraint>
+</security-constraint>
+  
  </web-app>

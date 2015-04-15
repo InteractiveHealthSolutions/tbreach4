@@ -16,6 +16,8 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4web_pk.shared;
 
+import com.ihsinformatics.tbr4web_pk.server.MobileService;
+
 /**
  * @author owais.hussain@irdresearch.org
  * 
