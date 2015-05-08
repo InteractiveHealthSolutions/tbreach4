@@ -100,8 +100,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	MyEditText			townAddress;
 	MyTextView			landmarkAddressTextView;
 	MyEditText			landmarkAddress;
-	MyTextView			cityTextView;
-	MyEditText			city;
+	/*MyTextView			cityTextView;
+	MyEditText			city;*/
 	MyTextView			countryTextView;
 	MyEditText			country;
 	
@@ -109,10 +109,18 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	MyEditText			phone;
 	MyTextView			contactTbTextView;
 	MyEditText			contactTb;
+	MyTextView			lastHivResultTextView;
+	MyEditText			lastHivResult;
 	MyTextView			diabetesTextView;
 	MyEditText			diabetes;
 	MyTextView			sputumSubmissionDateTextView;
 	MyEditText			sputumSubmissionDate;
+	MyTextView			sputumResultDateTextView;
+	MyEditText			sputumResultDate;
+	MyTextView			genexpertResultTextView;
+	MyEditText			genexpertResult;
+	MyTextView			treatmentInitiationDateTextView;
+	MyEditText			treatmentInitiationDate;
 	
 	MyTextView			pidTextView;
 	MyEditText			pid;
@@ -121,6 +129,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	
 	final int PATIENT_ID = 1;
 	final int NHLS_ID = 2;
+	
+	String[][] patientDetail = null;
 
 	/**
 	 * Subclass representing Fragment for test indication form
@@ -189,7 +199,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	{
 		FORM_NAME = "Patient Report";
 		TAG = "PatientReportActivity";
-		PAGE_COUNT = 5;
+		PAGE_COUNT = 6;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -208,7 +218,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		searchPatientTextView = new MyTextView (context, R.style.text, R.string.search_option);
 		patientIdRadioButton = new MyRadioButton (context, R.string.patient_id_radio, R.style.radio, R.string.patient_id_radio);
 		nhlsIdRadioButton = new MyRadioButton (context, R.string.nhls_id_radio, R.style.radio, R.string.nhls_id_radio);
-		searchOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL (),1);
+		searchOption = new MyRadioGroup (context, new MyRadioButton[] {patientIdRadioButton, nhlsIdRadioButton}, R.string.search_option, R.style.radio, App.isLanguageRTL (),0);
 
 		
 		patientIdMyTextView = new MyTextView (context, R.style.text, R.string.patient_id);
@@ -244,9 +254,6 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		physicalAddress  = new MyEditText (context, R.string.physical_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
 		physicalAddress.setKeyListener(null);
 		
-		//colonyAddressTextView = new MyTextView (context, R.style.text, R.string.colony_address);
-		//colonyAddress  = new MyEditText (context, R.string.colony_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
-		//colonyAddress.setKeyListener(null);
 		
 		townAddressTextView = new MyTextView (context, R.style.text, R.string.town_address);
 		townAddress = new MyEditText (context, R.string.town_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
@@ -256,9 +263,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		landmarkAddress  = new MyEditText (context, R.string.landmark_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
 		landmarkAddress.setKeyListener(null);
 		
-		cityTextView = new MyTextView (context, R.style.text, R.string.city_address);
+		/*cityTextView = new MyTextView (context, R.style.text, R.string.city_address);
 		city  = new MyEditText (context, R.string.city_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
-		city.setKeyListener(null);
+		city.setKeyListener(null);*/
 		
 		countryTextView = new MyTextView (context, R.style.text, R.string.country_address);
 		country  = new MyEditText (context, R.string.country_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
@@ -272,6 +279,10 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		contactTb = new MyEditText (context, R.string.contact_with_tb, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
 		contactTb.setKeyListener(null);
 		
+		lastHivResultTextView  = new MyTextView (context, R.style.text, R.string.hivTestResult);
+		lastHivResult = new MyEditText (context, R.string.hivTestResult, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
+		lastHivResult.setKeyListener(null);
+		
 		diabetesTextView = new MyTextView (context, R.style.text, R.string.diabetes);
 		diabetes = new MyEditText (context, R.string.diabetes, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
 		diabetes.setKeyListener(null);
@@ -279,6 +290,18 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		sputumSubmissionDateTextView = new MyTextView (context, R.style.text, R.string.date_of_sputum_submission);
 		sputumSubmissionDate = new MyEditText (context, R.string.date_of_sputum_submission, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
 		sputumSubmissionDate.setKeyListener(null);
+		
+		sputumResultDateTextView = new MyTextView (context, R.style.text, R.string.date_of_sputum_result);
+		sputumResultDate = new MyEditText (context, R.string.date_of_sputum_result, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
+		sputumResultDate.setKeyListener(null);
+		
+		genexpertResultTextView = new MyTextView (context, R.style.text, R.string.gxp_result);
+		genexpertResult = new MyEditText (context, R.string.gxp_result, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
+		genexpertResult.setKeyListener(null);
+		
+		treatmentInitiationDateTextView = new MyTextView(context, R.style.text, R.string.treatment_initiation_date);
+		treatmentInitiationDate = new MyEditText (context, R.string.treatment_initiation_date, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
+		treatmentInitiationDate.setKeyListener(null);
 		
 		pidTextView = new MyTextView (context, R.style.text, R.string.patient_id);
 		pid = new MyEditText (context, R.string.patient_id, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
@@ -291,10 +314,11 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		//saveButton.setText("Search");
 		
 		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId, searchButton},
-								{pidTextView, pid, nhlsIdTextView, nhlsId, firstNameTextView,firstName,surnameTextView,surname, genderTextView, gender},
-								{dobTextView,dob, ageTextView, age, physicalAddressTextView, physicalAddress, /*colonyAddressTextView, colonyAddress,*/ townAddressTextView, townAddress },
-								{landmarkAddressTextView, landmarkAddress, cityTextView, city, countryTextView, country, phoneTextView, phone, },
-								{contactTbTextView, contactTb, diabetesTextView, diabetes, sputumSubmissionDateTextView, sputumSubmissionDate} };
+								{pidTextView, pid, nhlsIdTextView, nhlsId, firstNameTextView,firstName,surnameTextView,surname,},
+								{genderTextView, gender,dobTextView,dob, ageTextView, age, phoneTextView, phone,},
+								{physicalAddressTextView, physicalAddress, townAddressTextView, townAddress, landmarkAddressTextView, landmarkAddress, /*cityTextView, city,*/ countryTextView, country,  },
+								{contactTbTextView, contactTb, lastHivResultTextView, lastHivResult, diabetesTextView, diabetes, },
+								{sputumSubmissionDateTextView, sputumSubmissionDate,sputumResultDateTextView,sputumResultDate,genexpertResultTextView,genexpertResult,treatmentInitiationDateTextView,treatmentInitiationDate}};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
 		for (int i = 0; i < PAGE_COUNT; i++)
@@ -321,8 +345,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		nhlsIdRadioButton.setOnClickListener(this);
 		
 		navigationSeekbar.setOnSeekBarChangeListener (this);
-		views = new View[] {patientId, testId, pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, /*colonyAddress,*/ townAddress, landmarkAddress, city, country,
-							phone, contactTb, diabetes,sputumSubmissionDate};
+		views = new View[] {patientId, testId, pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, townAddress, landmarkAddress, /*city,*/ country,
+							phone, contactTb, diabetes,sputumSubmissionDate,sputumResultDate,genexpertResult,treatmentInitiationDate};
 		
 		pager.setOnPageChangeListener (this);
 		patientId.setOnLongClickListener (this);
@@ -350,14 +374,6 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	{
 		super.initView (views);
 		
-		for (View v : views)
-		{
-			if (v instanceof MyEditText)
-			{
-				((MyEditText) v).setText ("");
-			}
-		}
-		
 		patientIdRadioButton.setChecked(true);
 		testId.setEnabled(false);
 		testIdMyTextView.setEnabled(false);
@@ -366,6 +382,9 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		patientId.requestFocus();
 		testId.clearFocus();
 		testId.setText("");
+		
+		treatmentInitiationDate.setVisibility(View.GONE);
+		treatmentInitiationDateTextView.setVisibility(View.GONE);
 		
 	}
 
@@ -535,6 +554,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 				    
 				}
 			}
+			
 		}
 	}
 
@@ -542,8 +562,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	public void clear ()
 	{
 		
-		View[] viewsArray = new View[] {pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, /*colonyAddress,*/ townAddress, landmarkAddress, city, country,
-				phone, contactTb, diabetes,sputumSubmissionDate};
+		View[] viewsArray = new View[] {pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, townAddress, landmarkAddress, /*city,*/ country,
+				phone, contactTb, diabetes,sputumSubmissionDate,sputumResultDate,genexpertResult,treatmentInitiationDate};
 		
 		for (View v : viewsArray)
 		{
@@ -573,26 +593,10 @@ public class PatientReportActivity extends AbstractFragmentActivity
 								loading.show ();
 							}
 						});
-						//TODO: Uncomment when live
-						String[][] result = serverService.getPatientReport(id,value);
-						if(result == null)
-						   return "FAIL";
-						firstName.setText(result[0][1]);
-						surname.setText(result[1][1]);
-						dob.setText(result[2][1]);
-						age.setText(result[3][1]);
-						gender.setText(result[4][1]);
-						physicalAddress.setText(result[5][1]);
-						townAddress.setText(result[6][1]);
-						landmarkAddress.setText(result[7][1]);
-						city.setText(result[8][1]);
-						country.setText(result[9][1]);
-						phone.setText(result[10][1]);
-						contactTb.setText(result[11][1]);
-						diabetes.setText(result[12][1]);
-						sputumSubmissionDate.setText(result[13][1]);
-						nhlsId.setText(result[14][1]);
-						pid.setText(result[15][1]);
+						
+						patientDetail = serverService.getPatientReport(id,value);
+						if(patientDetail == null)
+						   return "FAIL";		
 						return "SUCCESS";
 					}
 
@@ -617,6 +621,35 @@ public class PatientReportActivity extends AbstractFragmentActivity
 							toast.setGravity (Gravity.CENTER, 0, 0);
 							toast.show ();
 							return;
+						}
+						firstName.setText(patientDetail[0][1]);
+						surname.setText(patientDetail[1][1]);
+						dob.setText(patientDetail[2][1]);
+						age.setText(patientDetail[3][1]);
+						gender.setText(patientDetail[4][1]);
+						physicalAddress.setText(patientDetail[5][1]);
+						townAddress.setText(patientDetail[6][1]);
+						landmarkAddress.setText(patientDetail[7][1]);
+						/*city.setText(patientDetail[8][1]);*/
+						country.setText(patientDetail[9][1]);
+						phone.setText(patientDetail[10][1]);
+						contactTb.setText(patientDetail[11][1]);
+						diabetes.setText(patientDetail[12][1]);
+						sputumSubmissionDate.setText(patientDetail[13][1]);
+						nhlsId.setText(patientDetail[14][1]);
+						pid.setText(patientDetail[15][1]);
+						lastHivResult.setText(patientDetail[18][1]);
+						sputumResultDate.setText(patientDetail[16][1]);
+						genexpertResult.setText(patientDetail[17][1]);
+						if(patientDetail[17][1].equals("MTB Positive")){
+							treatmentInitiationDate.setText(patientDetail[19][1]);
+							treatmentInitiationDate.setVisibility(View.VISIBLE);
+							treatmentInitiationDateTextView.setVisibility(View.VISIBLE);
+						}
+						else
+						{
+							treatmentInitiationDate.setVisibility(View.GONE);
+							treatmentInitiationDateTextView.setVisibility(View.GONE);
 						}
 						gotoPage(1);
 							

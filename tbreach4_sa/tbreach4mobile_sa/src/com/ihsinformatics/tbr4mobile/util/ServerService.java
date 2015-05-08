@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -1031,7 +1031,7 @@ public class ServerService
 	{
 		
 		String response = "";
-		String[][] details = new String[16][2];
+		String[][] details = null;
 		JSONObject json = new JSONObject ();
 		try
 		{
@@ -1074,18 +1074,26 @@ public class ServerService
 					String landmark = "";
 					if(jsonResponse.get ("landmark") != null)
 						landmark = jsonResponse.get ("landmark").toString ();
-					String city = jsonResponse.get ("city").toString ();
+					String city = "";
 					String country = jsonResponse.get ("country").toString ();
 					String phone1 = jsonResponse.get ("phone1").toString ();
 					String contactTb = jsonResponse.get ("contact_tb").toString ();
 					String diabetes = jsonResponse.get ("diabetes").toString ();
-					String dateSputumSubmission = jsonResponse.get ("date").toString ();
+					String dateSputumSubmission = jsonResponse.get ("date_sputum_submission").toString ();
 					if (!dateSputumSubmission.equals(""))
 						dateSputumSubmission = dateSputumSubmission.substring(0,dateSputumSubmission.indexOf(" "));
+					String dateSputumResult = jsonResponse.get ("date_sputum_result").toString ();
+					if (!dateSputumResult.equals(""))
+						dateSputumResult = dateSputumResult.substring(0,dateSputumResult.indexOf(" "));
 					String testId = jsonResponse.get ("test_lab_id").toString ();
 					String pid = jsonResponse.get ("pid").toString ();
+					String genexpertResult = jsonResponse.get ("genexpert_result").toString ();
+					String lastHivResult = jsonResponse.get ("last_hiv").toString ();
+					String treatmentInitiationDate = jsonResponse.get ("date_treatment_initiation").toString ();
+					if (!treatmentInitiationDate.equals(""))
+						treatmentInitiationDate = treatmentInitiationDate.substring(0,treatmentInitiationDate.indexOf(" "));
 					
-					
+					details = new String[20][];
 					details[0] = new String[] {"First_Name", firstName};
 					details[1] = new String[] {"Last_Name", lastName};
 					details[2] = new String[] {"DOB", dob};
@@ -1102,7 +1110,10 @@ public class ServerService
 					details[13] = new String[] {"dateSputumSUbmission", dateSputumSubmission};
 					details[14] = new String[] {"testId", testId};
 					details[15] = new String[] {"pid", pid};
-					
+					details[16] = new String[] {"dateSputumResult", dateSputumResult};
+					details[17] = new String[] {"genexpertResult", genexpertResult};
+					details[18] = new String[] {"lastHivResult", lastHivResult};
+					details[19] = new String[] {"treatmentInitiationDate", treatmentInitiationDate};
 				}
 				catch (JSONException e)
 				{
@@ -1710,7 +1721,7 @@ public class ServerService
 		String address1 = values.getAsString("address1");
 		String town = values.getAsString("town");
 		String landmark = values.getAsString("landmark");
-		String city = values.getAsString("city");
+		//String city = values.getAsString("city");
 		String country = values.getAsString("country");
 		String tbSuspect = values.getAsString("TB Suspect");
 		
@@ -1743,7 +1754,7 @@ public class ServerService
 			json.put ("colony","");
 			json.put ("town",town);
 			json.put ("landmark",landmark);
-			json.put ("city",city);
+			//json.put ("city",city);
 			json.put ("country",country);
 			
             // Add contacts as array of person attributes

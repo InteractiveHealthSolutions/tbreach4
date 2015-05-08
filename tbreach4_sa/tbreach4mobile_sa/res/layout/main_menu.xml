@@ -90,21 +90,7 @@
                     android:text="@string/sputum_submission" />
             </TableRow>
 
-            <TableRow
-                android:id="@+main_id/patientReportTableRow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/micro" >
 
-                <Button
-                    android:id="@+main_id/patientReportButton"
-                    style="@style/button"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/menu_customer_info"
-                    android:tag="@string/patient_report"
-                    android:text="@string/patient_report" />
-            </TableRow>
 
             <TableRow
                 android:id="@+main_id/sputumResultTableRow"
@@ -138,6 +124,23 @@
                     android:tag="@string/treatment"
                     android:text="@string/treatment" />
             </TableRow>
+            
+                        <TableRow
+                android:id="@+main_id/patientReportTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/micro" >
+
+                <Button
+                    android:id="@+main_id/patientReportButton"
+                    style="@style/button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/menu_customer_info"
+                    android:tag="@string/patient_report"
+                    android:text="@string/patient_report" />
+            </TableRow>
+            
             
             <TableRow
                 android:id="@+main_id/feedbackTableRow"

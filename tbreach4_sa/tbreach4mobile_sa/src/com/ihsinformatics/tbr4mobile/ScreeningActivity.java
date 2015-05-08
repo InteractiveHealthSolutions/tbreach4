@@ -14,7 +14,6 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 
 package com.ihsinformatics.tbr4mobile;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -44,19 +43,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -65,12 +58,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -105,80 +99,62 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyTextView dateOfBirthTextView;
 	MyButton dateOfBirthButton;
 	Calendar dateOfBirth;
-	/*MyTextView dobTextView;
-	DatePicker dobPicker;
-	Calendar dob;*/
-	/*
-	 * MyTextView LanguagesSpokenTextView; MyCheckBox english; MyCheckBox
-	 * afrikaans; MyCheckBox zulu; MyCheckBox xhosa; MyCheckBox swati;
-	 * MyCheckBox tswana; MyCheckBox hindiUrdu; MyCheckBox other; MyCheckBox
-	 * dontKnow; MyCheckBox refuse;
-	 */
 
-	/*MyTextView mineHeadingTextView;
-	MyTextView workingOnMineTextView;
-	MySpinner workingOnMine;
-	MyTextView yearsWorkingNowTextView;
-	MyEditText yearsWorkingNow;
-	MyTextView workingOnMinePreviouslyTextView;
-	MySpinner workingOnMinePreviously;
-	MyTextView yearsWorkingOnMinePreviouslyTextView;
-	MyEditText yearsWorkingPreviously;
-	MyTextView householdWorkingMineTextView;
-	MySpinner householdWorkingMine;*/
-
+	
+	// TB Symptoms
 	MyTextView symptomsHeadingTextView;
 	MyTextView symptomQuestions;
+	
 	MyTextView coughTextView;
 	MyRadioGroup coughGroup;
 	MyRadioButton noCough;
 	MyRadioButton yesCough;
 	MyRadioButton refuseCough;
-	//MySpinner cough;
+	
 	MyTextView nightSweatsTextView;
 	MyRadioGroup nightSweatsGroup;
 	MyRadioButton noNightSweats;
 	MyRadioButton yesNightSweats;
 	MyRadioButton refuseNightSweats;
-	//MySpinner nightSweats;
+	
 	MyTextView weightLossTextView;
 	MyRadioButton noWeightLoss;
 	MyRadioButton yesWeightLoss;
 	MyRadioButton refuseWeightLoss;
 	MyRadioGroup weightLossGroup;
-	//MySpinner weightLoss;
+	
 	MyTextView feverTextView;
 	MyRadioButton noFever;
 	MyRadioButton yesFever;
 	MyRadioButton refuseFever;
 	MyRadioGroup feverGroup;
-	//MySpinner fever;
+	
 	MyTextView haemoptysisTextView;
-	//MySpinner haemoptysis;
 	MyRadioButton noHaemoptysis;
 	MyRadioButton yesHaemoptysis;
 	MyRadioButton refuseHaemoptysis;
 	MyRadioGroup haemoptysisGroup;
 
+	// TB Symptoms Duration
 	MyTextView summaryHeadingTextView;
 	MyTextView symptomQuestion;
 
 	MyTextView coughSymptom;
 	MyEditText coughSymptomDuration;
-	//MyTextView coughDays;
+	
 	MyTextView nigtSweatsSymptom;
 	MyEditText nightSweatsSymptomDuration;
-	//MyTextView nightSweatsDays;
+	
 	MyTextView weightLossSymptom;
 	MyEditText weightLossSymptomDuration;
-	//MyTextView weightLossDays;
+	
 	MyTextView feverSymptom;
 	MyEditText feverSymptomDuration;
-	//MyTextView feverDays;
+	
 	MyTextView haemoptysisSymptom;
 	MyEditText haemoptysisSymptomDuration;
-	//MyTextView haemoptysisDays;
 
+	//Risk Factors
 	MyTextView screenerInstructionTextView1;
 	MyTextView screenerInstructionRiskTextView;
 
@@ -190,15 +166,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton yesContactWithTb;
 	MyRadioButton refuseContactWithTb;
 	
-	//MySpinner contactWithTb;
 	MyTextView tbTreatmentPastTextView;
-	
 	MyRadioGroup tbTreatmentPastGroup;
 	MyRadioButton noTbTreatmentPast;
 	MyRadioButton yesTbTreatmentPast;
 	MyRadioButton refuseTbTreatmentPast;
 	
-	//MySpinner tbTreatmentPast;
 	MyTextView tbTreatmentPastDurationTextView;
 	MyEditText tbTreatmentPastDuration;
 	MyTextView diabetesTextView;
@@ -207,17 +180,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton noDiabetes;
 	MyRadioButton yesDiabetes;
 	MyRadioButton unknownDiabetes;
-	
-	//MySpinner diabetes;
-	/*MyTextView familyDiabetesTextView;
-	MySpinner familyDiabetes;
-	MyTextView hypertensionTextView;
-	MySpinner hypertension;
-	MyTextView breathingShortnessTextView;
-	MySpinner breathingShortness;
-	MyTextView tobaccoCurrentTextView;
-	MySpinner tobaccoCurrent;*/
 
+	//HIV Questions
 	MyTextView hivHeadingTextView;
 	MyTextView hivTestTextView;
 	
@@ -226,7 +190,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton yesHivTest;
 	MyRadioButton refuseHivTest;
 	
-	//MySpinner hivTest;
 	MyTextView hivTestResultTextView;
 	
 	MyRadioGroup hivTestResultGroup;
@@ -234,7 +197,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton negativeHivTestResult;
 	MyRadioButton unknownHivTestResult;
 	
-	//MySpinner hivTestResult;
 	MyTextView hivTestNewTextView;
 	
 	MyRadioGroup hivTestNewGroup;
@@ -242,8 +204,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton noHivTestNew;
 	MyRadioButton refuseHivTestNew;
 	
-	//MySpinner hivTestNew;
-
 	MyTextView screenerInstructionTextView2;
 	MyTextView screenerInstructionOneTextView;
 	MyTextView screenerInstructionTwoTextView;
@@ -253,9 +213,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioGroup patientReferredGroup;
 	MyRadioButton noPatientReferred;
 	MyRadioButton yesPatientReferred;
-	
-	//MySpinner  patientReferred;
 
+	// Patient IDs
 	MyTextView screenerInstructionTextView3;
 	MyCheckBox noPatientInformation;
 	MyCheckBox yesPatientInformation;
@@ -264,6 +223,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyEditText patientId;
 	MyButton scanBarcode;
 
+	// Contact Info
 	MyTextView providePhone1TextView;
 	MyRadioGroup providePhone1;
 	MyRadioButton noPhone1;
@@ -276,7 +236,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton myselfPhone1Owner;
 	MyRadioButton otherPhone1Owner;
 	
-	//MySpinner phone1Owner;
 	MyTextView phone1OtherOwnerTextView;
 	MyEditText phone1OtherOwner;
 
@@ -292,7 +251,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton myselfPhone2Owner;
 	MyRadioButton otherPhone2Owner;
 	
-	//MySpinner phone2Owner;
 	MyTextView phone2OtherOwnerTextView;
 	MyEditText phone2OtherOwner;
 
@@ -304,18 +262,21 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyEditText landmarkAddress;
 	MyTextView sputumVideoInstructionTextView;
 	
-	MyRadioGroup sputumVideoInstructionGroup;
+	MyRadioGroup sputumVideoInstructionOneGroup;
+	MyRadioGroup sputumVideoInstructionTwoGroup;
 	MyRadioButton noSputumVideoInstruction;
 	MyRadioButton yesSputumVideoInstruction;
 	MyRadioButton refuseSputumVideoInstruction;
 	MyRadioButton unavailableSputumVideoInstruction;
 	
-	//MySpinner sputumVideoInstruction;
-	
 	MyTextView screeningSpace;
 	MyTextView instruction;
 	
 	MyButton saveButton;
+	
+	private static Toast toast;
+	View[] goneViews;
+	View[] visibleViews;
 
 	/**
 	 * Subclass representing Fragment for screening form
@@ -375,6 +336,9 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 
 	@Override
 	public void createViews(Context context) {
+		
+		toast = new Toast(context);
+		
 		FORM_NAME = "Screening Form";
 		TAG = "ScreeningActivity";
 		PAGE_COUNT = 13;
@@ -429,115 +393,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.drawable.custom_button_beige, R.string.dob,
 				R.string.dob);
 		
-		/*dobTextView = new MyTextView(context, R.style.text, R.string.dob);
-		dobPicker = new DatePicker(context);
-		ArrayList<View> touchables = dobPicker.getTouchables();
-		for (int i = 0; i < touchables.size(); i++) {
-			if (i == 2 || i == 5 || i == 8)
-				touchables.get(i).setBackgroundResource(
-						R.drawable.numberpicker_down_normal);
-			else if (i == 0 || i == 3 || i == 6)
-				touchables.get(i).setBackgroundResource(
-						R.drawable.numberpicker_up_normal);
-			else
-				touchables.get(i).setBackgroundResource(
-						R.drawable.custom_button_beige);
-		}
-		dob = Calendar.getInstance();
-		dobPicker.init(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH),
-				dob.get(Calendar.DAY_OF_MONTH), new OnDateChangedListener() {
-	   
-					@Override
-					public void onDateChanged(DatePicker view, int year,
-							int monthOfYear, int dayOfMonth) {
-
-
-						Calendar selectedCal = Calendar.getInstance();
-	                    selectedCal.set(year, monthOfYear, dayOfMonth);
-
-	                    long selectedMilli = selectedCal.getTimeInMillis();
-
-	                    Date datePickerDate = new Date(selectedMilli);
-	                    if (datePickerDate.after(new Date())) {
-	                    	final Calendar cal = Calendar.getInstance();
-	                    	dobPicker.updateDate(cal.get(Calendar.YEAR),
-	                                cal.get(Calendar.MONTH),
-	                                cal.get(Calendar.DAY_OF_MONTH));
-	                    	} 
-						else{			
-							dob.set(Calendar.YEAR, year);
-							dob.set(Calendar.MONTH, monthOfYear);
-							dob.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-	
-							int diff = formDate.get(Calendar.YEAR)
-									- dob.get(Calendar.YEAR);
-							if (dob.get(Calendar.MONTH) > formDate
-									.get(Calendar.MONTH)
-									|| (dob.get(Calendar.MONTH) == formDate
-											.get(Calendar.MONTH) && dob
-											.get(Calendar.DATE) > formDate
-											.get(Calendar.DATE))) {
-								diff--;
-							}
-	
-							age.setText(Integer.toString(diff));
-						}
-						
-					}
-				});*/
-		
 		ageTextView = new MyTextView(context, R.style.text, R.string.age);
 		age = new MyTextView(context, R.style.text, R.string.zero);
-		
-		/*
-		 * LanguagesSpokenTextView = new MyTextView(context, R.style.text,
-		 * R.string.language_spoken);
-		 * 
-		 * english = new MyCheckBox(context, R.string.english, R.style.edit,
-		 * R.string.english, false); afrikaans = new MyCheckBox(context,
-		 * R.string.afrikaans, R.style.edit, R.string.afrikaans, false); zulu =
-		 * new MyCheckBox(context, R.string.zulu, R.style.edit, R.string.zulu,
-		 * false); xhosa = new MyCheckBox(context, R.string.xhosa, R.style.edit,
-		 * R.string.xhosa, false); swati = new MyCheckBox(context,
-		 * R.string.swati, R.style.edit, R.string.swati, false); tswana = new
-		 * MyCheckBox(context, R.string.tswana, R.style.edit, R.string.tswana,
-		 * false); hindiUrdu = new MyCheckBox(context, R.string.hindiUrdu,
-		 * R.style.edit, R.string.hindiUrdu, false); other = new
-		 * MyCheckBox(context, R.string.other, R.style.edit, R.string.other,
-		 * false); dontKnow = new MyCheckBox(context, R.string.dontKnow,
-		 * R.style.edit, R.string.dontKnow, false); refuse = new
-		 * MyCheckBox(context, R.string.refused, R.style.edit, R.string.refused,
-		 * false);
-		 */
-
-		// mine related
-		/*mineHeadingTextView = new MyTextView(context, R.style.text,
-				R.string.mineHeading);
-		mineHeadingTextView.setTypeface(null, Typeface.BOLD);
-		workingOnMineTextView = new MyTextView(context, R.style.text,
-				R.string.workNowMine);
-		workingOnMine = new MySpinner(context, getResources().getStringArray(
-				R.array.options), R.string.workNowMine, R.string.option_hint);
-		yearsWorkingNowTextView = new MyTextView(context, R.style.text,
-				R.string.yearWorkingNow);
-		yearsWorkingNow = new MyEditText(context, R.string.yearWorkingNow,
-				R.string.yearWorking_hint, InputType.TYPE_CLASS_NUMBER,
-				R.style.edit, 2, false);
-		workingOnMinePreviouslyTextView = new MyTextView(context, R.style.text,
-				R.string.workMinePreviously);
-		workingOnMinePreviously = new MySpinner(context, getResources()
-				.getStringArray(R.array.options), R.string.workMinePreviously,
-				R.string.option_hint);
-		yearsWorkingOnMinePreviouslyTextView = new MyTextView(context,
-				R.style.text, R.string.yearWorkingPreviously);
-		yearsWorkingPreviously = new MyEditText(context,
-				R.string.yearWorkingPreviously, R.string.yearWorking_hint,
-				InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
-		householdWorkingMineTextView = new MyTextView(context, R.style.text,
-				R.string.householdWorkMine);
-		householdWorkingMine = new MySpinner(context, getResources()
-				.getStringArray(R.array.options), R.string.householdWorkMine,
-				R.string.option_hint);*/
 
 		// Symptoms
 		symptomsHeadingTextView = new MyTextView(context, R.style.text,
@@ -558,8 +415,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noCough, yesCough, refuseCough }, R.string.cough,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		//cough = new MySpinner(context, getResources().getStringArray(R.array.options), R.string.cough, R.string.option_hint);
-		//coughDays = new MyTextView(context, R.style.text, R.string.day);
 		nightSweatsTextView = new MyTextView(context, R.style.text,
 				R.string.night_sweats);
 		nightSweatsTextView.setTextSize(20);
@@ -574,8 +429,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		nightSweatsGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { noNightSweats, yesNightSweats, refuseNightSweats }, R.string.night_sweats,
 				R.style.radio, App.isLanguageRTL(),0);
-		//nightSweats = new MySpinner(context, getResources().getStringArray(R.array.options), R.string.night_sweats, R.string.option_hint);
-		//nightSweatsDays = new MyTextView(context, R.style.text, R.string.day);
+		
 		weightLossTextView = new MyTextView(context, R.style.text,
 				R.string.weight_loss);
 		weightLossTextView.setTextSize(20);
@@ -591,8 +445,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noWeightLoss , yesWeightLoss , refuseWeightLoss  }, R.string.weight_loss,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		//weightLoss = new MySpinner(context, getResources().getStringArray(R.array.options), R.string.weight_loss, R.string.option_hint);
-		//weightLossDays = new MyTextView(context, R.style.text, R.string.day);
 		feverTextView = new MyTextView(context, R.style.text, R.string.fever);
 		feverTextView.setTextSize(20);
 		
@@ -607,8 +459,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noFever , yesFever , refuseFever }, R.string.fever,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		//fever = new MySpinner(context, getResources().getStringArray(R.array.options), R.string.fever, R.string.option_hint);
-		//feverDays = new MyTextView(context, R.style.text, R.string.day);
 		haemoptysisTextView = new MyTextView(context, R.style.text,
 				R.string.haemoptysis);
 		haemoptysisTextView.setTextSize(20);
@@ -623,9 +473,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		haemoptysisGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { noHaemoptysis , yesHaemoptysis , refuseHaemoptysis }, R.string.fever,
 				R.style.radio, App.isLanguageRTL(),0);
-		
-		//haemoptysis = new MySpinner(context, getResources().getStringArray(R.array.options), R.string.haemoptysis, R.string.option_hint);
-		//haemoptysisDays = new MyTextView(context, R.style.text, R.string.day);
 		
 		instruction = new MyTextView(context, R.style.text,
 				R.string.instructions);
@@ -661,13 +508,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.string.symptoms_period, R.string.symptoms_period_hint,
 				InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
 
-		/*
-		 * symptomsPeriodTextView = new MyTextView(context, R.style.text,
-		 * R.string.symptoms_period); symptomsPeriod = new MyEditText(context,
-		 * R.string.symptoms_period, R.string.symptoms_period_hint,
-		 * InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
-		 */
-
 		// Risk Factor
 
 		screenerInstructionTextView1 = new MyTextView(context, R.style.text,
@@ -701,9 +541,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noContactWithTb, yesContactWithTb, refuseContactWithTb }, R.string.contact_with_tb,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		/*contactWithTb = new MySpinner(context, getResources().getStringArray(
-				R.array.options), R.string.contact_with_tb,
-				R.string.option_hint);*/
 		tbTreatmentPastTextView = new MyTextView(context, R.style.text,
 				R.string.tb_treatment_previously);
 		
@@ -718,9 +555,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noTbTreatmentPast, yesTbTreatmentPast, refuseTbTreatmentPast }, R.string.tb_treatment_previously,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		/*tbTreatmentPast = new MySpinner(context, getResources().getStringArray(
-				R.array.options), R.string.tb_treatment_previously,
-				R.string.option_hint);*/
 		tbTreatmentPastDurationTextView = new MyTextView(context, R.style.text,
 				R.string.tb_treatment_duration);
 		tbTreatmentPastDuration = new MyEditText(context,
@@ -741,28 +575,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		diabetesGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { noDiabetes, yesDiabetes, unknownDiabetes }, R.string.diabetes,
 				R.style.radio, App.isLanguageRTL(),0);
-		
-		/*diabetes = new MySpinner(context, getResources().getStringArray(
-				R.array.option), R.string.diabetes, R.string.option_hint);*/
-		/*familyDiabetesTextView = new MyTextView(context, R.style.text,
-				R.string.family_diabetes);
-		familyDiabetes = new MySpinner(context, getResources().getStringArray(
-				R.array.option), R.string.family_diabetes, R.string.option_hint);
-		hypertensionTextView = new MyTextView(context, R.style.text,
-				R.string.hypertension);
-		hypertension = new MySpinner(context, getResources().getStringArray(
-				R.array.option), R.string.hypertension, R.string.option_hint);
-
-		breathingShortnessTextView = new MyTextView(context, R.style.text,
-				R.string.breathing_shortness);
-		breathingShortness = new MySpinner(context, getResources()
-				.getStringArray(R.array.options), R.string.breathing_shortness,
-				R.string.option_hint);
-		tobaccoCurrentTextView = new MyTextView(context, R.style.text,
-				R.string.tobacco_current);
-		tobaccoCurrent = new MySpinner(context, getResources().getStringArray(
-				R.array.tobacco_durations), R.string.tobacco_current,
-				R.string.option_hint);*/
 
 		// HIV related
 		hivHeadingTextView = new MyTextView(context, R.style.text,
@@ -782,9 +594,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { noHivTest , yesHivTest , refuseHivTest }, R.string.hivTest,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		
-		/*hivTest = new MySpinner(context, getResources().getStringArray(
-				R.array.options), R.string.hivTest, R.string.option_hint);*/
 		hivTestResultTextView = new MyTextView(context, R.style.text,
 				R.string.hivTestResult);
 		
@@ -799,9 +608,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { positiveHivTestResult , negativeHivTestResult , unknownHivTestResult }, R.string.hivTestResult,
 				R.style.radio, App.isLanguageRTL(),1);
 		
-		
-		/*hivTestResult = new MySpinner(context, getResources().getStringArray(
-				R.array.hiv_result), R.string.hivTestResult, R.string.option_hint);*/
 		hivTestNewTextView = new MyTextView(context, R.style.text,
 				R.string.hivTestNew);
 		
@@ -815,9 +621,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		hivTestNewGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { yesHivTestNew , noHivTestNew , refuseHivTestNew }, R.string.hivTestNew,
 				R.style.radio, App.isLanguageRTL(),0);
-		
-		/*hivTestNew = new MySpinner(context, getResources().getStringArray(
-				R.array.options), R.string.hivTestNew, R.string.option_hint);*/
 
 		// Screener Instruction
 		screenerInstructionTextView2 = new MyTextView(context, R.style.text,
@@ -857,11 +660,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		patientReferredGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { noPatientReferred , yesPatientReferred  },  R.string.patient_referred,
 				R.style.radio, App.isLanguageRTL(),0);
-		
-		/*patientReferred = new MySpinner(context, getResources().getStringArray(
-				R.array.option_yes_no), R.string.patient_referred,
-				R.string.option_hint);*/
-		
 		
 		noPatientInformation = new MyCheckBox(context, R.string.no,
 				R.style.edit, R.string.no, true);
@@ -905,10 +703,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { myselfPhone1Owner, otherPhone1Owner }, R.string.phone1_owner,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		
-		/*phone1Owner = new MySpinner(context, getResources().getStringArray(
-				R.array.owner_options), R.string.phone1_owner,
-				R.string.option_hint);*/
 		phone1OtherOwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone1_other_owner);
 		phone1OtherOwner = new MyEditText(context, R.string.phone2_owner,
@@ -941,10 +735,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				new MyRadioButton[] { myselfPhone2Owner, otherPhone2Owner }, R.string.phone2_owner,
 				R.style.radio, App.isLanguageRTL(),0);
 		
-		
-		/*phone2Owner = new MySpinner(context, getResources().getStringArray(
-				R.array.owner_options), R.string.phone2_owner,
-				R.string.option_hint);*/
 		phone2OtherOwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone2_other_owner);
 		phone2OtherOwner = new MyEditText(context, R.string.phone2_owner,
@@ -970,8 +760,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		sputumVideoInstructionTextView = new MyTextView(context, R.style.text,
 				R.string.sputum_video);
 		
-		noSputumVideoInstruction = new MyRadioButton(context, R.string.no, R.style.radio,
-				R.string.no);
+		noSputumVideoInstruction = new MyRadioButton(context, R.string.no_space, R.style.radio,
+				R.string.no_space);
 		yesSputumVideoInstruction = new MyRadioButton(context, R.string.yes, R.style.radio,
 				R.string.yes);
 		refuseSputumVideoInstruction = new MyRadioButton(context, R.string.refuse, R.style.radio,
@@ -979,13 +769,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		unavailableSputumVideoInstruction = new MyRadioButton(context, R.string.video_unavailable, R.style.radio,
 				R.string.video_unavailable);
 		
-		sputumVideoInstructionGroup = new MyRadioGroup(context,
-				new MyRadioButton[] { noSputumVideoInstruction, yesSputumVideoInstruction, refuseSputumVideoInstruction, unavailableSputumVideoInstruction }, R.string.sputum_video,
-				R.style.radio, App.isLanguageRTL(),1);
+		sputumVideoInstructionOneGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { noSputumVideoInstruction, refuseSputumVideoInstruction }, R.string.sputum_video,
+				R.style.radio, App.isLanguageRTL(),0);
 		
-		/*sputumVideoInstruction = new MySpinner(context, getResources()
-				.getStringArray(R.array.sputum_video_options),
-				R.string.phone2_owner, R.string.option_hint);*/
+		sputumVideoInstructionTwoGroup = new MyRadioGroup(context,
+				new MyRadioButton[] { yesSputumVideoInstruction, unavailableSputumVideoInstruction }, R.string.sputum_video,
+				R.style.radio, App.isLanguageRTL(),0);
 		
 		screeningSpace = new MyTextView(context, R.style.text,
 				R.string.screening_space);
@@ -998,52 +788,39 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				{ formDateTextView, formDateButton, firstNameTextView,
 						firstName, surnameTextView, surname, genderTextView,
 						gender },
-				{ dateOfBirthTextView, dateOfBirthButton, /*dobTextView, dobPicker,*/ ageTextView, age },
-				/*
-				 * { LanguagesSpokenTextView, english, afrikaans, zulu, xhosa,
-				 * swati, tswana, hindiUrdu, other, dontKnow, refuse },
-				 */
-				/*{ mineHeadingTextView, workingOnMineTextView, workingOnMine,
-						yearsWorkingNowTextView, yearsWorkingNow },
-				{ workingOnMinePreviouslyTextView, workingOnMinePreviously,
-						yearsWorkingOnMinePreviouslyTextView,
-						yearsWorkingPreviously, householdWorkingMineTextView,
-						householdWorkingMine },*/
-				{ symptomsHeadingTextView, symptomQuestions, instruction, coughTextView, coughGroup, /*cough,*/
-						nightSweatsTextView, nightSweatsGroup, /*nightSweats,*/ weightLossTextView, weightLossGroup/*,
-						weightLoss*/,feverTextView, feverGroup, /*fever,*/ haemoptysisTextView, haemoptysisGroup , /*haemoptysis*/ },
-				{ summaryHeadingTextView, symptomQuestion, coughSymptom,
-						coughSymptomDuration, /*coughDays,*/ nigtSweatsSymptom,
-						nightSweatsSymptomDuration, /*nightSweatsDays,*/ weightLossSymptom,
-						weightLossSymptomDuration, /*weightLossDays,*/ feverSymptom,
-						feverSymptomDuration, /*feverDays,*/ haemoptysisSymptom,
-						haemoptysisSymptomDuration,/* haemoptysisDays*/ },
-				{ screenerInstructionTextView1,
-						screenerInstructionRiskTextView,
-						riskFactorHeadingTextView, contactWithTbTextView, contactWithTbGroup
-						/*contactWithTb,*/  },
-				{ tbTreatmentPastTextView, tbTreatmentPastGroup /*,tbTreatmentPast*/, tbTreatmentPastDurationTextView, tbTreatmentPastDuration,
-						diabetesTextView, diabetesGroup/*, diabetes, familyDiabetesTextView,
-						familyDiabetes */},
-				/*{ hypertensionTextView, hypertension,
-						breathingShortnessTextView, breathingShortness,
-						tobaccoCurrentTextView, tobaccoCurrent },*/
-				{ hivHeadingTextView, hivTestTextView, hivTestGroup, /*hivTest,*/
-						hivTestResultTextView, hivTestResultGroup /*hivTestResult,*/
-						/*, hivTestNew */},
+				{ dateOfBirthTextView, dateOfBirthButton, ageTextView, age },
+				{ symptomsHeadingTextView, symptomQuestions, instruction, 
+						coughTextView, coughGroup,
+						nightSweatsTextView, nightSweatsGroup, 
+						weightLossTextView, weightLossGroup,
+						feverTextView, feverGroup,
+						haemoptysisTextView, haemoptysisGroup },
+				{ summaryHeadingTextView, symptomQuestion, 
+						coughSymptom,coughSymptomDuration, 
+						nigtSweatsSymptom,nightSweatsSymptomDuration, 
+						weightLossSymptom,weightLossSymptomDuration, 
+						feverSymptom,feverSymptomDuration,  
+						haemoptysisSymptom,haemoptysisSymptomDuration },
+				{ screenerInstructionTextView1,screenerInstructionRiskTextView,
+						riskFactorHeadingTextView, contactWithTbTextView, contactWithTbGroup  },
+				{ tbTreatmentPastTextView, tbTreatmentPastGroup, tbTreatmentPastDurationTextView, tbTreatmentPastDuration,
+						diabetesTextView, diabetesGroup },
+				{ hivHeadingTextView, hivTestTextView, hivTestGroup,
+						hivTestResultTextView, hivTestResultGroup },
 				{ hivTestNewTextView, hivTestNewGroup, screenerInstructionTextView2, screenerInstructionOneTextView,patientReferredTextView, patientReferredGroup/*, patientReferred*/ },
 				{ screenerInstructionTextView3, screenerInstructionTwoTextView,
 						noPatientInformation, yesPatientInformation,
 						patientIdTextView, patientId, scanBarcode },
 				{ providePhone1TextView, providePhone1, phone1TextView, phone1,
-						phone1OwnerTextView, phone1OwnerGroup ,/* phone1Owner,*/ phone1OtherOwnerTextView ,phone1OtherOwner },
+						phone1OwnerTextView, phone1OwnerGroup , phone1OtherOwnerTextView ,phone1OtherOwner },
 				{ providePhone2TextView, providePhone2, phone2TextView, phone2,
-						phone2OwnerTextView, phone2OwnerGroup , /*phone2Owner,*/ phone2OtherOwnerTextView, phone2OtherOwner },
+						phone2OwnerTextView, phone2OwnerGroup , phone2OtherOwnerTextView, phone2OtherOwner },
 				{ physicalAddressTextView, physicalAddress,
 						townAddressTextView, townAddress,
 						landmarkAddressTextView, landmarkAddress },
-				{ sputumVideoInstructionTextView, sputumVideoInstructionGroup , /*sputumVideoInstruction, screeningSpace,*/ saveButton },
+				{ sputumVideoInstructionTextView, sputumVideoInstructionOneGroup, sputumVideoInstructionTwoGroup, screeningSpace, saveButton },
 				};
+		
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup>();
 		for (int i = 0; i < PAGE_COUNT; i++) {
@@ -1052,28 +829,27 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 			params.setMargins(0, 5, 0, 5);
 			layout.setLayoutParams(params);
-			layout.setOrientation(LinearLayout.VERTICAL);
+			layout.setOrientation(LinearLayout.VERTICAL);  
 
-			for (int j = 0; j < viewGroups[i].length; j++) {
+			for (int j = 0; j < viewGroups[i].length; j++) {  
 
-				if (i == 3 || i == 2) {
+				if (i == 3 || i == 2) {  //if page# is 3 or 2
 					LinearLayout horizontalLayout = new LinearLayout(context);
 					horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
 					if (j == 0 || j == 1) {
-						horizontalLayout.addView(viewGroups[i][j]);
+						horizontalLayout.addView(viewGroups[i][j]);  // Main heading & Question 
 					} else if (i == 2 && j == 2){
-						horizontalLayout.addView(viewGroups[i][j]);	
+						horizontalLayout.addView(viewGroups[i][j]);	 // sub-instruction for page#2
 					}					
-					else {
-						horizontalLayout.addView(viewGroups[i][j]);
+					else {  // Two views horizontally
+						horizontalLayout.addView(viewGroups[i][j]); 
 						j++;
 						horizontalLayout.addView(viewGroups[i][j]);
-						/*j++;
-						horizontalLayout.addView(viewGroups[i][j]);*/
 					}
 					layout.addView(horizontalLayout);
 				} else
-					layout.addView(viewGroups[i][j]);
+					layout.addView(viewGroups[i][j]); 
+				
 			}
 
 			ScrollView scrollView = new ScrollView(context);
@@ -1082,99 +858,42 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			scrollView.addView(layout);
 			groups.add(scrollView);
 		}
-		// Set event listeners
-		formDateButton.setOnClickListener(this);
-		dateOfBirthButton.setOnClickListener(this);
-		firstButton.setOnClickListener(this);
-		lastButton.setOnClickListener(this);
-		clearButton.setOnClickListener(this);
-		saveButton.setOnClickListener(this);
-		scanBarcode.setOnClickListener(this);
+		
 		navigationSeekbar.setOnSeekBarChangeListener(this);
 		age.setOnEditorActionListener(this);
-		noPhone1.setOnClickListener(this);
-		yesPhone1.setOnClickListener(this);
-		noPhone2.setOnClickListener(this);
-		yesPhone2.setOnClickListener(this);
-		noTbTreatmentPast.setOnClickListener(this);
-		yesTbTreatmentPast.setOnClickListener(this);
-		refuseTbTreatmentPast.setOnClickListener(this);
-		myselfPhone2Owner.setOnClickListener(this);
-		otherPhone2Owner.setOnClickListener(this);
-		myselfPhone1Owner.setOnClickListener(this);
-		otherPhone1Owner.setOnClickListener(this);
-		noHivTest.setOnClickListener(this);
-		yesHivTest.setOnClickListener(this);
-		refuseHivTest.setOnClickListener(this);
-		negativeHivTestResult.setOnClickListener(this);
-		positiveHivTestResult.setOnClickListener(this);
-		unknownHivTestResult.setOnClickListener(this);
-		yesHivTestNew.setOnClickListener(this);
-		noHivTestNew.setOnClickListener(this);
-		refuseHivTestNew.setOnClickListener(this);
-		/*phone1.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				
-				String s = phone1.getText().toString();
-				int length = s.length();
-				
-				if(length == 4) {
-					phone1.setText(s.substring(0,3)+"-"+s.substring(4,1));
-				}
-				
-				int position = phone1.length();
-				phone1.setSelection(position);
-			}
-			   
-	});*/
 		
-		
-		/*cough.setOnItemSelectedListener(this);
-		nightSweats.setOnItemSelectedListener(this);
-		weightLoss.setOnItemSelectedListener(this);
-		fever.setOnItemSelectedListener(this);
-		haemoptysis.setOnItemSelectedListener(this);*/
-		
-
-		views = new View[] { /*
-							 * english, afrikaans, zulu, xhosa, swati, tswana,
-							 * hindiUrdu, other, dontKnow, refuse,
-							 */age, firstName, surname,/* yearsWorkingNow,
-				yearsWorkingPreviously, workingOnMine, workingOnMinePreviously,
-				householdWorkingMine,*/ /*hivTest,*/ /*hivTestResult,*/ /*hivTestNew,*/
-				/*cough, nightSweats, weightLoss, fever, haemoptysis,*/
-				/*contactWithTb,*/ /*tbTreatmentPast,*/ tbTreatmentPastDuration,
-				/*diabetes, familyDiabetes, hypertension, breathingShortness,
-				tobaccoCurrent,*/ noPatientInformation, yesPatientInformation,
-				phone1, /*phone1Owner,*/ phone1OtherOwner, phone2, /*phone2Owner,*/
+		views = new View[] { 
+				age, firstName, surname, tbTreatmentPastDuration,
+				noPatientInformation, yesPatientInformation,
+				phone1, phone1OtherOwner, phone2, 
 				phone2OtherOwner, physicalAddress, townAddress,
-				landmarkAddress, /*sputumVideoInstruction,*/
-				/*tobaccoCurrentTextView,*/ patientId, coughSymptomDuration,
+				landmarkAddress, patientId, coughSymptomDuration,
 				nightSweatsSymptomDuration, weightLossSymptomDuration,
-				feverSymptomDuration, haemoptysisSymptomDuration };
-		for (View v : views) {
+				feverSymptomDuration, haemoptysisSymptomDuration,
+				male,noPatientInformation,noCough,noNightSweats,noWeightLoss,noFever,noHaemoptysis,
+				noContactWithTb,noTbTreatmentPast,noPatientReferred,noSputumVideoInstruction,unknownDiabetes,myselfPhone1Owner,myselfPhone2Owner,
+				noHivTest,unknownHivTestResult,yesHivTestNew,noPhone1,noPhone2};
+		
+		View[] setListener = new View[]{
+				scanBarcode, formDateButton, dateOfBirthButton, firstButton, lastButton, clearButton, saveButton,
+				noPhone1, noPhone2, yesPhone1, yesPhone2,
+				noTbTreatmentPast, yesTbTreatmentPast,refuseTbTreatmentPast,
+				myselfPhone1Owner,otherPhone1Owner,myselfPhone2Owner,otherPhone2Owner,
+				noHivTest, yesHivTest, refuseHivTest, negativeHivTestResult, positiveHivTestResult, unknownHivTestResult,
+				yesHivTestNew, noHivTestNew, refuseHivTestNew, yesPatientInformation, noPatientInformation, noSputumVideoInstruction, yesSputumVideoInstruction, refuseSputumVideoInstruction, unavailableSputumVideoInstruction};
+		
+		for (View v : setListener) {
 			if (v instanceof Spinner) {
 				((Spinner) v).setOnItemSelectedListener(this);
 			} else if (v instanceof CheckBox) {
 				((CheckBox) v).setOnCheckedChangeListener(this);
+			}  else if (v instanceof Button) {
+				((Button) v).setOnClickListener(this);
+			}  else if (v instanceof RadioButton) {
+				((RadioButton) v).setOnClickListener(this);
 			}
 		}
+		
 		pager.setOnPageChangeListener(this);
 		// Detect RTL language
 		if (App.isLanguageRTL()) {
@@ -1190,15 +909,16 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			}
 		}
 
+		goneViews = new View []{patientIdTextView,patientId,scanBarcode,tbTreatmentPastDuration,tbTreatmentPastDurationTextView,
+				hivTestResultTextView,hivTestResultGroup,phone2OtherOwner,phone2OtherOwnerTextView,phone1OtherOwner,phone1OtherOwnerTextView,
+				phone1,phone1TextView,phone1OwnerTextView,phone1OwnerGroup,
+				phone2,phone2TextView,phone2OwnerTextView,phone2OwnerGroup};
+		
+		visibleViews = new View []{hivTestNewTextView,hivTestNewGroup};
 	}
 
 	@Override
 	public void initView(View[] views) {
-
-		/*dob.setTime(new Date());
-		dobPicker.updateDate(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH),
-				dob.get(Calendar.DAY_OF_MONTH));*/
-	
 		
 		formDate = Calendar.getInstance();
 		dateOfBirth = Calendar.getInstance();
@@ -1206,90 +926,43 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		formDate.setTime(new Date());
 		dateOfBirth.setTime(new Date());
 		updateDisplay();
-		male.setChecked(true);
-		noPatientInformation.setChecked(true);
-		noCough.setChecked(true);
-		noNightSweats.setChecked(true);
-		noWeightLoss.setChecked(true);
-		noFever.setChecked(true);
-		noHaemoptysis.setChecked(true);
-		noContactWithTb.setChecked(true);
-		noTbTreatmentPast.setChecked(true);
-		noPatientReferred.setChecked(true);
-		noSputumVideoInstruction.setChecked(true);
-		unknownDiabetes.setChecked(true);
-		myselfPhone1Owner.setChecked(true);
-		myselfPhone2Owner.setChecked(true);
-		noHivTest.setChecked(true);
-		unknownHivTestResult.setChecked(true);
-		yesHivTestNew.setChecked(true);
+		
 		physicalAddressTextView.setEnabled(false);
 		landmarkAddressTextView.setEnabled(false);
 		townAddressTextView.setEnabled(false);	
 		physicalAddress.setEnabled(false);
 		landmarkAddress.setEnabled(false);
-		townAddress.setEnabled(false);		
-		patientIdTextView.setVisibility(View.GONE);
-		patientId.setVisibility(View.GONE);
-		scanBarcode.setVisibility(View.GONE);
-		tbTreatmentPastDuration.setVisibility(View.GONE);
-		tbTreatmentPastDurationTextView.setVisibility(View.GONE);
-		super.initView(views);
-		/* refuse.setChecked(true); */
-		/*yearsWorkingNowTextView.setEnabled(false);
-		yearsWorkingNow.setEnabled(false);
-		yearsWorkingOnMinePreviouslyTextView.setEnabled(false);
-		yearsWorkingPreviously.setEnabled(false);*/
-		/*hivTestResult.setEnabled(false);*/
-		
-		
-		
-		hivTestResultTextView.setVisibility(View.GONE);
-		hivTestResultGroup.setVisibility(View.GONE);
-		phone2OtherOwner.setVisibility(View.GONE);
-		phone2OtherOwnerTextView.setVisibility(View.GONE);
-		phone1OtherOwner.setVisibility(View.GONE);
-		phone1OtherOwnerTextView.setVisibility(View.GONE);
+		townAddress.setEnabled(false);	
 		
 		providePhone1.setEnabled(false);
 		providePhone2.setEnabled(false);
-		
 
-		noPhone1.setChecked(true);
-		noPhone2.setChecked(true);
 		
-		phone1.setVisibility(View.GONE);
-		phone1TextView.setVisibility(View.GONE);
-		phone1OwnerTextView.setVisibility(View.GONE);
-		phone1OwnerGroup.setVisibility(View.GONE);
+		super.initView(views);
 		
-		phone2.setVisibility(View.GONE);
-		phone2TextView.setVisibility(View.GONE);
-		phone2OwnerTextView.setVisibility(View.GONE);
-		phone2OwnerGroup.setVisibility(View.GONE);
+		// Hide Views
+		for (View v : goneViews) {
+			v.setVisibility(View.GONE);
+		}
 		
-		hivTestNewTextView.setVisibility(View.VISIBLE);
-		hivTestNewGroup.setVisibility(View.VISIBLE);
+		// Show Views
+		for (View v : visibleViews) {
+			v.setVisibility(View.VISIBLE);
+		}
 		
 		sputumVideoInstructionTextView.setVisibility(View.INVISIBLE);
-		sputumVideoInstructionGroup.setVisibility(View.INVISIBLE);
+		sputumVideoInstructionOneGroup.setVisibility(View.INVISIBLE);
+		sputumVideoInstructionTwoGroup.setVisibility(View.INVISIBLE);
 		
-		/*hivTestResult.setSelection(2);*/
-		/*hivTestNew.setSelection(1);*/
-		/*diabetes.setSelection(2);
-		familyDiabetes.setSelection(2);
-		hypertension.setSelection(2);*/
+		coughSymptomDuration.setHint("  0  ");
+		nightSweatsSymptomDuration.setHint("  0  ");
+		weightLossSymptomDuration.setHint("  0  ");
+		haemoptysisSymptomDuration.setHint("  0  ");
+		feverSymptomDuration.setHint("  0  ");
 		
-		if(!coughSymptom.isEnabled())
-			coughSymptomDuration.setHint("  0  ");
-		if(!nigtSweatsSymptom.isEnabled())
-			nightSweatsSymptomDuration.setHint("  0  ");
-		if(!weightLossSymptom.isEnabled())
-			weightLossSymptomDuration.setHint("  0  ");
-		if(!haemoptysisSymptom.isEnabled())
-			haemoptysisSymptomDuration.setHint("  0  ");
-		if(!feverSymptom.isEnabled())
-			feverSymptomDuration.setHint("  0  ");
+		refuseSputumVideoInstruction.setChecked(false);
+		yesSputumVideoInstruction.setChecked(false);
+		unavailableSputumVideoInstruction.setChecked(false);
 		
 		skipValue = true;
 
@@ -1297,22 +970,46 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 
 	@Override
 	public void updateDisplay() {
+		
+		//setting formDate to button
 		formDateButton.setText(DateFormat.format("dd-MMM-yyyy", formDate));
 		
+		//if formDate is in future
+		if(formDate.getTime().after(new Date())){
+			
+			if (toast != null)
+			    toast.cancel();  // cancel toast
+			
+			formDateButton.setTextColor(getResources().getColor(R.color.Red));
+			toast = Toast.makeText(ScreeningActivity.this,"Form Date: "+getResources().getString(R.string.invalid_date_or_time), Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else
+			formDateButton.setTextColor(getResources().getColor(R.color.IRDTitle));
+		
+		//setting dob to button
 		dateOfBirthButton.setText(DateFormat.format("dd-MMM-yyyy", dateOfBirth));
 
+		//Calculating age and displaying if valid
 		int diff = formDate.get(Calendar.YEAR) - dateOfBirth.get(Calendar.YEAR);
 		if (dateOfBirth.get(Calendar.MONTH) > formDate.get(Calendar.MONTH) || (dateOfBirth.get(Calendar.MONTH) == formDate.get(Calendar.MONTH) && dateOfBirth.get(Calendar.DATE) > formDate.get(Calendar.DATE))) {
 			diff--;
 		}
 		
-		age.setText(Integer.toString(diff));
-		
-		if(diff < 0)
-			age.setTextColor(getResources().getColor(R.color.Red));
-		else
-			age.setTextColor(getResources().getColor(R.color.IRDTitle));
+		if(diff < 0){  //invalid age
 			
+			age.setText("");
+			if (toast != null)
+			    toast.cancel();
+			
+			age.setTextColor(getResources().getColor(R.color.Red));
+			toast = Toast.makeText(ScreeningActivity.this,"DOB: "+getResources().getString(R.string.invalid_date_or_time), Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else {   //valid age
+			age.setTextColor(getResources().getColor(R.color.IRDTitle));
+			age.setText(Integer.toString(diff));
+		}	
 
 		boolean hasCough = yesCough.isChecked();
 		boolean hasNightSweats = yesNightSweats.isChecked();
@@ -1325,30 +1022,19 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		
 		coughSymptom.setEnabled(hasCough);
 		coughSymptomDuration.setEnabled(hasCough);
-		//coughSymptomDuration.setFocusable(hasCough);
-		//coughDays.setEnabled(hasCough);
 		nigtSweatsSymptom.setEnabled(hasNightSweats);
 		nightSweatsSymptomDuration.setEnabled(hasNightSweats);
-		//nightSweatsSymptomDuration.setFocusable(hasNightSweats);
-		//nightSweatsDays.setEnabled(hasNightSweats);
 		weightLossSymptom.setEnabled(hasWeightLoss);
 		weightLossSymptomDuration.setEnabled(hasWeightLoss);
-		//weightLossSymptomDuration.setFocusable(hasWeightLoss);
-		//weightLossDays.setEnabled(hasWeightLoss);
 		feverSymptom.setEnabled(hasFever);
 		feverSymptomDuration.setEnabled(hasFever);
-		//feverSymptomDuration.setFocusable(hasFever);
-		//feverDays.setEnabled(hasFever);
 		haemoptysisSymptom.setEnabled(hasHaemoptysis);
 		haemoptysisSymptomDuration.setEnabled(hasHaemoptysis);
-		//haemoptysisSymptomDuration.setFocusable(hasHaemoptysis);
-		//haemoptysisDays.setEnabled(hasHaemoptysis);
 		
-
 		boolean check = (lastHivResult | hasCough | hasFever | hasWeightLoss
 				| hasNightSweats | hasHaemoptysis | hasContactWithTb | hadTbTreatmentInPast);
-		yesPatientInformation.setChecked(check);
-		noPatientInformation.setChecked(!check);
+		yesPatientInformation.setChecked(check);  //suspect
+		noPatientInformation.setChecked(!check);  //non-suspect
 
 	}
 
@@ -1357,8 +1043,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		boolean valid = true;
 		StringBuffer message = new StringBuffer();
 		// Validate mandatory controls
-		View[] mandatory = { firstName, surname, age, /*yearsWorkingNow,
-				yearsWorkingPreviously,*/ tbTreatmentPastDuration, patientId,
+		View[] mandatory = { firstName, surname, age, tbTreatmentPastDuration, patientId,
 				phone1, phone1OtherOwner, phone2, phone2OtherOwner,
 				physicalAddress, 
 				coughSymptomDuration, nightSweatsSymptomDuration,
@@ -1511,7 +1196,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 					}
 				}
 				
-				if(phone1.isEnabled()){
+				if(phone1.getVisibility() == View.VISIBLE && phone1.isEnabled()){
 					if(!RegexUtil.isContactNumber(App.get(phone1))){
 						valid = false;
 						message.append(phone1.getTag().toString()
@@ -1523,7 +1208,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 					}
 				}
 				
-				if(phone2.isEnabled()){
+				if(phone2.getVisibility() == View.VISIBLE && phone2.isEnabled()){
 					if(!RegexUtil.isContactNumber(App.get(phone2))){
 						valid = false;
 						message.append(phone2.getTag().toString()
@@ -1601,41 +1286,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			values.put("address1", App.get(physicalAddress));
 			values.put("town", App.get(townAddress));
 			values.put("landmark", App.get(landmarkAddress));
-			values.put("city", App.getCity());
+			//values.put("city", App.getCity());
 			values.put("country", App.getCountry());
-
-			/*
-			 * if (english.isChecked()) observations.add(new String[] {
-			 * "Language", "English" }); if (afrikaans.isChecked())
-			 * observations.add(new String[] { "Language", "Afrikaans" }); if
-			 * (zulu.isChecked()) observations.add(new String[] { "Language",
-			 * "Zulu" }); if (xhosa.isChecked()) observations.add(new String[] {
-			 * "Language", "Xhosa" }); if (swati.isChecked())
-			 * observations.add(new String[] { "Language", "Swati" }); if
-			 * (tswana.isChecked()) observations.add(new String[] { "Language",
-			 * "Tswana" }); if (hindiUrdu.isChecked()) observations.add(new
-			 * String[] { "Language", "Hindi/Urdu" }); if (other.isChecked())
-			 * observations.add(new String[] { "Language", "Other" }); if
-			 * (dontKnow.isChecked()) observations.add(new String[] {
-			 * "Language", "Don't Know" }); if (refuse.isChecked())
-			 * observations.add(new String[] { "Language", "Refuse" });
-			 */
-
-			/*observations.add(new String[] { "Miner currently",
-					App.get(workingOnMine) });
-			if (App.get(workingOnMine).equals("Yes"))
-				observations.add(new String[] { "Miner currently duration",
-						App.get(yearsWorkingNow) });
-			if (workingOnMinePreviously.isEnabled()) {
-				observations.add(new String[] { "Miner previously",
-						App.get(workingOnMinePreviously) });
-				if (App.get(workingOnMinePreviously).equals("Yes"))
-					observations.add(new String[] {
-							"Miner previously duration",
-							App.get(yearsWorkingPreviously) });
-			}
-			observations.add(new String[] { "Miner Family Member",
-					App.get(householdWorkingMine) });*/
 
 			observations.add(new String[] { "Cough",  noCough.isChecked() ? "No" : (yesCough.isChecked() ? "Yes" : "Refuse") });
 			observations.add(new String[] { "Night Sweats",
@@ -1664,14 +1316,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				observations.add(new String[] { "TB treatment past duration",
 						App.get(tbTreatmentPastDuration) });
 			observations.add(new String[] { "Diabetes", noDiabetes.isChecked() ? "No" : (yesDiabetes.isChecked() ? "Yes" : "Unknown") });
-			/*observations.add(new String[] { "Family Diabetes",
-					App.get(familyDiabetes) });
-			observations.add(new String[] { "Hypertension",
-					App.get(hypertension) });
-			observations.add(new String[] { "Breathing Shortness",
-					App.get(breathingShortness) });
-			observations
-					.add(new String[] { "Smoking", App.get(tobaccoCurrent) });*/
 
 			observations
 					.add(new String[] { "HIV test before", noHivTest.isChecked() ? "No" : (yesHivTest.isChecked() ? "Yes" : "Refuse") });
@@ -1922,11 +1566,6 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		} else if (view == noPhone2 || view == yesPhone2) {
 			boolean check = yesPhone2.isChecked();
 			
-			/*String value = phone1OwnerGroup.getSelectedValue();
-			
-			Toast.makeText(ScreeningActivity.this,
-	                value, Toast.LENGTH_SHORT).show();*/
-			
 			if(check){
 				
 				phone2.setVisibility(View.VISIBLE);
@@ -2034,7 +1673,18 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			else
 				screenerInstructionOneTextView.setText(R.string.screener_instruction_one_no);
 			
-		}
+		}else if (view == noSputumVideoInstruction || view == yesSputumVideoInstruction || view == refuseSputumVideoInstruction || view == unavailableSputumVideoInstruction){
+			
+			if(view == noSputumVideoInstruction || view == refuseSputumVideoInstruction){
+				yesSputumVideoInstruction.setChecked(false);
+				unavailableSputumVideoInstruction.setChecked(false);
+			}
+			else{
+				noSputumVideoInstruction.setChecked(false);
+				refuseSputumVideoInstruction.setChecked(false);
+			}
+			
+		}	
 	}
 
 	@Override
@@ -2042,79 +1692,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			long id) {
 		MySpinner spinner = (MySpinner) parent;
 		boolean visible = spinner.getSelectedItemPosition() == 1;
-		/*if (parent == workingOnMine) {
-			yearsWorkingNowTextView.setEnabled(visible);
-			yearsWorkingNow.setEnabled(visible);
-			if (visible) {
-				workingOnMinePreviouslyTextView.setEnabled(false);
-				workingOnMinePreviously.setEnabled(false);
-				yearsWorkingOnMinePreviouslyTextView.setEnabled(false);
-				yearsWorkingPreviously.setEnabled(false);
-			} else {
-				workingOnMinePreviouslyTextView.setEnabled(true);
-				workingOnMinePreviously.setEnabled(true);
-			}
-		} else if (parent == workingOnMinePreviously) {
-			yearsWorkingOnMinePreviouslyTextView.setEnabled(visible);
-			yearsWorkingPreviously.setEnabled(visible);
-		} else*/ /*if (parent == hivTest) {
-			if (!visible) {
-				hivTestResult.setEnabled(false);
-				hivTestResultTextView.setEnabled(false);
-				hivTestNewTextView.setEnabled(true);
-				hivTestNew.setEnabled(true);
-			} else {
-				hivTestResult.setEnabled(true);
-				hivTestResultTextView.setEnabled(true);
-			}
-			hivTestResult.setSelection(2);
-			hivTestNew.setSelection(1);
-		} else if (parent == hivTestResult) {
-			int count = hivTestResult.getSelectedItemPosition();
-			if (count == 0) {
-				hivTestNewTextView.setEnabled(false);
-				hivTestNew.setEnabled(false);
-			} else {
-				int chk = hivTest.getSelectedItemPosition();
-				if (chk == 1) {
-					hivTestNewTextView.setEnabled(true);
-					hivTestNew.setEnabled(true);
-				}
-			}
-			hivTestNew.setSelection(1);
-		} else if (parent == hivTestNew) {
-			if (visible)
-				screenerInstructionOneTextView
-						.setText(R.string.screener_instruction_one_yes);
-			else
-				screenerInstructionOneTextView
-						.setText(R.string.screener_instruction_one_no);
-		}*/ 
 		updateDisplay();
 	}
 
 	@Override
 	public void onCheckedChanged(CompoundButton button, boolean state) {
-		/*
-		 * if (button == refuse) { if (button.isChecked()) {
-		 * english.setChecked(false); afrikaans.setChecked(false);
-		 * zulu.setChecked(false); xhosa.setChecked(false);
-		 * swati.setChecked(false); tswana.setChecked(false);
-		 * hindiUrdu.setChecked(false); other.setChecked(false);
-		 * dontKnow.setChecked(false); }
-		 * 
-		 * } else if (button == english) { if (button.isChecked())
-		 * refuse.setChecked(false); } else if (button == afrikaans) { if
-		 * (button.isChecked()) refuse.setChecked(false); } else if (button ==
-		 * zulu) { if (button.isChecked()) refuse.setChecked(false); } else if
-		 * (button == xhosa) { if (button.isChecked()) refuse.setChecked(false);
-		 * } else if (button == swati) { if (button.isChecked())
-		 * refuse.setChecked(false); } else if (button == tswana) { if
-		 * (button.isChecked()) refuse.setChecked(false); } else if (button ==
-		 * hindiUrdu) { if (button.isChecked()) refuse.setChecked(false); } else
-		 * if (button == other) { if (button.isChecked())
-		 * refuse.setChecked(false); } else
-		 */
+	
 		if (button == yesPatientInformation) {
 			if (button.isChecked()) {
 				patientIdTextView.setVisibility(View.VISIBLE);
@@ -2138,10 +1721,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				phone2OwnerGroup.setVisibility(View.VISIBLE);
 				
 				sputumVideoInstructionTextView.setVisibility(View.VISIBLE);
-				sputumVideoInstructionGroup.setVisibility(View.VISIBLE);
+				sputumVideoInstructionOneGroup.setVisibility(View.VISIBLE);
+				sputumVideoInstructionTwoGroup.setVisibility(View.VISIBLE);
 				
 				providePhone1.setEnabled(true);
 				providePhone2.setEnabled(true);
+				phone1.setEnabled(true);
+				phone2.setEnabled(true);
 				
 				skipValue = false;
 				
@@ -2167,10 +1753,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				phone1OwnerGroup.setVisibility(View.GONE);
 				
 				sputumVideoInstructionTextView.setVisibility(View.INVISIBLE);
-				sputumVideoInstructionGroup.setVisibility(View.INVISIBLE);
+				sputumVideoInstructionOneGroup.setVisibility(View.INVISIBLE);
+				sputumVideoInstructionTwoGroup.setVisibility(View.INVISIBLE);
 				
 				providePhone1.setEnabled(false);
 				providePhone2.setEnabled(false);
+				phone1.setEnabled(false);
+				phone2.setEnabled(false);
 				
 				skipValue = true;
 			}

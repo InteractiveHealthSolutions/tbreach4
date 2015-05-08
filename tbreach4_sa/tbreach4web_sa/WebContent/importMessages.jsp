@@ -40,7 +40,7 @@ function importMessage()
 <table align="center">
 <tr><td>
 <div align="center" class="divCenter">
-Last Import on: <i>  <%= MobileService.getService().getLastImport() %> SAST</i>
+<%-- Last Import on: <i>  <%= MobileService.getService().getLastImport() %> SAST</i> --%>
 
 <form name="import_form" action="DashboardServlet" method="post" ONSUBMIT="return importMessage()">
 <br>

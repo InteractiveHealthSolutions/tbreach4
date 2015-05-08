@@ -52,10 +52,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -90,8 +92,6 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	MyRadioButton 		unknownViewedSputumVideo;
 	MyRadioButton 		unavailableViewedSputumVideo;
 	
-	//MySpinner			viewedSputumVideo;
-	
 	MyTextView		    sputumTimeTextView;
 	
 	MyRadioGroup 		sputumTimeGroup;
@@ -101,15 +101,11 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	MyRadioButton 		moreThirdDaySputumTime;
 	MyRadioButton 		unknownSputumTime;
 	
-	//MySpinner			sputumTime;
-	
 	MyTextView			sputumStatusTextView;
 	
 	MyRadioGroup 		sputumStatusGroup;
 	MyRadioButton 		acceptSputumStatus;
 	MyRadioButton 		rejectSputumStatus;
-	
-	//MySpinner			sputumStatus;
 	
 	MyTextView			rejectionReasonTextView;
 	
@@ -118,8 +114,6 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	MyRadioButton 		foodParticlesRejectionReason;
 	MyRadioButton 		insufficientRejectionReason;
 	MyRadioButton 		oldRejectionReason;
-	
-	//MySpinner			rejectionReason;
 	
 	MyTextView 			labTestIdTextView;
 	MyEditText			labTestId;
@@ -141,6 +135,10 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	
 	String firstNameValue = "";
 	String lastNameValue = "";
+	private static Toast toast;
+	
+	View[] visibleViews;
+	View[] goneViews;
 	
 
 	/**
@@ -208,6 +206,9 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	@Override
 	public void createViews (final Context context)
 	{
+		
+		toast = new Toast(context);
+		
 		FORM_NAME = "Sputum Submission Form";
 		TAG = "SputumSubmissionActivity";
 		PAGE_COUNT = 6;
@@ -257,9 +258,6 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 				new MyRadioButton[] { noViewedSputumVideo, yesViewedSputumVideo, refuseViewedSputumVideo, unknownViewedSputumVideo, unavailableViewedSputumVideo }, R.string.sputum_video,
 				R.style.radio, App.isLanguageRTL(),1);
 		
-		
-		//viewedSputumVideo = new MySpinner (context, getResources ().getStringArray (R.array.video_viewed_option), R.string.video_viewed, R.string.option_hint); 
-		
 		sputumTimeTextView = new MyTextView (context, R.style.text, R.string.sputum_time);
 		
 		spotSputumTime = new MyRadioButton(context, R.string.spot, R.style.radio,
@@ -279,12 +277,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 				new MyRadioButton[] { spotSputumTime, secondDaySputumTime, thirdDaySputumTime, moreThirdDaySputumTime, unknownSputumTime }, R.string.sputum_time,
 				R.style.radio, App.isLanguageRTL(),1);
 		
-		
-		//sputumTime = new MySpinner (context, getResources ().getStringArray (R.array.sputum_time_option), R.string.sputum_time, R.string.option_hint); 
-		
 		sputumStatusTextView = new MyTextView (context, R.style.text, R.string.sputum_status);
-		
-		
 		acceptSputumStatus = new MyRadioButton(context, R.string.accept, R.style.radio,
 				R.string.accept);
 		rejectSputumStatus = new MyRadioButton(context, R.string.reject, R.style.radio,
@@ -292,7 +285,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		
 		sputumStatusGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { acceptSputumStatus, rejectSputumStatus }, R.string.sputum_status,
-				R.style.radio, App.isLanguageRTL(),1);
+				R.style.radio, App.isLanguageRTL(),0);
 		
 		
 		//sputumStatus = new MySpinner (context, getResources ().getStringArray (R.array.sputum_status_option), R.string.sputum_status, R.string.option_hint); 
@@ -311,8 +304,6 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		rejectionReasonGroup = new MyRadioGroup(context,
 				new MyRadioButton[] { salivaRejectionReason, foodParticlesRejectionReason, insufficientRejectionReason, oldRejectionReason }, R.string.sputum_status,
 				R.style.radio, App.isLanguageRTL(),1);
-		
-		//rejectionReason = new MySpinner (context, getResources ().getStringArray (R.array.rejection_reason_option), R.string.rejection_reason, R.string.option_hint); 
 		
 		labTestIdTextView = new MyTextView (context, R.style.text, R.string.lab_test_id);
 		labTestId = new MyEditText (context, R.string.lab_test_id, R.string.lab_test_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.labTestIdLength, false);
@@ -358,10 +349,10 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		View[][] viewGroups = { 
 					{formDateTextView, formDateButton, patientIdTextView, patientId, scanBarcode, firstNameTextView, firstName, surnameTextView, surname,  searchPatientButton}, 
 				    {screenerInstructionOneTextView, screenerInstructionOne},
-					{viewedSputumVideoTextView, viewedSputumVideoGroup /*viewedSputumVideo, */},
-					{sputumTimeTextView, sputumTimeGroup, /*sputumTime,*/},
-					{screenerInstructionTwoTextView,screenerInstructionTwo, sputumStatusTextView, sputumStatusGroup, /*sputumStatus,*/},
-					{rejectionReasonTextView, rejectionReasonGroup, /*rejectionReason,*/ screenerInstructionThreeTextView,screenerInstructionThree,labTestIdTextView,labTestId,scanBarcodeLabTestId ,sputumSubmissionSpace,saveButton}
+					{viewedSputumVideoTextView, viewedSputumVideoGroup },
+					{sputumTimeTextView, sputumTimeGroup, },
+					{screenerInstructionTwoTextView,screenerInstructionTwo, sputumStatusTextView, sputumStatusGroup ,rejectionReasonTextView, rejectionReasonGroup},
+					{ screenerInstructionThreeTextView,screenerInstructionThree,labTestIdTextView,labTestId,scanBarcodeLabTestId ,sputumSubmissionSpace,saveButton}
 					};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -379,26 +370,18 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 			groups.add (scrollView);
 		}
 		// Set event listeners
-		formDateButton.setOnClickListener (this);
-		firstButton.setOnClickListener (this);
-		lastButton.setOnClickListener (this);
-		clearButton.setOnClickListener (this);
-		saveButton.setOnClickListener (this);
-		scanBarcode.setOnClickListener (this);
-		searchPatientButton.setOnClickListener(this);
-		scanBarcodeLabTestId.setOnClickListener(this);
 		navigationSeekbar.setOnSeekBarChangeListener (this);
 		
-		spotSputumTime.setOnClickListener(this);
-		secondDaySputumTime.setOnClickListener(this);
-		thirdDaySputumTime.setOnClickListener(this);
-		moreThirdDaySputumTime.setOnClickListener(this);
-		unknownSputumTime.setOnClickListener(this);
-		acceptSputumStatus.setOnClickListener(this);
-		rejectSputumStatus.setOnClickListener(this);
+		views = new View[] {patientId, firstName, surname,labTestId,
+				unknownViewedSputumVideo,unknownSputumTime,acceptSputumStatus,salivaRejectionReason};
 		
-		views = new View[] {patientId, firstName, surname, /*viewedSputumVideo,*/ /*sputumTime,*/ /*sputumStatus,*/labTestId};
-		for (View v : views)
+		
+		View[] setListener = new View[]{
+				formDateButton,firstButton,lastButton,clearButton,saveButton,scanBarcode,searchPatientButton,scanBarcodeLabTestId,
+				spotSputumTime,secondDaySputumTime,thirdDaySputumTime,moreThirdDaySputumTime,unknownSputumTime,acceptSputumStatus,rejectSputumStatus,
+				};
+		
+		for (View v : setListener)
 		{
 			if (v instanceof Spinner)
 			{
@@ -408,7 +391,13 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 			{
 				((CheckBox) v).setOnCheckedChangeListener (this);
 			}
+			else if (v instanceof Button) {
+				((Button) v).setOnClickListener(this);
+			}  else if (v instanceof RadioButton) {
+				((RadioButton) v).setOnClickListener(this);
+			}
 		}
+		
 		pager.setOnPageChangeListener (this);
 		patientId.setOnLongClickListener (this);
 		// Detect RTL language
@@ -428,6 +417,9 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 				}
 			}
 		}
+		
+		goneViews = new View[]{rejectionReasonTextView,rejectionReasonGroup,screenerInstructionThree,screenerInstructionThreeTextView};
+		visibleViews = new View[]{labTestIdTextView,labTestId,scanBarcodeLabTestId,sputumSubmissionSpace};
 	}
 
 	@Override
@@ -436,20 +428,19 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 		super.initView (views);
 		formDate = Calendar.getInstance ();
 		updateDisplay ();
-        unknownViewedSputumVideo.setChecked(true);
-        unknownSputumTime.setChecked(true);
-        acceptSputumStatus.setChecked(true);
-        rejectionReasonTextView.setVisibility(View.GONE);
-        rejectionReasonGroup.setVisibility(View.GONE);
-        salivaRejectionReason.setChecked(true);
-        labTestIdTextView.setVisibility(View.VISIBLE);
-		labTestId.setVisibility(View.VISIBLE);
-		scanBarcodeLabTestId.setVisibility(View.VISIBLE);
+		
+		// Hide Views
+		for (View v : goneViews) {
+			v.setVisibility(View.GONE);
+		}
+		
+		// Show Views
+		for (View v : visibleViews) {
+			v.setVisibility(View.VISIBLE);
+		}
+		
 		screenerInstructionThreeTextView.setText(R.string.empty_string);
 		screenerInstructionThree.setText(R.string.empty_string);
-		screenerInstructionThree.setVisibility(View.GONE);
-		screenerInstructionThreeTextView.setVisibility(View.GONE);
-		sputumSubmissionSpace.setVisibility(View.VISIBLE);
         firstNameValue = "";
         lastNameValue = "";
         firstName.setText(firstNameValue);
@@ -460,6 +451,18 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 	public void updateDisplay ()
 	{
 		formDateButton.setText (DateFormat.format ("dd-MMM-yyyy", formDate));
+		
+		if(formDate.getTime().after(new Date())){
+			
+			if (toast != null)
+			    toast.cancel();
+			
+			formDateButton.setTextColor(getResources().getColor(R.color.Red));
+			toast = Toast.makeText(SputumSubmissionActivity.this,"Form Date: "+getResources().getString(R.string.invalid_date_or_time), Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else
+			formDateButton.setTextColor(getResources().getColor(R.color.IRDTitle));
 	}
 
 	@Override
@@ -497,16 +500,6 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 				message.append (patientId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
 				patientId.setTextColor (getResources ().getColor (R.color.Red));
 			}
-		    /*if(labTestId.isEnabled())
-		    {
-		    	if(!(App.get (labTestId).length() == 0)){
-			    	
-						valid = false;
-						message.append (labTestId.getTag ().toString () + ": " + getResources ().getString (R.string.invalid_data) + "\n");
-						labTestId.setTextColor (getResources ().getColor (R.color.Red));
-				
-		    	}
-		    }*/
 				
 		}
 		// Validate range
@@ -838,7 +831,7 @@ public class SputumSubmissionActivity extends AbstractFragmentActivity
 				screenerInstructionThree.setText(R.string.screener_instruction_repeat);
 				screenerInstructionThree.setVisibility(View.VISIBLE);
 				screenerInstructionThreeTextView.setVisibility(View.VISIBLE);
-				sputumSubmissionSpace.setVisibility(View.GONE);
+				sputumSubmissionSpace.setVisibility(View.VISIBLE);
 			}
 			else
 			{

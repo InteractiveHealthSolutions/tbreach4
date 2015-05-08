@@ -50,6 +50,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -173,6 +174,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 						formDate.set (year, monthOfYear, dayOfMonth);
 						updateDisplay ();
 					}
+					
 				};
 				return new DatePickerDialog (this, dateSetListener, formDate.get (Calendar.YEAR), formDate.get (Calendar.MONTH), formDate.get (Calendar.DAY_OF_MONTH));
 				// Show time dialog
@@ -221,6 +223,13 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 			else if (v instanceof CheckBox)
 			{
 				((CheckBox) v).setChecked (false);
+			}
+			else if (v instanceof CheckBox) 
+			{
+				((CheckBox) v).setChecked(true);
+			}  else if (v instanceof RadioButton) 
+			{
+				((RadioButton) v).setChecked(true);
 			}
 		}
 		gotoFirstPage ();

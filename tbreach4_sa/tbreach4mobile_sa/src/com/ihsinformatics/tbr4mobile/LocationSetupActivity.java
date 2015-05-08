@@ -316,10 +316,10 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 			if (!App.isOfflineMode ())
 				screeningStrategySearchButton.setEnabled(true);
 			screeningStrategySpinner.setEnabled(true);
-			facilityTextView.setEnabled(false);
+			facilityTextView.setEnabled(true);
 			if (!App.isOfflineMode ())
 				facilitySearchButton.setEnabled(false);
-			facilitySpinner.setEnabled(false);
+			facilitySpinner.setEnabled(true);
 			
 		}
 		else 
@@ -827,8 +827,8 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 			facilitySpinner.setAdapter(null);
 			facilitySpinner.setAdapter (facilityAdapter);
 			
-			if(facilityRadioButton.isChecked())
-			{
+//			if(facilityRadioButton.isChecked())
+//			{
 				
 				String facility = App.getFacility();
 				if(facility != "")
@@ -856,14 +856,14 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 				// Save location in preferences
 				editor.putString(Preferences.LOCATION, App.getLocation ());
 			
-			}
+			/*}
 			else
 			{
-				App.setLocation(App.getDistrict());
+				App.setLocation(App.getFacility());
 				// Save location in preferences
-				locationIdTextView.setText(App.getLocation());
+				locationIdTextView.setText(App.getFacility());
 				editor.putString(Preferences.LOCATION, App.getLocation ());
-			}
+			}*/
 			editor.apply ();
 		}
 		
@@ -876,8 +876,7 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 			SharedPreferences.Editor editor = preferences.edit ();
 			editor.putString(Preferences.FACILITY, App.getFacility ());
 			
-			if(facilityRadioButton.isChecked())
-			{
+			
 				if(facilitySpinner.getSelectedItemPosition () != -1)
 				{
 					
@@ -893,7 +892,7 @@ public class LocationSetupActivity extends Activity implements IActivity, OnClic
 				// Save location in preferences
 				editor.putString(Preferences.LOCATION, App.getLocation ());
 				
-			}
+			
 			editor.apply ();
 		}
 		

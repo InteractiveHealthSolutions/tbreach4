@@ -14,7 +14,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="age">Age (in years)</string>
-    <string name="age_hint">Enter age (1 - 120)</string>
+    <string name="age_hint">Enter age (1 - 119)</string>
     <string name="dob">Date of Birth</string>
     <string name="language_spoken">Languages Spoken at Home</string>
     <string name="english">English</string>
@@ -164,9 +164,10 @@
     <string name="blood_sugar_indication">Blood Sugar</string>
     <string name="cxr_spirometry_indication">CXR and Spirometry</string>
     
+     <string name="no_space">"No "</string>
     <string name="success_screening">"Screening Form Successfully saved."</string>
     
-    <string name="screening_space">"\n\n\n"</string>
+    <string name="screening_space">"\n"</string>
     
     <string name="n">"N"</string>
     <string name="y">"Y"</string>

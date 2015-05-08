@@ -64,7 +64,7 @@
     
     <string name="fetch_name">Fetch Patient\'s Name</string>
     
-    <string name="sputumSubmission_space">"\n\n\n\n\n\n\n"</string>
+    <string name="sputumSubmission_space">"\n\n\n\n\n\n"</string>
     
     <string name="scan_nhls_code">"Scan NHLS Barcode"</string>
     

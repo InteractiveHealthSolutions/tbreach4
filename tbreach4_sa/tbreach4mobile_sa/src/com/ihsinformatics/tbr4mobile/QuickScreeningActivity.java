@@ -186,7 +186,7 @@ public class QuickScreeningActivity extends Activity implements IActivity, OnCli
 			String age = App.get(ageEditText);
 			int a = Integer.parseInt(age);
 			
-			if(a<=0 || a>120 ){
+			if(a<=0 || a>119){
 				valid = false;
 				message.append (ageEditText.getTag () + ". ");
 				ageEditText.setTextColor (getResources ().getColor (R.color.Red));

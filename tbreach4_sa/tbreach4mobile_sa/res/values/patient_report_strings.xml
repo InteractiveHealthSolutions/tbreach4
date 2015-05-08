@@ -18,6 +18,7 @@
     <string name="country_address">Country</string>
     <string name="phone_number">Phone number</string>
     <string name="date_of_sputum_submission">Date sputum handed from patient to screener</string>
+    <string name="date_of_sputum_result">Date of sputum result</string>
     <string name="search_option">Search by</string>
     <string name="test_id">Lab Test ID</string>
     
