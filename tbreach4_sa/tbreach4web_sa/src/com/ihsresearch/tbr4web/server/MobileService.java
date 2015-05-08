@@ -270,6 +270,8 @@ public class MobileService
 					|| formType.equals (FormType.SPUTUM_RESULT) || formType.equals(FormType.TREATMENT_INITIATION)  
 					|| formType.equals(FormType.TREATMENT_FOLLOWUP)  || formType.equals(FormType.TREATMENT_OUTCOME))
 				response = doGenericForm (formType, jsonObject);
+			else if (formType.equals("DATA_UPLOAD"))
+			    response = doDataUpload();
 			else
 				throw new Exception ();
 		}
@@ -902,7 +904,7 @@ public class MobileService
 						
 						int size = contactTbObs.size ();
 						if(size != 0){
-							Obs contactTbO = contactTbObs.get (size - 1);
+							Obs contactTbO = contactTbObs.get (0);
 							String contactTbValue = contactTbO.getValueCoded ().getName ().getName ();
 							json.put ("contact_tb", contactTbValue);
 						}
@@ -919,7 +921,7 @@ public class MobileService
 					{
 						int size = diabetesObs.size ();
 						if(size != 0){
-							Obs diabetesO = diabetesObs.get (size - 1);
+							Obs diabetesO = diabetesObs.get (0);
 							String diabetesValue = diabetesO.getValueCoded ().getName ().getName ();
 							json.put ("diabetes", diabetesValue);
 						}
@@ -937,7 +939,7 @@ public class MobileService
 						int size = labTestIdObs.size ();
 						if (size != 0)
 						{
-							Obs labTestIdO = labTestIdObs.get (size - 1);
+							Obs labTestIdO = labTestIdObs.get (0);
 							String labTestIdValue = labTestIdO.getValueText ();
 							json.put ("test_lab_id", labTestIdValue);
 						}
@@ -946,17 +948,77 @@ public class MobileService
 					}
 					else
 						json.put ("test_lab_id", "");
+					
+					
+					Concept lastHivResultConcept = Context.getConceptService ().getConceptByName ("Last HIV result");
+					List<Obs> lastHivResultObs = new LinkedList<Obs> ();
+					lastHivResultObs = Context.getObsService ().getObservationsByPersonAndConcept (p, lastHivResultConcept);
+					if (lastHivResultObs != null)
+					{
+						
+						int size = lastHivResultObs.size ();
+						if(size != 0){
+							Obs lastHivO = lastHivResultObs.get (0);
+							String lastHivValue = lastHivO.getValueCoded ().getName ().getName ();
+							json.put ("last_hiv", lastHivValue);
+						}
+						else
+							json.put ("last_hiv", "");
+					}
+					else
+						json.put ("last_hiv", "");
 
-					json.put ("date", "");
-					List<Encounter> encountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
-					for (Encounter e : encountersByPatient)
+					json.put ("date_sputum_submission", "");
+					List<Encounter> sputumSubmissionEncountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
+					for (Encounter e : sputumSubmissionEncountersByPatient)
 					{
 						if (e.getEncounterType ().getName ().equals ("Sputum Submission"))
 						{
-							json.put ("date", DateTimeUtil.getSQLDate (e.getEncounterDatetime ()));
+							json.put ("date_sputum_submission", DateTimeUtil.getSQLDate (e.getEncounterDatetime ()));
 						}
 					}
-
+					
+					json.put ("date_sputum_result", "");
+					List<Encounter> sputumResultEncountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
+					for (Encounter e : sputumResultEncountersByPatient)
+					{
+						if (e.getEncounterType ().getName ().equals ("Sputum Result"))
+						{
+							json.put ("date_sputum_result", DateTimeUtil.getSQLDate (e.getEncounterDatetime ()));
+						}
+					}
+						
+					
+					json.put ("date_treatment_initiation", "");
+					Concept genexpertResultConcept = Context.getConceptService ().getConceptByName ("GeneXpert Result");
+					List<Obs> genexpertResultObs = new LinkedList<Obs> ();
+					genexpertResultObs = Context.getObsService ().getObservationsByPersonAndConcept (p, genexpertResultConcept);
+					if (genexpertResultObs != null)
+					{
+						
+						int size = genexpertResultObs.size ();
+						if(size != 0){
+							Obs genexpertO = genexpertResultObs.get (0);
+							String genexpertValue = genexpertO.getValueCoded ().getName ().getName ();
+							json.put ("genexpert_result", genexpertValue);
+							
+							if(genexpertValue.equals("MTB Positive")){
+								List<Encounter> treatmentInitiationEncountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
+								for (Encounter e : treatmentInitiationEncountersByPatient)
+								{
+									if (e.getEncounterType ().getName ().equals ("Treatment Initiation"))
+									{
+										json.put ("date_treatment_initiation", DateTimeUtil.getSQLDate (e.getEncounterDatetime ()));
+									}
+								}
+							}
+						}
+						else
+							json.put ("genexpert_result", "");
+					}
+					else
+						json.put ("genexpert_result", "");
+					
 				}
 			}
 		}
@@ -1067,7 +1129,7 @@ public class MobileService
 			String colony = values.getString ("colony");
 			String town = values.getString ("town");
 			String landmark = values.getString ("landmark");
-			String city = values.getString ("city");
+			//String city = values.getString ("city");
 			String country = values.getString ("country");
 
 			String formDate = values.getString ("form_date");
@@ -1113,7 +1175,7 @@ public class MobileService
 					address.setAddress2 (colony);
 					address.setAddress3 (town);
 					address.setAddress4 (landmark);
-					address.setCityVillage (city);
+					//address.setCityVillage (city);
 					address.setCountry (country);
 					address.setCreator (creatorObj);
 					address.setDateCreated (new Date ());
@@ -2063,5 +2125,12 @@ public class MobileService
 		String[][] data = executeQuery (selectQuery, null);
 		return data;
 	}
+	
+	/*
+	  * TEMPORARY. Remove after all MS Access data has been uploaded
+	  */
+	 private String doDataUpload() {
+	  return new AccessUpload().upload();
+	 }
 
 }

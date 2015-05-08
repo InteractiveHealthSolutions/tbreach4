@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.zip.ZipOutputStream;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -36,7 +37,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import com.ihsresearch.tbr4web.server.util.CSVUtil;
+
 import ca.uhn.hl7v2.util.MessageQuery.Result;
 
 public class DashboardServlet extends HttpServlet
@@ -84,6 +87,10 @@ public class DashboardServlet extends HttpServlet
 		{
 			doOpenMrsScreeningStatistics (request, response);
 		}
+		else if (reqType.equals ("Test"))
+		{
+			weeklyScreenersReport();
+		}
 
 	}
 
@@ -106,7 +113,7 @@ public class DashboardServlet extends HttpServlet
 				userSession.setAttribute ("password", password);
 				userSession.setMaxInactiveInterval (30 * 60);
 
-				rd = request.getRequestDispatcher ("/dashboard.jsp");
+				rd = request.getRequestDispatcher ("/dashboardd.jsp");
 				
 				// Session creation!
                 Cookie loginCookie = new Cookie("dashboard_user",username);
@@ -553,6 +560,8 @@ public class DashboardServlet extends HttpServlet
 			e.printStackTrace ();
 		}
 	}
+	
+	private void weeklyScreenersReport(){}
 	
 	
 	private void renewCookie(HttpServletRequest request, HttpServletResponse response){
