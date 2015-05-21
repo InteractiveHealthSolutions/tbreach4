@@ -1,4 +1,14 @@
-package com.ihsresearch.tbr4web.server;
+/**
+ * Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Interactive Health Solutions, info@ihsinformatics.com
+ * You can also access the license on the internet at the address: http://www.gnu.org/licenses/gpl-3.0.html
+ * Interactive Health Solutions, hereby disclaims all copyright interest in this program written by the contributors.
+ * Contributors: Owais
+ */package com.ihsresearch.tbr4web.server;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,9 +40,14 @@ import org.openmrs.api.context.Context;
 import com.ihsresearch.tbr4web.server.util.DateTimeUtil;
 import com.ihsresearch.tbr4web.shared.CsvUtil;
 
+/**
+ * This class is used to import data exported from MS Access. NOT general purpose
+ * 
+ * @author owais.hussain@irdresearch.org
+ */
 public class AccessUpload {
 
-	static final String filePath = "C:\\Users\\Rabbia\\Desktop\\MINE-TB Clean data.csv";
+	static final String filePath = "E:\\MINETB_Clean.csv";
 
 	static final char separator = ',';
 
@@ -58,7 +73,7 @@ public class AccessUpload {
 		User user = Context.getUserService().getUserByUsername("owais");
 		configuration.setCreator(user);
 		configuration
-				.setCsvHeader("form_date,time_stamp,district_name,facility_name,screener_id,user_id,nhls_id,first_name,surname,dob,age,gender,address,phone1,tb_contact,hiv_positive,diabetes,sputum_collection_date,sputum_result_date,sputum_result,mdr,treatment_start_date,died,lost_followup,transferred,transfer_to,comments");
+				.setCsvHeader("patient_id,uid,form_date,time_stamp,district_name,facility_name,screener_id,user_id,nhls_id,first_name,surname,dob,age,gender,address,phone1,tb_contact,hiv_positive,diabetes,sputum_collection_date,sputum_result_date,sputum_result,mdr,treatment_start_date,died,lost_followup,transferred,transfer_to,suspect");
 		configuration.setDateCreated(new Date());
 		configuration.setDateFormat(dateFormat);
 		configuration.setFieldSeparator(separator);
@@ -85,58 +100,67 @@ public class AccessUpload {
 		// Manually adding attributes from the list
 		definedAttributes.add(map.get(9));
 		definedAttributes.add(map.get(10));
-		definedAttributes.add(map.get(11));
+		// definedAttributes.add(map.get(12));
 
 		// For each record, fill respective properties
 		for (int i = 0; i < data.length; i++) {
 			try {
 				Patient patient = new Patient();
-				Date dateCreated = DateTimeUtil.getDateFromString(data[i][indices.get("date_created")], dateFormat);
-				User creator = Context.getUserService().getUserByUsername(data[i][indices.get("creator")]);
-				PatientIdentifierType identifierType = Context.getPatientService().getPatientIdentifierTypeByName(
-						"OpenMRS Identification Number");
+				Date dateCreated = DateTimeUtil.getDateFromString(
+						data[i][indices.get("date_created")], dateFormat);
+				User creator = Context.getUserService().getUserByUsername(
+						data[i][indices.get("creator")]);
+				PatientIdentifierType identifierType = Context
+						.getPatientService().getPatientIdentifierTypeByName(
+								"OpenMRS Identification Number");
 				// Patient ID
 				if (indices.containsKey("patient_identifier")) {
 					String id = data[i][indices.get("patient_identifier")];
 					// Check if this one already exists
-					List<Patient> patients = Context.getPatientService().getPatients(id);
+					List<Patient> patients = Context.getPatientService()
+							.getPatients(id);
 					if (patients != null) {
 						if (patients.size() > 0) {
-							message.append("ERROR. Patient ID " + id + " already exists. Skipping/Deleting.\n");
+							message.append("ERROR. Patient ID " + id
+									+ " already exists. Skipping/Deleting.\n");
 							if (deleteExisting)
-								Context.getPatientService().purgePatient(patients.get(0));
+								Context.getPatientService().purgePatient(
+										patients.get(0));
 							continue;
 						}
 					}
-					PatientIdentifier patientId = new PatientIdentifier(id, identifierType, null);
+					PatientIdentifier patientId = new PatientIdentifier(
+							getLuhnId(id), identifierType, null);
 					if (indices.containsKey("location")) {
-						Location location = Context.getLocationService().getLocation(data[i][indices.get("location")]);
+						Location location = Context.getLocationService()
+								.getLocation(data[i][indices.get("location")]);
 						patientId.setLocation(location);
 					}
 					patient.addIdentifier(patientId);
 				} else {
-					message.append("ERROR. Skipping record " + (i + 1) + " because of missing patient ID.\n");
+					message.append("ERROR. Skipping record " + (i + 1)
+							+ " because of missing patient ID.\n");
 					continue;
 				}
 				// Demographics
 				if (indices.containsKey("gender"))
 					patient.setGender(data[i][indices.get("gender")]);
 				else {
-					message.append("Skipping record " + (i + 1) + " because of missing gender.\n");
+					message.append("Skipping record " + (i + 1)
+							+ " because of missing gender.\n");
 					continue;
 				}
 				if (indices.containsKey("date_created")) {
 					patient.setPersonDateCreated(dateCreated);
 					patient.setDateCreated(dateCreated);
 				}
-				if (indices.containsKey("date_of_birth"))
-					patient.setBirthdate(DateTimeUtil.getDateFromString(data[i][indices.get("date_of_birth")],
-							dateFormat));
-				else if (indices.containsKey("age"))
-					patient.setBirthdateFromAge(Integer.parseInt(data[i][indices.get("age")]), dateCreated);
-				else {
-					message.append("Skipping record " + (i + 1) + " because of missing age.\n");
-					continue;
+				try {
+					patient.setBirthdate(DateTimeUtil.getDateFromString(
+							data[i][indices.get("date_of_birth")], dateFormat));
+				} catch (Exception e) {
+					patient.setBirthdateFromAge(
+							Integer.parseInt(data[i][indices.get("age")]),
+							dateCreated);
 				}
 				if (indices.containsKey("creator")) {
 					patient.setCreator(creator);
@@ -147,13 +171,15 @@ public class AccessUpload {
 				if (indices.containsKey("given_name"))
 					name.setGivenName(data[i][indices.get("given_name")]);
 				else {
-					Log.warn("ERROR. Skipping record " + (i + 1) + " because of missing given name.\n");
+					Log.warn("ERROR. Skipping record " + (i + 1)
+							+ " because of missing given name.\n");
 					continue;
 				}
 				if (indices.containsKey("family_name"))
 					name.setFamilyName(data[i][indices.get("family_name")]);
 				else {
-					Log.warn("ERROR. Skipping record " + (i + 1) + " because of missing last name.\n");
+					Log.warn("ERROR. Skipping record " + (i + 1)
+							+ " because of missing last name.\n");
 					continue;
 				}
 				patient.addName(name);
@@ -170,152 +196,235 @@ public class AccessUpload {
 				for (int j = 0; j < definedAttributes.size(); j++) {
 					CsvImporterMapping mapping = definedAttributes.get(j);
 					String type = mapping.getObjectName();
-					PersonAttributeType attributeType = Context.getPersonService().getPersonAttributeTypeByName(type);
+					PersonAttributeType attributeType = Context
+							.getPersonService().getPersonAttributeTypeByName(
+									type);
 					PersonAttribute attribute = new PersonAttribute();
 					attribute.setAttributeType(attributeType);
-					attribute.setValue(data[i][indices.get(mapping.getObjectName())]);
+					String value = data[i][indices.get(mapping.getObjectName())];
+					attribute.setValue(value);
 					patient.addAttribute(attribute);
 				}
-				Patient savedPatient = Context.getPatientService().savePatient(patient);
+				Patient savedPatient = Context.getPatientService().savePatient(
+						patient);
 				if (savedPatient != null) {
-					message.append("SUCCESS. " + savedPatient.getPatientIdentifier().getIdentifier() + "\n");
+					message.append("SUCCESS. "
+							+ savedPatient.getPatientIdentifier()
+									.getIdentifier() + "\n");
 					/*
 					 * This is specific to MINE-TB Access imports. Remove
 					 * afterwards
 					 */
 					try {
-						Encounter screening = prepareScreeningEncounter(savedPatient, map, data[i], indices, creator);
-						screening = Context.getEncounterService().saveEncounter(screening);
+						Encounter screening = prepareScreeningEncounter(
+								savedPatient, map, data[i], indices, creator);
+						screening = Context.getEncounterService()
+								.saveEncounter(screening);
 					} catch (Exception e) {
 						message.append("Screening encounter did not save for: "
-								+ patient.getPatientIdentifier().getIdentifier() + "\n");
+								+ patient.getPatientIdentifier()
+										.getIdentifier() + "\n");
 					}
 					try {
-						Encounter sputumSubmission = prepareSputumSubmission(savedPatient, map, data[i], indices,
-								creator);
-						sputumSubmission = Context.getEncounterService().saveEncounter(sputumSubmission);
+						Encounter sputumSubmission = prepareSputumSubmission(
+								savedPatient, map, data[i], indices, creator);
+						sputumSubmission = Context.getEncounterService()
+								.saveEncounter(sputumSubmission);
 					} catch (Exception e) {
 						message.append("Sputum Submission encounter did not save for: "
-								+ patient.getPatientIdentifier().getIdentifier() + "\n");
+								+ patient.getPatientIdentifier()
+										.getIdentifier() + "\n");
 					}
 					try {
-						Encounter sputumResults = prepareSputumResult(savedPatient, map, data[i], indices, creator);
-						sputumResults = Context.getEncounterService().saveEncounter(sputumResults);
+						Encounter sputumResults = prepareSputumResult(
+								savedPatient, map, data[i], indices, creator);
+						sputumResults = Context.getEncounterService()
+								.saveEncounter(sputumResults);
 					} catch (Exception e) {
 						message.append("Sputum Results encounter did not save for: "
-								+ patient.getPatientIdentifier().getIdentifier() + "\n");
+								+ patient.getPatientIdentifier()
+										.getIdentifier() + "\n");
 					}
 					/* Block comment end */
 				}
 			} catch (ParseException e) {
-				message.append("ERROR. Some parse thing with record " + (i + 1) + "\n");
-			} catch (NullPointerException e) {
-				message.append("ERROR. Some null thing with record " + (i + 1) + "\n");
-			} catch (Exception e) {
-				message.append("ERROR. Some exception thing with record " + (i + 1) + ". Here: " + e.getMessage()
+				message.append("ERROR. Some parse thing with record " + (i + 1)
 						+ "\n");
+			} catch (NullPointerException e) {
+				message.append("ERROR. Some null thing with record " + (i + 1)
+						+ "\n");
+			} catch (Exception e) {
+				message.append("ERROR. Some exception thing with record "
+						+ (i + 1) + ". Here: " + e.getMessage() + "\n");
 			}
 		}
 		Context.closeSession();
-		System.out.println(message.toString());
 		return message.toString();
 	}
 
-	private List<CsvImporterMapping> createMapping(CsvImporterConfiguration configuration) {
+	private String getLuhnId(String id) throws Exception {
+		String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
+		id = id.trim().toUpperCase();
+		int sum = 0;
+		for (int i = 0; i < id.length(); i++) {
+			char ch = id.charAt(id.length() - i - 1);
+			if (validChars.indexOf(ch) == -1)
+				throw new Exception("\"" + ch + "\" is an invalid character");
+			int digit = (int) ch - 48;
+			int weight;
+			if (i % 2 == 0) {
+				weight = (2 * digit) - (int) (digit / 5) * 9;
+			} else {
+				weight = digit;
+			}
+			sum += weight;
+		}
+		sum = Math.abs(sum) + 10;
+		String newId = id + "-" + String.valueOf((10 - (sum % 10)) % 10);
+		System.out.println(newId);
+		return newId;
+	}
+
+	private List<CsvImporterMapping> createMapping(
+			CsvImporterConfiguration configuration) {
 		List<CsvImporterMapping> map = new ArrayList<CsvImporterMapping>();
 		// Person
 		int k = 0;
 		User user = configuration.getCreator();
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "age",
-				OpenMrsObjectCategory.PERSON, "age", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "dob",
-				OpenMrsObjectCategory.PERSON, "date_of_birth", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "gender",
-				OpenMrsObjectCategory.PERSON, "gender", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "form_date",
-				OpenMrsObjectCategory.PERSON, "date_created", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "age", OpenMrsObjectCategory.PERSON, "age", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "dob", OpenMrsObjectCategory.PERSON,
+				"date_of_birth", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "gender", OpenMrsObjectCategory.PERSON,
+				"gender", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "form_date", OpenMrsObjectCategory.PERSON,
+				"date_created", null));
 		// Person Names
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "first_name",
-				OpenMrsObjectCategory.PERSON_NAME, "given_name", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "surname",
-				OpenMrsObjectCategory.PERSON_NAME, "family_name", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "first_name", OpenMrsObjectCategory.PERSON_NAME,
+				"given_name", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "surname", OpenMrsObjectCategory.PERSON_NAME,
+				"family_name", null));
 		// Person Address
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "address",
-				OpenMrsObjectCategory.PERSON_ADDRESS, "address1", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "city",
-				OpenMrsObjectCategory.PERSON_ADDRESS, "city_village", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "country",
-				OpenMrsObjectCategory.PERSON_ADDRESS, "country", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "address", OpenMrsObjectCategory.PERSON_ADDRESS,
+				"address1", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "city", OpenMrsObjectCategory.PERSON_ADDRESS,
+				"city_village", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "country", OpenMrsObjectCategory.PERSON_ADDRESS,
+				"country", null));
 		// Person attributes
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "phone1",
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "phone1",
 				OpenMrsObjectCategory.PERSON_ATTRIBUTE, "Primary Phone", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "facility_name",
-				OpenMrsObjectCategory.PERSON_ATTRIBUTE, "Location", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "suspect",
-				OpenMrsObjectCategory.PERSON_ATTRIBUTE, "Suspect/Non-Suspect", null));
+		// map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+		// configuration, "facility_name",
+		// OpenMrsObjectCategory.PERSON_ATTRIBUTE, "Location", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "suspect",
+				OpenMrsObjectCategory.PERSON_ATTRIBUTE, "Suspect/Non-Suspect",
+				null));
 		// Patient
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "user_id",
-				OpenMrsObjectCategory.PATIENT, "creator", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "facility_name",
-				OpenMrsObjectCategory.LOCATION, "location", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "patient_id",
-				OpenMrsObjectCategory.PATIENT, "patient_identifier", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "user_id", OpenMrsObjectCategory.PATIENT,
+				"creator", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "facility_name", OpenMrsObjectCategory.LOCATION,
+				"location", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "patient_id", OpenMrsObjectCategory.PATIENT,
+				"patient_identifier", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "uid", OpenMrsObjectCategory.PATIENT, "uid",
+				null));
 		// Provider
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "screener_id",
-				OpenMrsObjectCategory.PROVIDER, "provider", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "screener_id", OpenMrsObjectCategory.PROVIDER,
+				"provider", null));
 		// Encounters
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "form_date",
-				OpenMrsObjectCategory.ENCOUNTER, "screening_date_created", "Screening"));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "time_stamp",
-				OpenMrsObjectCategory.ENCOUNTER, "time_stamp", "Screening"));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "sputum_collection_date",
-				OpenMrsObjectCategory.ENCOUNTER, "sputum_submission_date_created", "Sputum Submission"));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "sputum_result_date",
-				OpenMrsObjectCategory.ENCOUNTER, "sputum_result_date_created", "Sputum Result"));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "treatment_start_date",
-				OpenMrsObjectCategory.ENCOUNTER, "treatment_date_created", "Treatment Initiation"));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "form_date", OpenMrsObjectCategory.ENCOUNTER,
+				"screening_date_created", "Screening"));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "time_stamp", OpenMrsObjectCategory.ENCOUNTER,
+				"time_stamp", "Screening"));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "sputum_collection_date",
+				OpenMrsObjectCategory.ENCOUNTER,
+				"sputum_submission_date_created", "Sputum Submission"));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "sputum_result_date",
+				OpenMrsObjectCategory.ENCOUNTER, "sputum_result_date_created",
+				"Sputum Result"));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "treatment_start_date",
+				OpenMrsObjectCategory.ENCOUNTER, "treatment_date_created",
+				"Treatment Initiation"));
 		// Observations
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "district_name",
-				OpenMrsObjectCategory.OBS, "District", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "facility_name",
-				OpenMrsObjectCategory.OBS, "Facility name", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "diabetes",
-				OpenMrsObjectCategory.OBS, "Diabetes", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "tb_contact",
-				OpenMrsObjectCategory.OBS, "Contact with TB", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "hiv_positive",
-				OpenMrsObjectCategory.OBS, "Last HIV result", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "district_name", OpenMrsObjectCategory.OBS,
+				"District", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "facility_name", OpenMrsObjectCategory.OBS,
+				"Facility name", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "diabetes", OpenMrsObjectCategory.OBS,
+				"Diabetes", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "tb_contact", OpenMrsObjectCategory.OBS,
+				"Contact with TB", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "hiv_positive", OpenMrsObjectCategory.OBS,
+				"Last HIV result", null));
 		// Sputum Submission/Result
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "nhls_id",
-				OpenMrsObjectCategory.OBS, "Lab Test ID", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "sputum_result",
-				OpenMrsObjectCategory.OBS, "GeneXpert Result", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "rif",
-				OpenMrsObjectCategory.OBS, "RIF Result", null));
-		map.add(new CsvImporterMapping(k++, new Date(), user, null, null, configuration, "sputum_result_date",
-				OpenMrsObjectCategory.OBS, "Date Of Test Report", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "nhls_id", OpenMrsObjectCategory.OBS,
+				"Lab Test ID", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "sputum_result", OpenMrsObjectCategory.OBS,
+				"GeneXpert Result", null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "rif", OpenMrsObjectCategory.OBS, "RIF Result",
+				null));
+		map.add(new CsvImporterMapping(k++, new Date(), user, null, null,
+				configuration, "sputum_result_date", OpenMrsObjectCategory.OBS,
+				"Date Of Test Report", null));
 		return map;
 	}
 
-	private Encounter prepareScreeningEncounter(Patient patient, List<CsvImporterMapping> map, String[] data,
-			Map<String, Integer> indices, User creator) throws ParseException, NullPointerException {
+	private Encounter prepareScreeningEncounter(Patient patient,
+			List<CsvImporterMapping> map, String[] data,
+			Map<String, Integer> indices, User creator) throws ParseException,
+			NullPointerException {
 		Encounter encounter = null;
 		String formDate = data[indices.get("screening_date_created")];
 		if (!formDate.equals("")) {
 			encounter = new Encounter();
-			encounter.setEncounterType(Context.getEncounterService().getEncounterType("Screening"));
+			encounter.setEncounterType(Context.getEncounterService()
+					.getEncounterType("Screening"));
 			Date date = DateTimeUtil.getDateFromString(formDate, dateFormat);
-			Date timestamp = DateTimeUtil.getDateFromString(data[indices.get("time_stamp")], dateFormat);
+			Date timestamp = DateTimeUtil.getDateFromString(
+					data[indices.get("time_stamp")], dateFormat);
 			encounter.setCreator(creator);
 			encounter.setDateCreated(timestamp);
 			encounter.setEncounterDatetime(date);
-			EncounterRole role = Context.getEncounterService().getEncounterRole(1);
-			Provider provider = Context.getProviderService().getProviderByIdentifier(creator.getUsername());
+			EncounterRole role = Context.getEncounterService()
+					.getEncounterRole(1);
+			Provider provider = Context.getProviderService()
+					.getProviderByIdentifier(creator.getUsername());
 			if (provider == null) {
-				provider = Context.getProviderService().getProviderByIdentifier("RACHEL");
+				provider = Context.getProviderService()
+						.getProviderByIdentifier("RACHEL");
 			}
 			encounter.addProvider(role, provider);
-			Location location = Context.getLocationService().getLocation(data[indices.get("location")]);
+			Location location = Context.getLocationService().getLocation(
+					data[indices.get("location")]);
 			encounter.setLocation(location);
 			encounter.setPatient(patient);
 			Concept question, answerCoded;
@@ -324,59 +433,73 @@ public class AccessUpload {
 			question = Context.getConceptService().getConceptByName("District");
 			answerText = data[indices.get("District")];
 			Obs obs = new Obs(patient, question, timestamp, location);
-			obs.setComment("Imported from MS Access DB");
+			String uid = data[indices.get("uid")];
+			obs.setComment("Imported from MS Access DB. Original UID: " + uid);
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Facility name
-			question = Context.getConceptService().getConceptByName("Facility name");
+			question = Context.getConceptService().getConceptByName(
+					"Facility name");
 			answerText = data[indices.get("Facility name")];
 			obs = new Obs(patient, question, timestamp, location);
-			obs.setComment("Imported from MS Access DB");
+			obs.setComment("Imported from MS Access DB. Original UID: " + uid);
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Diabetes
 			question = Context.getConceptService().getConceptByName("Diabetes");
-			answerCoded = Context.getConceptService().getConceptByName(data[indices.get("Diabetes")]);
+			answerCoded = Context.getConceptService().getConceptByName(
+					data[indices.get("Diabetes")]);
 			obs = new Obs(patient, question, timestamp, location);
-			obs.setComment("Imported from MS Access DB");
+			obs.setComment("Imported from MS Access DB. Original UID: " + uid);
 			obs.setValueCoded(answerCoded);
 			encounter.addObs(obs);
 			// Contact with TB
-			question = Context.getConceptService().getConceptByName("Contact with TB");
-			answerCoded = Context.getConceptService().getConceptByName(data[indices.get("Contact with TB")]);
+			question = Context.getConceptService().getConceptByName(
+					"Contact with TB");
+			answerCoded = Context.getConceptService().getConceptByName(
+					data[indices.get("Contact with TB")]);
 			obs = new Obs(patient, question, timestamp, location);
-			obs.setComment("Imported from MS Access DB");
+			obs.setComment("Imported from MS Access DB. Original UID: " + uid);
 			obs.setValueCoded(answerCoded);
 			encounter.addObs(obs);
 			// Last HIV result
-			question = Context.getConceptService().getConceptByName("Last HIV result");
-			answerCoded = Context.getConceptService().getConceptByName(data[indices.get("Last HIV result")]);
+			question = Context.getConceptService().getConceptByName(
+					"Last HIV result");
+			answerCoded = Context.getConceptService().getConceptByName(
+					data[indices.get("Last HIV result")]);
 			obs = new Obs(patient, question, timestamp, location);
-			obs.setComment("Imported from MS Access DB");
+			obs.setComment("Imported from MS Access DB. Original UID: " + uid);
 			obs.setValueCoded(answerCoded);
 			encounter.addObs(obs);
 		}
 		return encounter;
 	}
 
-	private Encounter prepareSputumSubmission(Patient patient, List<CsvImporterMapping> map, String[] data,
-			Map<String, Integer> indices, User creator) throws ParseException, NullPointerException {
+	private Encounter prepareSputumSubmission(Patient patient,
+			List<CsvImporterMapping> map, String[] data,
+			Map<String, Integer> indices, User creator) throws ParseException,
+			NullPointerException {
 		Encounter encounter = null;
 		String formDate = data[indices.get("sputum_submission_date_created")];
 		if (!formDate.equals("")) {
 			encounter = new Encounter();
-			encounter.setEncounterType(Context.getEncounterService().getEncounterType("Sputum Submission"));
+			encounter.setEncounterType(Context.getEncounterService()
+					.getEncounterType("Sputum Submission"));
 			Date date = DateTimeUtil.getDateFromString(formDate, dateFormat);
 			encounter.setCreator(creator);
 			encounter.setDateCreated(date);
 			encounter.setEncounterDatetime(date);
-			EncounterRole role = Context.getEncounterService().getEncounterRole(1);
-			Provider provider = Context.getProviderService().getProviderByIdentifier(creator.getUsername());
+			EncounterRole role = Context.getEncounterService()
+					.getEncounterRole(1);
+			Provider provider = Context.getProviderService()
+					.getProviderByIdentifier(creator.getUsername());
 			if (provider == null) {
-				provider = Context.getProviderService().getProviderByIdentifier("RACHEL");
+				provider = Context.getProviderService()
+						.getProviderByIdentifier("RACHEL");
 			}
 			encounter.addProvider(role, provider);
-			Location location = Context.getLocationService().getLocation(data[indices.get("location")]);
+			Location location = Context.getLocationService().getLocation(
+					data[indices.get("location")]);
 			encounter.setLocation(location);
 			encounter.setPatient(patient);
 			Concept question;
@@ -389,14 +512,16 @@ public class AccessUpload {
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Facility name
-			question = Context.getConceptService().getConceptByName("Facility name");
+			question = Context.getConceptService().getConceptByName(
+					"Facility name");
 			answerText = data[indices.get("Facility name")];
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Lab Test ID
-			question = Context.getConceptService().getConceptByName("Lab Test ID");
+			question = Context.getConceptService().getConceptByName(
+					"Lab Test ID");
 			answerText = data[indices.get("Lab Test ID")];
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
@@ -406,24 +531,31 @@ public class AccessUpload {
 		return encounter;
 	}
 
-	private Encounter prepareSputumResult(Patient patient, List<CsvImporterMapping> map, String[] data,
-			Map<String, Integer> indices, User creator) throws ParseException, NullPointerException {
+	private Encounter prepareSputumResult(Patient patient,
+			List<CsvImporterMapping> map, String[] data,
+			Map<String, Integer> indices, User creator) throws ParseException,
+			NullPointerException {
 		Encounter encounter = null;
 		String formDate = data[indices.get("sputum_result_date_created")];
 		if (!formDate.equals("")) {
 			encounter = new Encounter();
-			encounter.setEncounterType(Context.getEncounterService().getEncounterType("Sputum Result"));
+			encounter.setEncounterType(Context.getEncounterService()
+					.getEncounterType("Sputum Result"));
 			Date date = DateTimeUtil.getDateFromString(formDate, dateFormat);
 			encounter.setCreator(creator);
 			encounter.setDateCreated(date);
 			encounter.setEncounterDatetime(date);
-			EncounterRole role = Context.getEncounterService().getEncounterRole(1);
-			Provider provider = Context.getProviderService().getProviderByIdentifier(creator.getUsername());
+			EncounterRole role = Context.getEncounterService()
+					.getEncounterRole(1);
+			Provider provider = Context.getProviderService()
+					.getProviderByIdentifier(creator.getUsername());
 			if (provider == null) {
-				provider = Context.getProviderService().getProviderByIdentifier("RACHEL");
+				provider = Context.getProviderService()
+						.getProviderByIdentifier("RACHEL");
 			}
 			encounter.addProvider(role, provider);
-			Location location = Context.getLocationService().getLocation(data[indices.get("location")]);
+			Location location = Context.getLocationService().getLocation(
+					data[indices.get("location")]);
 			encounter.setLocation(location);
 			encounter.setPatient(patient);
 			Concept question, answerCoded;
@@ -437,36 +569,44 @@ public class AccessUpload {
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Facility name
-			question = Context.getConceptService().getConceptByName("Facility name");
+			question = Context.getConceptService().getConceptByName(
+					"Facility name");
 			answerText = data[indices.get("Facility name")];
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Lab Test ID
-			question = Context.getConceptService().getConceptByName("Lab Test ID");
+			question = Context.getConceptService().getConceptByName(
+					"Lab Test ID");
 			answerText = data[indices.get("Lab Test ID")];
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueText(answerText);
 			encounter.addObs(obs);
 			// Date Of Test Report
-			question = Context.getConceptService().getConceptByName("Date Of Test Report");
-			answerDate = DateTimeUtil.getDateFromString(data[indices.get("Date Of Test Report")], dateFormat);
+			question = Context.getConceptService().getConceptByName(
+					"Date Of Test Report");
+			answerDate = DateTimeUtil.getDateFromString(
+					data[indices.get("Date Of Test Report")], dateFormat);
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueDate(answerDate);
 			encounter.addObs(obs);
 			// GeneXpert Result
-			question = Context.getConceptService().getConceptByName("GeneXpert Result");
-			answerCoded = Context.getConceptService().getConceptByName(data[indices.get("GeneXpert Result")]);
+			question = Context.getConceptService().getConceptByName(
+					"GeneXpert Result");
+			answerCoded = Context.getConceptService().getConceptByName(
+					data[indices.get("GeneXpert Result")]);
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueCoded(answerCoded);
 			encounter.addObs(obs);
 			// RIF Result
-			question = Context.getConceptService().getConceptByName("RIF Result");
-			answerCoded = Context.getConceptService().getConceptByName(data[indices.get("RIF Result")]);
+			question = Context.getConceptService().getConceptByName(
+					"RIF Result");
+			answerCoded = Context.getConceptService().getConceptByName(
+					data[indices.get("RIF Result")]);
 			obs = new Obs(patient, question, date, location);
 			obs.setComment("Imported from MS Access DB");
 			obs.setValueCoded(answerCoded);
