@@ -46,6 +46,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	public static final String	SUPPORT_EMAIL	= "support_email";
 	public static final String	USERNAME		= "username";
 	public static final String	LOCATION		= "location";
+	public static final String 	SCREENER_NAME	= "name";
 	public static final String	AUTO_LOGIN		= "auto_login";
 
 	@Override
@@ -151,5 +152,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		{
 			App.setAutoLogin (sharedPreferences.getBoolean (key, App.isAutoLogin ()));
 		}
+		else if (key.equals (SCREENER_NAME))
+		{
+			App.setScreenerName(sharedPreferences.getString(key, App.getScreenerName()));
+		}	
 	}
 }

@@ -245,6 +245,7 @@ public class ServerService
 			{
 				ContentValues values = new ContentValues ();
 				String userName = userObj.getString ("name");
+				String screenerName = userObj.getString ("sname");
 				// If user is found, then save it into local DB
 				if (userName.equalsIgnoreCase (App.getUsername ()))
 				{
@@ -260,7 +261,7 @@ public class ServerService
 					}
 					user = getOpenMrsObjectFromDb (Metadata.USER, name);
 					if(user != null){
-						return "SUCCESS";
+						return "SUCCESS:"+screenerName;
 					}
 				}
 			}
@@ -1067,7 +1068,9 @@ public class ServerService
 						gen = "Male";
 					else
 						gen = "Female";
-					String add = jsonResponse.get ("address").toString ();
+					String add = "";
+					if(jsonResponse.get ("address") != null)
+						add = jsonResponse.get ("address").toString ();
 					String town = "";
 					if(jsonResponse.get ("town") != null)
 					    town = jsonResponse.get ("town").toString ();
@@ -1675,6 +1678,15 @@ public class ServerService
 		}
 		return patients;
 	}
+	
+	/**
+	 * 
+	 * return true if login dosen't need to be renewed. 
+	 * 
+	 * Checks the last login timestamp if day of date changed then renew login.
+	 * 
+	 * @return
+	 */
 	
 	public Boolean renewLoginStatus () {
 		
@@ -2513,6 +2525,45 @@ public class ServerService
 		
 		dbUtil.update(Metadata.METADATA_TABLE, values, "type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'", null);
 		
+	}
+	
+	
+	public String[] fetchScreenersLocationSetting(String username){
+		
+		String response = "";
+		try
+		{
+			JSONObject json = new JSONObject ();
+			json.put ("app_ver", App.getVersion ());
+			json.put ("form_name", FormType.GET_LOCATION_SETUP);
+			json.put ("username", App.getUsername ());
+			response = post ("?content=" + JsonUtil.getEncodedJson (json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			if (jsonResponse.has ("result"))
+			{
+				String result1 = jsonResponse.getString ("facility");
+				String result2 = jsonResponse.getString ("screener_type");
+				//String result3 = jsonResponse.getString ("overall_message");
+				//String result4 = jsonResponse.getString ("message");
+				
+				String[] results = {result1, result2/*, result3, result4*/};
+				return results;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (JSONException e)
+		{
+			Log.e (TAG, e.getMessage ());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e (TAG, e.getMessage ());
+		}
+		
+		return null;
 	}
 	
 	

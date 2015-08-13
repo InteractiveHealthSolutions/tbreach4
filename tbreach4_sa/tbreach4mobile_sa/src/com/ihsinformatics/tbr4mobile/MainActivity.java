@@ -110,6 +110,7 @@ public class MainActivity extends Activity
 		App.setUseSsl (preferences.getBoolean (Preferences.USE_SSL, true));
 		App.setUsername (preferences.getString (Preferences.USERNAME, ""));
 		App.setPassword (preferences.getString (Preferences.PASSWORD, ""));
+		App.setScreenerName (preferences.getString (Preferences.SCREENER_NAME, ""));
 		App.setLocation (preferences.getString (Preferences.LOCATION, ""));
 		App.setScreeningType (preferences.getString (Preferences.SCREENING_TYPE, ""));
 		App.setScreeningStrategy (preferences.getString (Preferences.SCREENING_STRATEGY, ""));

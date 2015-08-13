@@ -13,6 +13,7 @@
     <string name="patient_not_found">Could not find patient from home visit</string>
     <string name="missing_contacts">Clinic did not have address or phone number</string>
      <string name="patient_died">Patient died</string>
+     <string name="already_initiated">Patient already on Treatment</string>
     
     <string name="treatment_initiation">Was patient transferred out?</string>
     <string name="transferred_out">Transferred out</string>
@@ -28,6 +29,9 @@
     <string name="followup_date">Date of Follow-up Smear</string>
     <string name="smear_test_location">Location where sputum was collected for Follow-up Smear</string>
     <string name="smear_result">Smear Result</string>
+    <string name="positive_scanity">Positive(Scanty)</string>
+	<string name="positive_plus">Positive(++)</string>
+	<string name="positive_plus_plus">Positive(+++)</string>
     
      <!-- Treatment Outcome Question --> 
     <string name="treatment_outcome_string">Treatment Outcome</string>
@@ -41,7 +45,7 @@
     
     <string name="initiated_yes_space">\n\n</string>
     <string name="initiated_no_space">\n\n\n\n\n\n\n\n\n\n\n</string>
-    <string name="followup_space">\n\n\n\n\n\n\n\n</string>
+    <string name="followup_space">\n</string>
     <string name="outcome_space">\n\n\n\n\n</string>
     
     

@@ -33,6 +33,7 @@ import com.ihsinformatics.tbr4mobile.util.RegexUtil;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentValues;
 import android.content.Context;
@@ -116,6 +117,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 	MyRadioButton 		notFoundReasonTreatmentNotInitiated;
 	MyRadioButton 		contactMissingReasonTreatmentNotInitiated;
 	MyRadioButton 		patientDiedReasonTreatmentNotInitiated;
+	MyRadioButton		alreadyOnTreatmentTreatmentNotInitiated;
 	
 	MyTextView			treatmentInitiationTextView;
 	
@@ -128,9 +130,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 	MyTextView			transferOutDateTextView;
 	DatePicker 			transferOutDatePicker;
 	Calendar			transferDate;
-	
-	MyTextView			treatmentInitiationLocationTextView;
-	MyEditText			treatmentInitiationLocation;
+
 	MyTextView			treatmentInitiationDateTextView;
 	DatePicker			treatmentInitiationDatePicker;
 	Calendar			initiationDate;
@@ -143,7 +143,12 @@ public class TreatmentActivity extends AbstractFragmentActivity
 	MyTextView			smearTestLocationTextView;
 	MyEditText			smearTestLocation;
 	MyTextView			smearResultTextView;
-	MyEditText			smearResult;
+	MyRadioButton		negativeSmearResult;
+	MyRadioButton		positiveScantySmearResult;
+	MyRadioButton		positivePlusPlusSmearResult;
+	MyRadioButton		positivePlusPlusPlusSmearResult;
+	MyRadioButton		leakedSmearResult;
+	MyRadioGroup		smearResult;
 	
 	//Treatment Outcome Questions
 	
@@ -260,7 +265,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		}
 		FragmentManager fragmentManager = getSupportFragmentManager ();
 		CustomerInfoFragmentPagerAdapter pagerAdapter = new CustomerInfoFragmentPagerAdapter (fragmentManager);
-		pager.setAdapter (pagerAdapter);
+		pager.setAdapter(pagerAdapter);
 		pager.setOffscreenPageLimit (PAGE_COUNT);
 		// Create views for pages
 		
@@ -324,8 +329,11 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		patientDiedReasonTreatmentNotInitiated = new MyRadioButton(context, R.string.patient_died, R.style.radio,
 				R.string.patient_died);
 		
+		alreadyOnTreatmentTreatmentNotInitiated = new MyRadioButton(context, R.string.already_initiated, R.style.radio,
+				R.string.already_initiated);
+		
 		reasonTreatmentNotInitiatedGroup = new MyRadioGroup(context,
-				new MyRadioButton[] { refusedReasonTreatmentNotInitiated, notFoundReasonTreatmentNotInitiated, contactMissingReasonTreatmentNotInitiated, patientDiedReasonTreatmentNotInitiated}, R.string.treament_initiated,
+				new MyRadioButton[] { refusedReasonTreatmentNotInitiated, notFoundReasonTreatmentNotInitiated, contactMissingReasonTreatmentNotInitiated, patientDiedReasonTreatmentNotInitiated, alreadyOnTreatmentTreatmentNotInitiated}, R.string.treament_initiated,
 				R.style.radio, App.isLanguageRTL(),1);
 		
 		treatmentInitiationTextView = new MyTextView (context, R.style.text, R.string.treatment_initiation);
@@ -372,8 +380,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 			   
 		});
 		
-		treatmentInitiationLocationTextView = new MyTextView (context, R.style.text, R.string.treatment_initiation_location);
-		treatmentInitiationLocation = new MyEditText (context, R.string.treatment_initiation_location, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 25, false);
 		treatmentInitiationDateTextView = new MyTextView (context, R.style.text, R.string.treatment_initiation_date);
 		initiationDate = Calendar.getInstance ();
 		treatmentInitiationDatePicker = new DatePicker(context);
@@ -392,9 +398,9 @@ public class TreatmentActivity extends AbstractFragmentActivity
                 
 				if(datePickerDate.after(formdate)){
 					final Calendar cal = Calendar.getInstance();
-					treatmentInitiationDatePicker.updateDate(cal.get(Calendar.YEAR),
-                            cal.get(Calendar.MONTH),
-                            cal.get(Calendar.DAY_OF_MONTH));
+					treatmentInitiationDatePicker.updateDate(formDate.get(Calendar.YEAR),
+                            formDate.get(Calendar.MONTH),
+                            formDate.get(Calendar.DAY_OF_MONTH));
 				}
 				
 				else
@@ -409,35 +415,40 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		followUpDate = Calendar.getInstance ();
 		followUpDatePicker = new DatePicker(context);
 		followUpDatePicker.setTag("Followup Date");
-		followUpDatePicker.init(followUpDatePicker.getYear(), followUpDatePicker.getMonth(), followUpDatePicker.getDayOfMonth(),new OnDateChangedListener() {
-		    
+		followUpDatePicker.init(followUpDatePicker.getYear(), followUpDatePicker.getMonth(), followUpDatePicker.getDayOfMonth(), new OnDateChangedListener() {
+
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				
+
 				Calendar selectedCal = Calendar.getInstance();
-                selectedCal.set(year, monthOfYear, dayOfMonth,0,0,0);
+				selectedCal.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
 
-                long selectedMilli = selectedCal.getTimeInMillis();
+				long selectedMilli = selectedCal.getTimeInMillis();
 
-                Date datePickerDate = new Date(selectedMilli);
-                Date formdate = formDate.getTime();
-                
-				if(datePickerDate.after(formdate)){
+				Date datePickerDate = new Date(selectedMilli);
+				Date formdate = formDate.getTime();
+
+				if (datePickerDate.after(formdate)) {
 					final Calendar cal = Calendar.getInstance();
-					followUpDatePicker.updateDate(cal.get(Calendar.YEAR),
-                            cal.get(Calendar.MONTH),
-                            cal.get(Calendar.DAY_OF_MONTH));
-				}
-				
-				else
-				
-				followUpDate.set (year, monthOfYear, dayOfMonth);
-			   }
-			   
-			 });
+					followUpDatePicker.updateDate(formDate.get(Calendar.YEAR),
+							formDate.get(Calendar.MONTH),
+							formDate.get(Calendar.DAY_OF_MONTH));
+				} else
+
+					followUpDate.set(year, monthOfYear, dayOfMonth);
+			}
+
+		});
 		smearTestLocationTextView  = new MyTextView (context, R.style.text, R.string.smear_test_location);
 		smearTestLocation = new MyEditText (context, R.string.smear_test_location, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 25, false);
 		smearResultTextView  = new MyTextView (context, R.style.text, R.string.smear_result); 
-		smearResult = new MyEditText (context, R.string.smear_result, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 25, false);
+		negativeSmearResult = new MyRadioButton(context, R.string.negative, R.style.radio,R.string.negative);
+		positiveScantySmearResult = new MyRadioButton(context, R.string.positive_scanity, R.style.radio,R.string.positive_scanity);
+		positivePlusPlusSmearResult = new MyRadioButton(context, R.string.positive_plus, R.style.radio,R.string.positive_plus);
+		positivePlusPlusPlusSmearResult = new MyRadioButton(context, R.string.positive_plus_plus, R.style.radio,R.string.positive_plus_plus);
+		leakedSmearResult = new MyRadioButton(context, R.string.leaked, R.style.radio,R.string.leaked);
+		smearResult = new MyRadioGroup(context,
+			new MyRadioButton[] { negativeSmearResult, positiveScantySmearResult,positivePlusPlusSmearResult, positivePlusPlusPlusSmearResult,leakedSmearResult}, R.string.treatment_outcome_string,
+			R.style.radio, App.isLanguageRTL(),1);
 		
 		//Outcome
 		
@@ -460,9 +471,9 @@ public class TreatmentActivity extends AbstractFragmentActivity
                 
 				if(datePickerDate.after(formdate)){
 					final Calendar cal = Calendar.getInstance();
-					outcomeDatePicker.updateDate(cal.get(Calendar.YEAR),
-                            cal.get(Calendar.MONTH),
-                            cal.get(Calendar.DAY_OF_MONTH));
+					outcomeDatePicker.updateDate(formDate.get(Calendar.YEAR),
+							formDate.get(Calendar.MONTH),
+							formDate.get(Calendar.DAY_OF_MONTH));
 				}
 				
 				else
@@ -502,14 +513,14 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				R.drawable.custom_button_beige, R.string.submit_form,
 				R.string.submit_form);
 	
-		allFormViews = new View[] {treatmentInitiatedTextView,treatmentInitiatedGroup,reasonTreatmentNotInitiatedTextView, reasonTreatmentNotInitiatedGroup, treatmentInitiationTextView,treatmentInitiationGroup,transferOutLocationTextView,transferOutLocation,transferOutDateTextView,transferOutDatePicker,treatmentInitiationLocationTextView,treatmentInitiationLocation,treatmentInitiationDateTextView,treatmentInitiationDatePicker, followUpDateTextView,followUpDatePicker,smearTestLocationTextView,smearTestLocation,smearResultTextView,smearResult,treatmentOutcomeTextView, treatmentOutcomeGroup, outcomeDateTextView, outcomeDatePicker,treatmentInitiatedSpace, treatmentFollowupSpace, outcomeSpace, saveButton , transferOutLocationTreatmentOutcome, transferOutLocationTreatmentOutcomeTextView};
+		allFormViews = new View[] {treatmentInitiatedTextView,treatmentInitiatedGroup,reasonTreatmentNotInitiatedTextView, reasonTreatmentNotInitiatedGroup, treatmentInitiationTextView,treatmentInitiationGroup,transferOutLocationTextView,transferOutLocation,transferOutDateTextView,transferOutDatePicker,treatmentInitiationDateTextView,treatmentInitiationDatePicker, followUpDateTextView,followUpDatePicker,smearTestLocationTextView,smearTestLocation,smearResultTextView,smearResult,treatmentOutcomeTextView, treatmentOutcomeGroup, outcomeDateTextView, outcomeDatePicker,treatmentInitiatedSpace, treatmentFollowupSpace, outcomeSpace, saveButton , transferOutLocationTreatmentOutcome, transferOutLocationTreatmentOutcomeTextView};
 		radioButtonViews = new View[] {initiationTreatment,followupTreatment,outcomeTreatment,yesTreatmentInitiated,noTreatmentInitiated,refusedReasonTreatmentNotInitiated,notFoundReasonTreatmentNotInitiated,contactMissingReasonTreatmentNotInitiated,transferredOutTreatmentInitiation,clinicTreatmentInitiation,curedTreatmentOutcome,completedTreatmentOutcome,defaultTreatmentOutcome,failureTreatmentOutcome,deathTreatmentOutcome,transferOutTreatmentOutcome};
 		
 		View[][] viewGroups = { 
 				    {formDateTextView, formDateButton, treatmentTypeTextView, treatmentTypeGroup},
 				    {submitByTextView, submitOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId,firstNameTextView, firstName, searchPatientButton},
 				    {treatmentInitiatedTextView,treatmentInitiatedGroup,reasonTreatmentNotInitiatedTextView, reasonTreatmentNotInitiatedGroup, treatmentInitiationTextView,treatmentInitiationGroup,followUpDateTextView,followUpDatePicker,smearTestLocationTextView,smearTestLocation, treatmentOutcomeTextView, treatmentOutcomeGroup, transferOutLocationTreatmentOutcomeTextView, transferOutLocationTreatmentOutcome},
-				    {transferOutLocationTextView,transferOutLocation,transferOutDateTextView,transferOutDatePicker,treatmentInitiationLocationTextView,treatmentInitiationLocation,treatmentInitiationDateTextView,treatmentInitiationDatePicker,smearResultTextView,smearResult,outcomeDateTextView, outcomeDatePicker,treatmentInitiatedSpace, treatmentFollowupSpace, outcomeSpace, saveButton}
+				    {transferOutLocationTextView,transferOutLocation,transferOutDateTextView,transferOutDatePicker,treatmentInitiationDateTextView,treatmentInitiationDatePicker,smearResultTextView,smearResult,outcomeDateTextView, outcomeDatePicker,treatmentInitiatedSpace, treatmentFollowupSpace, outcomeSpace, saveButton}
 		};
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -534,7 +545,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				formDateButton,firstButton,lastButton,clearButton,saveButton,scanBarcode,searchPatientButton,
 				curedTreatmentOutcome,completedTreatmentOutcome,defaultTreatmentOutcome,failureTreatmentOutcome,deathTreatmentOutcome,transferOutTreatmentOutcome,
 				initiationTreatment,followupTreatment,outcomeTreatment,
-				refusedReasonTreatmentNotInitiated,notFoundReasonTreatmentNotInitiated,contactMissingReasonTreatmentNotInitiated,
+				refusedReasonTreatmentNotInitiated,notFoundReasonTreatmentNotInitiated,contactMissingReasonTreatmentNotInitiated,patientDiedReasonTreatmentNotInitiated,alreadyOnTreatmentTreatmentNotInitiated,
 				yesTreatmentInitiated,noTreatmentInitiated,
 				transferredOutTreatmentInitiation,clinicTreatmentInitiation,
 				patientIdRadioButton,nhlsIdRadioButton
@@ -552,9 +563,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 			}
 		}
 				
-		views = new View[] {testId, patientId,treatmentInitiationLocation,transferOutLocation,patientIdRadioButton
-				
-		};
+		views = new View[] {testId, patientId,transferOutLocation,patientIdRadioButton,negativeSmearResult};
 	
 		pager.setOnPageChangeListener (this);
 		// Detect RTL language
@@ -599,6 +608,16 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		{
 			v.setVisibility(View.GONE);
 		}
+        
+        transferDate.setTime(formDate.getTime());
+		initiationDate.setTime(formDate.getTime());
+		followUpDate.setTime(formDate.getTime());
+		outcomeDate.setTime(formDate.getTime());
+		
+		transferOutDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+		treatmentInitiationDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+		followUpDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+		outcomeDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));		
 			
 	}
 
@@ -618,17 +637,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		}
 		else{
 			formDateButton.setTextColor(getResources().getColor(R.color.IRDTitle));
-			
-			transferDate.setTime(formDate.getTime());
-			initiationDate.setTime(formDate.getTime());
-			followUpDate.setTime(formDate.getTime());
-			outcomeDate.setTime(formDate.getTime());
-			
-			transferOutDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
-			treatmentInitiationDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
-			followUpDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
-			outcomeDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
-			
 		}	
 		
 	}
@@ -639,7 +647,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 		boolean valid = true;
 		StringBuffer message = new StringBuffer ();
 		// Validate mandatory controls
-		View[] mandatory = {testId, patientId,treatmentInitiationLocation,transferOutLocation, smearTestLocation,smearResult, transferOutLocationTreatmentOutcome};
+		View[] mandatory = {testId, patientId,transferOutLocation, smearTestLocation, transferOutLocationTreatmentOutcome};
 		for (View v : mandatory)
 		{
 			if(v.getVisibility() == View.VISIBLE && v.isEnabled())
@@ -743,13 +751,10 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					observations.add(new String[] { "Treatment Initiated",  noTreatmentInitiated.isChecked() ? "No" : "Yes" });
 
 				if(reasonTreatmentNotInitiatedGroup.getVisibility() == View.VISIBLE)
-					observations.add(new String[] { "Reason Treatment Not Initiated",  refusedReasonTreatmentNotInitiated.isChecked() ? "Refused Treatment" : (notFoundReasonTreatmentNotInitiated.isChecked() ? "Patient Not Found" : (contactMissingReasonTreatmentNotInitiated.isChecked() ? "Missing Patient Information" : "Patient Died")) });
+					observations.add(new String[] { "Reason Treatment Not Initiated",  refusedReasonTreatmentNotInitiated.isChecked() ? "Refused Treatment" : (notFoundReasonTreatmentNotInitiated.isChecked() ? "Patient Not Found" : (contactMissingReasonTreatmentNotInitiated.isChecked() ? "Missing Patient Information" : (patientDiedReasonTreatmentNotInitiated.isChecked() ? "Patient Died" : "Patient already on Treatment"))) });
 				
 				if(treatmentInitiationGroup.getVisibility() == View.VISIBLE)
 					observations.add(new String[] { "Treatment Initiation",  transferredOutTreatmentInitiation.isChecked() ? "Transferred Out" :  "Treatment Initiated at Clinic" });
-				
-				if(treatmentInitiationLocation.getVisibility() == View.VISIBLE)
-					observations.add(new String[] { "Treatment Initiation Location",  App.get(treatmentInitiationLocation)});
 				
 				if(treatmentInitiationDatePicker.getVisibility() == View.VISIBLE)
 					observations.add (new String[] {"Treatment Initiation Date", App.getSqlDate (initiationDate)});
@@ -767,7 +772,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					observations.add(new String[] { "Smear Test Location",  App.get(smearTestLocation)});
 				
 				if(smearResult.getVisibility() == View.VISIBLE)
-					observations.add(new String[] { "Smear Result",  App.get(smearResult)});
+					observations.add(new String[] { "Smear Result",  negativeSmearResult.isChecked() ? "Negative" : (positiveScantySmearResult.isChecked() ? "Positive (Scanty)" : (positivePlusPlusSmearResult.isChecked() ? "Positive (++)" : (positivePlusPlusPlusSmearResult.isChecked() ? "Positive (+++)" : "Leaked")) )});
 				
 				if(treatmentOutcomeGroup.getVisibility() == View.VISIBLE)
 					observations.add(new String[] { "Treatment Outcome",  curedTreatmentOutcome.isChecked() ? "Cured" : (completedTreatmentOutcome.isChecked() ? "Completed" : (defaultTreatmentOutcome.isChecked() ? "Default" : (failureTreatmentOutcome.isChecked() ? "Failure" : "Death"))) });
@@ -890,9 +895,9 @@ public class TreatmentActivity extends AbstractFragmentActivity
 	@Override
 	public void onClick (View view)
 	{
-		if (view == formDateButton)
-		{
+		if (view == formDateButton) {
 			showDialog (DATE_DIALOG_ID);
+		
 		}
 		else if (view == searchPatientButton)
 		{
@@ -1034,7 +1039,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 			outcomeSpace.setVisibility(View.VISIBLE);
 			saveButton.setVisibility(View.VISIBLE);
 		}
-		else if (view == refusedReasonTreatmentNotInitiated || view ==  notFoundReasonTreatmentNotInitiated || view == contactMissingReasonTreatmentNotInitiated || view == patientDiedReasonTreatmentNotInitiated){
+		else if (view == refusedReasonTreatmentNotInitiated || view ==  notFoundReasonTreatmentNotInitiated || view == contactMissingReasonTreatmentNotInitiated || view == patientDiedReasonTreatmentNotInitiated || view == alreadyOnTreatmentTreatmentNotInitiated){
 			treatmentInitiatedSpace.setVisibility(View.VISIBLE);
 			treatmentInitiatedSpace.setText(getResources ().getString (R.string.initiated_no_space));
 			saveButton.setVisibility(View.VISIBLE);
@@ -1050,8 +1055,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				transferOutLocation.setVisibility(View.GONE);
 				transferOutDateTextView.setVisibility(View.GONE);
 				transferOutDatePicker.setVisibility(View.GONE);
-				treatmentInitiationLocationTextView.setVisibility(View.VISIBLE);
-				treatmentInitiationLocation.setVisibility(View.VISIBLE);
 				treatmentInitiationDateTextView.setVisibility(View.VISIBLE);
 				treatmentInitiationDatePicker.setVisibility(View.VISIBLE);
 			}
@@ -1060,8 +1063,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				transferOutLocation.setVisibility(View.VISIBLE);
 				transferOutDateTextView.setVisibility(View.VISIBLE);
 				transferOutDatePicker.setVisibility(View.VISIBLE);
-				treatmentInitiationLocationTextView.setVisibility(View.GONE);
-				treatmentInitiationLocation.setVisibility(View.GONE);
 				treatmentInitiationDateTextView.setVisibility(View.GONE);
 				treatmentInitiationDatePicker.setVisibility(View.GONE);					
 			}
@@ -1080,8 +1081,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 				transferOutLocation.setVisibility(View.GONE);
 				transferOutDateTextView.setVisibility(View.GONE);
 				transferOutDatePicker.setVisibility(View.GONE);
-				treatmentInitiationLocationTextView.setVisibility(View.GONE);
-				treatmentInitiationLocation.setVisibility(View.GONE);
 				treatmentInitiationDateTextView.setVisibility(View.GONE);
 				treatmentInitiationDatePicker.setVisibility(View.GONE);
 				
@@ -1106,8 +1105,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					transferOutLocation.setVisibility(View.GONE);
 					transferOutDateTextView.setVisibility(View.GONE);
 					transferOutDatePicker.setVisibility(View.GONE);
-					treatmentInitiationLocationTextView.setVisibility(View.VISIBLE);
-					treatmentInitiationLocation.setVisibility(View.VISIBLE);
 					treatmentInitiationDateTextView.setVisibility(View.VISIBLE);
 					treatmentInitiationDatePicker.setVisibility(View.VISIBLE);
 					
@@ -1120,8 +1117,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					transferOutLocation.setVisibility(View.VISIBLE);
 					transferOutDateTextView.setVisibility(View.VISIBLE);
 					transferOutDatePicker.setVisibility(View.VISIBLE);
-					treatmentInitiationLocationTextView.setVisibility(View.GONE);
-					treatmentInitiationLocation.setVisibility(View.GONE);
 					treatmentInitiationDateTextView.setVisibility(View.GONE);
 					treatmentInitiationDatePicker.setVisibility(View.GONE);	
 					
@@ -1157,8 +1152,6 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					treatmentInitiationGroup.setVisibility(View.VISIBLE);
 					
 					if(clinicTreatmentInitiation.isChecked()){
-						treatmentInitiationLocationTextView.setVisibility(View.VISIBLE);
-						treatmentInitiationLocation.setVisibility(View.VISIBLE);
 						treatmentInitiationDateTextView.setVisibility(View.VISIBLE);
 						treatmentInitiationDatePicker.setVisibility(View.VISIBLE);
 						
@@ -1293,12 +1286,43 @@ public class TreatmentActivity extends AbstractFragmentActivity
 						}
 					};
 				updateTask.execute ("");
-				
-			
-			
 		
 		return true;
 	}
+	
+	@Override
+	protected Dialog onCreateDialog (int id)
+	{
+		switch (id)
+		{
+			
+		// Show date dialog
+			case DATE_DIALOG_ID :
+				OnDateSetListener dateSetListener = new OnDateSetListener ()
+				{
+					@Override
+					public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth)
+					{
+						formDate.set (year, monthOfYear, dayOfMonth);
+						updateDisplay ();
+						
+						transferDate.setTime(formDate.getTime());
+						initiationDate.setTime(formDate.getTime());
+						followUpDate.setTime(formDate.getTime());
+						outcomeDate.setTime(formDate.getTime());
+						
+						transferOutDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+						treatmentInitiationDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+						followUpDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+						outcomeDatePicker.updateDate(formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+						
+					}
+				};
+		
+				return new DatePickerDialog (this, dateSetListener, formDate.get (Calendar.YEAR), formDate.get (Calendar.MONTH), formDate.get (Calendar.DAY_OF_MONTH));
+		}	
+		return null;
+	}		
 
 	@Override
 	public boolean onLongClick(View arg0) {

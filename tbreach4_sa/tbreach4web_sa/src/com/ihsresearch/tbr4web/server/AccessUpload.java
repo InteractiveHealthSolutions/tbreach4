@@ -32,7 +32,7 @@ import com.ihsresearch.tbr4web.shared.CsvUtil;
 
 public class AccessUpload {
 
-	static final String filePath = "C:\\Users\\Rabbia\\Desktop\\MINE-TB Clean data.csv";
+	static final String filePath = "C:\\Users\\CellDatabase\\Desktop\\MINE-TB Clean data.csv";
 
 	static final char separator = ',';
 

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import com.ihsinformatics.tbr4mobile.custom.MyButton;
@@ -49,8 +50,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.text.method.KeyListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -94,12 +98,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton female;
 
 	MyTextView ageTextView;
-	MyTextView age;
+	MyEditText age;
 	
 	MyTextView dateOfBirthTextView;
 	MyButton dateOfBirthButton;
 	Calendar dateOfBirth;
 
+	MyCheckBox	dateOfBirthUnknown;
 	
 	// TB Symptoms
 	MyTextView symptomsHeadingTextView;
@@ -230,6 +235,10 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton yesPhone1;
 	MyTextView phone1TextView;
 	MyEditText phone1;
+	MyTextView seprator1A;
+	MyEditText phone1B;
+	MyTextView seprator1B;
+	MyEditText phone1C;
 	MyTextView phone1OwnerTextView;
 	
 	MyRadioGroup phone1OwnerGroup;
@@ -245,6 +254,10 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	MyRadioButton yesPhone2;
 	MyTextView phone2TextView;
 	MyEditText phone2;
+	MyTextView seprator2A;
+	MyEditText phone2B;
+	MyTextView seprator2B;
+	MyEditText phone2C;
 	MyTextView phone2OwnerTextView;
 	
 	MyRadioGroup phone2OwnerGroup;
@@ -393,8 +406,13 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				R.drawable.custom_button_beige, R.string.dob,
 				R.string.dob);
 		
+		dateOfBirthUnknown = new MyCheckBox(context, R.string.dob_unknown, R.style.edit, R.string.dob_unknown, false);
+		
 		ageTextView = new MyTextView(context, R.style.text, R.string.age);
-		age = new MyTextView(context, R.style.text, R.string.zero);
+		age = new MyEditText(context, R.string.age, R.string.age, InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
+		age.setText(getResources().getString(R.string.zero));
+		
+		age.setTag(age.getKeyListener());  
 
 		// Symptoms
 		symptomsHeadingTextView = new MyTextView(context, R.style.text,
@@ -689,8 +707,14 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				noPhone1, yesPhone1 }, R.string.phone_1, R.style.radio,
 				App.isLanguageRTL(),0);
 		phone1TextView = new MyTextView(context, R.style.text, R.string.phone_1);
-		phone1 = new MyEditText(context, R.string.phone1, R.string.phone1_hint,
-				InputType.TYPE_CLASS_PHONE, R.style.edit, 10, false);
+		phone1 = new MyEditText(context, R.string.phone1, R.string.phone1_hint_A,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 3, false);
+		seprator1A = new MyTextView(context, R.style.text, R.string.hash);
+		phone1B = new MyEditText(context, R.string.phone1, R.string.phone1_hint_A,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 3, false);
+		seprator1B = new MyTextView(context, R.style.text, R.string.hash);
+		phone1C = new MyEditText(context, R.string.phone1, R.string.phone1_hint_B,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 4, false);
 		phone1OwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone1_owner);
 		
@@ -720,8 +744,14 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				noPhone2, yesPhone2 }, R.string.phone_2, R.style.radio,
 				App.isLanguageRTL(),0);
 		phone2TextView = new MyTextView(context, R.style.text, R.string.phone_2);
-		phone2 = new MyEditText(context, R.string.phone2, R.string.phone1_hint,
-				InputType.TYPE_CLASS_PHONE, R.style.edit, 10, false);
+		phone2 = new MyEditText(context, R.string.phone1, R.string.phone1_hint_A,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 3, false);
+		seprator2A = new MyTextView(context, R.style.text, R.string.hash);
+		phone2B = new MyEditText(context, R.string.phone1, R.string.phone1_hint_A,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 3, false);
+		seprator2B = new MyTextView(context, R.style.text, R.string.hash);
+		phone2C = new MyEditText(context, R.string.phone1, R.string.phone1_hint_B,
+				InputType.TYPE_CLASS_PHONE, R.style.edit, 4, false);
 		phone2OwnerTextView = new MyTextView(context, R.style.text,
 				R.string.phone2_owner);
 		
@@ -788,7 +818,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				{ formDateTextView, formDateButton, firstNameTextView,
 						firstName, surnameTextView, surname, genderTextView,
 						gender },
-				{ dateOfBirthTextView, dateOfBirthButton, ageTextView, age },
+				{ dateOfBirthTextView, dateOfBirthButton, ageTextView, age, dateOfBirthUnknown },
 				{ symptomsHeadingTextView, symptomQuestions, instruction, 
 						coughTextView, coughGroup,
 						nightSweatsTextView, nightSweatsGroup, 
@@ -811,9 +841,9 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				{ screenerInstructionTextView3, screenerInstructionTwoTextView,
 						noPatientInformation, yesPatientInformation,
 						patientIdTextView, patientId, scanBarcode },
-				{ providePhone1TextView, providePhone1, phone1TextView, phone1,
+				{ providePhone1TextView, providePhone1, phone1TextView, phone1, seprator1A, phone1B, seprator1B, phone1C,
 						phone1OwnerTextView, phone1OwnerGroup , phone1OtherOwnerTextView ,phone1OtherOwner },
-				{ providePhone2TextView, providePhone2, phone2TextView, phone2,
+				{ providePhone2TextView, providePhone2, phone2TextView, phone2, seprator2A, phone2B, seprator2B, phone2C,
 						phone2OwnerTextView, phone2OwnerGroup , phone2OtherOwnerTextView, phone2OtherOwner },
 				{ physicalAddressTextView, physicalAddress,
 						townAddressTextView, townAddress,
@@ -847,7 +877,22 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 						horizontalLayout.addView(viewGroups[i][j]);
 					}
 					layout.addView(horizontalLayout);
-				} else
+				} else if ((i == 9 || i == 10) && j == 3){
+					LinearLayout horizontalLayout = new LinearLayout(context);
+					horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+					horizontalLayout.addView(viewGroups[i][j]); 
+					j++;
+					horizontalLayout.addView(viewGroups[i][j]);
+					j++;
+					horizontalLayout.addView(viewGroups[i][j]);
+					j++;
+					horizontalLayout.addView(viewGroups[i][j]);
+					j++;
+					horizontalLayout.addView(viewGroups[i][j]);
+					layout.addView(horizontalLayout);
+				} 
+				
+				else
 					layout.addView(viewGroups[i][j]); 
 				
 			}
@@ -860,12 +905,38 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		}
 		
 		navigationSeekbar.setOnSeekBarChangeListener(this);
-		age.setOnEditorActionListener(this);
+		
+		age.addTextChangedListener(new TextWatcher(){
+	        public void afterTextChanged(Editable s) {
+	        	
+				KeyListener ageKeyListener = age.getKeyListener();
+	        	
+	        	if(!App.get(age).equals("") && ageKeyListener != null) {
+		        	int year = formDate.get(Calendar.YEAR);
+		        	dateOfBirth.set (formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+		        	
+		        	int dateOYear = year - Integer.parseInt(App.get(age));
+		        	
+		        	dateOfBirth.set(Calendar.YEAR, dateOYear);
+	        	
+		        	dateOfBirthButton.setText(DateFormat.format("dd-MMM-yyyy", dateOfBirth));
+	        	}
+	        	else if(App.get(age).equals("")){
+	        		
+	        		dateOfBirth.set (formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH), formDate.get(Calendar.DAY_OF_MONTH));
+	        		dateOfBirthButton.setText(DateFormat.format("dd-MMM-yyyy", dateOfBirth));
+	        	}
+	        	
+	        	
+	        }
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
 		
 		views = new View[] { 
 				age, firstName, surname, tbTreatmentPastDuration,
 				noPatientInformation, yesPatientInformation,
-				phone1, phone1OtherOwner, phone2, 
+				phone1, phone1B, phone1C, phone1OtherOwner, phone2, phone2B, phone2C, 
 				phone2OtherOwner, physicalAddress, townAddress,
 				landmarkAddress, patientId, coughSymptomDuration,
 				nightSweatsSymptomDuration, weightLossSymptomDuration,
@@ -875,7 +946,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				noHivTest,unknownHivTestResult,yesHivTestNew,noPhone1,noPhone2};
 		
 		View[] setListener = new View[]{
-				scanBarcode, formDateButton, dateOfBirthButton, firstButton, lastButton, clearButton, saveButton,
+				scanBarcode, formDateButton, dateOfBirthButton, firstButton, lastButton, clearButton, saveButton, dateOfBirthUnknown,
 				noPhone1, noPhone2, yesPhone1, yesPhone2,
 				noTbTreatmentPast, yesTbTreatmentPast,refuseTbTreatmentPast,
 				myselfPhone1Owner,otherPhone1Owner,myselfPhone2Owner,otherPhone2Owner,
@@ -936,7 +1007,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		
 		providePhone1.setEnabled(false);
 		providePhone2.setEnabled(false);
-
+		
+		age.setKeyListener(null);
 		
 		super.initView(views);
 		
@@ -1043,19 +1115,35 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		boolean valid = true;
 		StringBuffer message = new StringBuffer();
 		// Validate mandatory controls
-		View[] mandatory = { firstName, surname, age, tbTreatmentPastDuration, patientId,
+		View[] mandatory1 = { firstName, surname, age, tbTreatmentPastDuration, patientId,
 				phone1, phone1OtherOwner, phone2, phone2OtherOwner,
-				physicalAddress, 
-				coughSymptomDuration, nightSweatsSymptomDuration,
-				weightLossSymptomDuration, feverSymptomDuration,
-				haemoptysisSymptomDuration };
-		for (View v : mandatory) {
+				physicalAddress, };
+		
+		for (View v : mandatory1) {
 			if (v.getVisibility() == View.VISIBLE && v.isEnabled()) {
 				if (App.get(v).equals("")) {
 					valid = false;
 					message.append(v.getTag().toString() + ". ");
 					((EditText) v).setHintTextColor(getResources().getColor(
 							R.color.Red));
+				}
+			}
+		}
+		
+		if(App.getScreeningType().equals("Facility"))
+		{
+			View[] mandatory2 = {coughSymptomDuration, nightSweatsSymptomDuration,
+				weightLossSymptomDuration, feverSymptomDuration,
+				haemoptysisSymptomDuration };
+			
+			for (View v : mandatory2) {
+				if (v.getVisibility() == View.VISIBLE && v.isEnabled()) {
+					if (App.get(v).equals("")) {
+						valid = false;
+						message.append(v.getTag().toString() + ". ");
+						((EditText) v).setHintTextColor(getResources().getColor(
+								R.color.Red));
+					}
 				}
 			}
 		}
@@ -1197,7 +1285,8 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				}
 				
 				if(phone1.getVisibility() == View.VISIBLE && phone1.isEnabled()){
-					if(!RegexUtil.isContactNumber(App.get(phone1))){
+					
+					if(App.get(phone1).length() != 3 || App.get(phone1B).length() != 3 || App.get(phone1C).length() != 4){
 						valid = false;
 						message.append(phone1.getTag().toString()
 								+ ": "
@@ -1205,11 +1294,17 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 										R.string.invalid_data) + "\n");
 						phone1.setTextColor(getResources().getColor(
 								R.color.Red));
+						phone1B.setTextColor(getResources().getColor(
+								R.color.Red));
+						phone1C.setTextColor(getResources().getColor(
+								R.color.Red));
 					}
+					
 				}
 				
 				if(phone2.getVisibility() == View.VISIBLE && phone2.isEnabled()){
-					if(!RegexUtil.isContactNumber(App.get(phone2))){
+					
+					if(App.get(phone2).length() != 3 || App.get(phone2B).length() != 3 || App.get(phone2C).length() != 4){
 						valid = false;
 						message.append(phone2.getTag().toString()
 								+ ": "
@@ -1217,11 +1312,15 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 										R.string.invalid_data) + "\n");
 						phone2.setTextColor(getResources().getColor(
 								R.color.Red));
+						phone2B.setTextColor(getResources().getColor(
+								R.color.Red));
+						phone2C.setTextColor(getResources().getColor(
+								R.color.Red));
 					}
+					
 				}
 			}
-			
-			
+					
 		}
 		if (!valid) {
 			App.getAlertDialog(this, AlertType.ERROR, message.toString())
@@ -1272,13 +1371,15 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				values.put("TB Suspect", "Non-Suspect");
 
 			if (yesPhone1.isChecked()) {
-				values.put("phone1", App.get(phone1));
+				String phoneNo = App.get(phone1) + App.get(phone1B) + App.get(phone1C);
+				values.put("phone1", phoneNo);
 				if (phone1OtherOwner.getVisibility() == View.VISIBLE)
 					values.put("phone1Owner", App.get(phone1OtherOwner));
 			}
 
 			if (yesPhone2.isChecked()) {
-				values.put("phone2", App.get(phone2));
+				String phoneNo = App.get(phone2) + App.get(phone2B) + App.get(phone2C);
+				values.put("phone2", phoneNo);
 				if (phone2OtherOwner.getVisibility() == View.VISIBLE)
 					values.put("phone2Owner", App.get(phone2OtherOwner));
 			}
@@ -1297,15 +1398,15 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			observations.add(new String[] { "Fever", noFever.isChecked() ? "No" : (yesFever.isChecked() ? "Yes" : "Refuse") });
 			observations
 					.add(new String[] { "Haemoptysis", noHaemoptysis.isChecked() ? "No" : (yesHaemoptysis.isChecked() ? "Yes" : "Refuse") });
-			if(coughSymptomDuration.isEnabled())
+			if(coughSymptomDuration.isEnabled() && !(App.get(coughSymptomDuration).equals("")))
 				observations.add(new String[] { "Cough Duration", App.get(coughSymptomDuration) });
-			if(nightSweatsSymptomDuration.isEnabled())
+			if(nightSweatsSymptomDuration.isEnabled() && !(App.get(nightSweatsSymptomDuration).equals("")))
 				observations.add(new String[] { "Night Sweats Duration", App.get(nightSweatsSymptomDuration) });
-			if(weightLossSymptomDuration.isEnabled())
+			if(weightLossSymptomDuration.isEnabled() && !(App.get(weightLossSymptomDuration).equals("")))
 				observations.add(new String[] { "Weight Loss Duration", App.get(weightLossSymptomDuration) });
-			if(feverSymptomDuration.isEnabled())
+			if(feverSymptomDuration.isEnabled() && !(App.get(feverSymptomDuration).equals("")))
 				observations.add(new String[] { "Fever Duration", App.get(feverSymptomDuration) });
-			if(haemoptysisSymptomDuration.isEnabled())
+			if(haemoptysisSymptomDuration.isEnabled() && !(App.get(haemoptysisSymptomDuration).equals("")))
 				observations.add(new String[] { "Haemoptysis Duration", App.get(haemoptysisSymptomDuration) });
 
 			observations.add(new String[] { "Contact with TB",
@@ -1535,8 +1636,12 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			
 			if(check){
 				
-				phone1.setVisibility(View.VISIBLE);
 				phone1TextView.setVisibility(View.VISIBLE);
+				phone1.setVisibility(View.VISIBLE);
+				seprator1A.setVisibility(View.VISIBLE);
+				phone1B.setVisibility(View.VISIBLE);
+				seprator1B.setVisibility(View.VISIBLE);
+				phone1C.setVisibility(View.VISIBLE);
 				phone1OwnerTextView.setVisibility(View.VISIBLE);
 				phone1OwnerGroup.setVisibility(View.VISIBLE);
 				
@@ -1555,6 +1660,10 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			else{
 				
 				phone1.setVisibility(View.GONE);
+				seprator1A.setVisibility(View.GONE);
+				phone1B.setVisibility(View.GONE);
+				seprator1B.setVisibility(View.GONE);
+				phone1C.setVisibility(View.GONE);
 				phone1TextView.setVisibility(View.GONE);
 				phone1OwnerTextView.setVisibility(View.GONE);
 				phone1OwnerGroup.setVisibility(View.GONE);
@@ -1569,6 +1678,10 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			if(check){
 				
 				phone2.setVisibility(View.VISIBLE);
+				seprator2A.setVisibility(View.VISIBLE);
+				phone2B.setVisibility(View.VISIBLE);
+				seprator2B.setVisibility(View.VISIBLE);
+				phone2C.setVisibility(View.VISIBLE);
 				phone2TextView.setVisibility(View.VISIBLE);
 				phone2OwnerTextView.setVisibility(View.VISIBLE);
 				phone2OwnerGroup.setVisibility(View.VISIBLE);
@@ -1588,6 +1701,10 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 			else{
 				
 				phone2.setVisibility(View.GONE);
+				seprator2A.setVisibility(View.GONE);
+				phone2B.setVisibility(View.GONE);
+				seprator2B.setVisibility(View.GONE);
+				phone2C.setVisibility(View.GONE);
 				phone2TextView.setVisibility(View.GONE);
 				phone2OwnerTextView.setVisibility(View.GONE);
 				phone2OwnerGroup.setVisibility(View.GONE);
@@ -1712,10 +1829,19 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				yesPhone1.setChecked(true);
 				yesPhone2.setChecked(true);
 				phone1.setVisibility(View.VISIBLE);
+				phone1.setVisibility(View.VISIBLE);
+				phone1B.setVisibility(View.VISIBLE);
+				phone1C.setVisibility(View.VISIBLE);
+				seprator1A.setVisibility(View.VISIBLE);
+				seprator1B.setVisibility(View.VISIBLE);
 				phone1TextView.setVisibility(View.VISIBLE);
 				phone1OwnerTextView.setVisibility(View.VISIBLE);
 				phone1OwnerGroup.setVisibility(View.VISIBLE);
 				phone2.setVisibility(View.VISIBLE);
+				phone2B.setVisibility(View.VISIBLE);
+				phone2C.setVisibility(View.VISIBLE);
+				seprator2A.setVisibility(View.VISIBLE);
+				seprator2B.setVisibility(View.VISIBLE);
 				phone2TextView.setVisibility(View.VISIBLE);
 				phone2OwnerTextView.setVisibility(View.VISIBLE);
 				phone2OwnerGroup.setVisibility(View.VISIBLE);
@@ -1744,10 +1870,18 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				noPhone1.setChecked(true);
 				noPhone2.setChecked(true);
 				phone2.setVisibility(View.GONE);
+				phone2B.setVisibility(View.GONE);
+				phone2C.setVisibility(View.GONE);
+				seprator2A.setVisibility(View.GONE);
+				seprator2B.setVisibility(View.GONE);
 				phone2TextView.setVisibility(View.GONE);
 				phone2OwnerTextView.setVisibility(View.GONE);
 				phone2OwnerGroup.setVisibility(View.GONE);
 				phone1.setVisibility(View.GONE);
+				phone1B.setVisibility(View.GONE);
+				phone1C.setVisibility(View.GONE);
+				seprator1A.setVisibility(View.GONE);
+				seprator1B.setVisibility(View.GONE);
 				phone1TextView.setVisibility(View.GONE);
 				phone1OwnerTextView.setVisibility(View.GONE);
 				phone1OwnerGroup.setVisibility(View.GONE);
@@ -1763,6 +1897,18 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				
 				skipValue = true;
 			}
+		}else if(button == dateOfBirthUnknown){
+			
+			if(button.isChecked()){
+				
+				age.setKeyListener((KeyListener)age.getTag());
+				
+			}
+			else{
+				
+				age.setKeyListener(null);
+			}
+			
 		}
 
 	}
@@ -1775,6 +1921,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 	@Override
 	public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
 		// TODO Auto-generated method stub
+
 		return false;
 	}
 

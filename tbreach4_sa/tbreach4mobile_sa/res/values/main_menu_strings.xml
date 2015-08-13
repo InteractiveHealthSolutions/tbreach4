@@ -17,5 +17,6 @@
     <string name="test_indication">Test Indication</string>
     <string name="feedback">Feedback</string>
     <string name="dot_dot_dot">...</string>
+    <string name="fetching_locations">Fetching Screener\'s Location Settings.</string>
 
 </resources>

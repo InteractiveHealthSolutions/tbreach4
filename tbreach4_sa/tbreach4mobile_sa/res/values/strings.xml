@@ -2,8 +2,8 @@
 <resources>
 
     <string name="loading_message">Saving trees..</string>
-    <string name="app_name">TB REACH 4 SA - MINE TB (1.3.4)</string>
-     <string name="version_no">MINE TB (1.3.4)</string>
+    <string name="app_name">TB REACH 4 SA - MINE TB (1.4.4)</string>
+     <string name="version_no">MINE TB (1.4.4)</string>
     <string name="menu_settings">Settings</string>
     <string name="server">Server Address</string>
     <string name="use_secure">Use SSL/TLS</string>

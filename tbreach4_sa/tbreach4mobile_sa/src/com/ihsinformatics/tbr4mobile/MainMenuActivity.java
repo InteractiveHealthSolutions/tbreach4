@@ -72,6 +72,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	ImageButton						locationSetup;
 	Animation						alphaAnimation;
 
+	String 							screenerLocationSetup[] = null;
 	OpenMrsObject[]					locations;
 	View[]							views;
 
@@ -98,9 +99,6 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
 		locationSetup = (ImageButton) findViewById (R.main_id.locationSetupButton);
 		
-		this.setTitle("   "+getResources ().getString (R.string.version_no) + "                     username: "+App.getUsername());
-		
-
 		// Disable all forms that cannot be filled offline
 		if (App.isOfflineMode ())
 		{
@@ -131,32 +129,51 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 
 	public void initView (View[] views)
 	{
-		if (App.getLocation () != null)
-		{
-			
-			if (App.getLocation() != ""){
-				String loc[] = App.getLocation().split(" ");
-				String location = loc[0];
-				
-				String screeningType = App.getScreeningType();
-				if(screeningType.equalsIgnoreCase("Community")){
-					String ss[] = App.getScreeningStrategy().split("-");
-					location = location.concat(" - ");
-					location = location.concat(ss[1]);
 
-					screening.setVisibility(View.VISIBLE);
-					quickScreening.setVisibility(View.VISIBLE);
-				}
+		getScreenerLocationSetup();
+		/*if (App.getLocation() == "")
+			
+			if(!App.isOfflineMode())
+				getScreenerLocationSetup();
+		else{
+			
+			
+			Intent thisIntent = getIntent();
+			
+			if (thisIntent.hasExtra("new_login")){ 
 				
-				else{
-					location = App.getFacility();
-					quickScreening.setVisibility(View.GONE);
-				}
-			locationTextView.setText (location);
+				if(!App.isOfflineMode())
+					getScreenerLocationSetup();
+				
 			}
+			
+		}*/
+		
+		String location = "";
+				
+		String screeningType = App.getScreeningType();
+		String facility = App.getFacility();
+		
+		
+		if(!facility.equals("") && !screeningType.equals("")){
+			facility = facility.substring(6);
+			
+			if(screeningType.equalsIgnoreCase("Community")){
+				location = facility + " (Community)";
+	
+				screening.setVisibility(View.VISIBLE);
+				quickScreening.setVisibility(View.VISIBLE);
+			}
+			
+			else if (screeningType.equalsIgnoreCase("Facility")){
+				location = facility + " (Facility)";
+				quickScreening.setVisibility(View.GONE);
+			}
+			
+			this.setTitle("   "+getResources ().getString (R.string.version_no) + "                     User: "+App.getScreenerName());
+			
+			locationTextView.setText (location);
 		}
-		
-		
 		
 		// When online, check if there are offline forms for current user
 		if (!App.isOfflineMode ())
@@ -330,110 +347,91 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		// Show a list of all locations to choose. This is to limit the
 		// locations displayed on site spinner
 			case LOCATIONS_DIALOG :
-				builder.setTitle (getResources ().getString (R.string.multi_select_hint));
+				builder.setTitle(getResources().getString(R.string.multi_select_hint));
 				OpenMrsObject[] locationsList = serverService.getLocations ();
 				final ArrayList<CharSequence> locations = new ArrayList<CharSequence> ();
 				for (OpenMrsObject location : locationsList)
 					locations.add (location.getName ());
 				final EditText locationText = new EditText (this);
 				locationText.setTag ("Location");
-				locationText.setHint (R.string.location_hint);
-				builder.setView (locationText);
-				builder.setPositiveButton (R.string.save, new DialogInterface.OnClickListener ()
-				{
+				locationText.setHint(R.string.location_hint);
+				builder.setView(locationText);
+				builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 					@Override
-					public void onClick (DialogInterface dialogInterface, int i)
-					{
-						final String selected = App.get (locationText);
-						if (selected.equals (""))
-						{
-							Toast toast = Toast.makeText (MainMenuActivity.this, "", App.getDelay ());
-							toast.setText (R.string.empty_data);
-							toast.setGravity (Gravity.CENTER, 0, 0);
-							toast.show ();
+					public void onClick(DialogInterface dialogInterface, int i) {
+						final String selected = App.get(locationText);
+						if (selected.equals("")) {
+							Toast toast = Toast.makeText(MainMenuActivity.this, "", App.getDelay());
+							toast.setText(R.string.empty_data);
+							toast.setGravity(Gravity.CENTER, 0, 0);
+							toast.show();
 							return;
 						}
 						// Try to fetch from local DB or Server
-						AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
-						{
+						AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String>() {
 							@Override
-							protected String doInBackground (String... params)
-							{
-								try
-								{
-									if (!serverService.checkInternetConnection ())
-									{
-										AlertDialog alertDialog = App.getAlertDialog (MainMenuActivity.this, AlertType.ERROR, getResources ().getString (R.string.data_connection_error));
-										alertDialog.setTitle (getResources ().getString (R.string.error_title));
-										alertDialog.setButton (AlertDialog.BUTTON_POSITIVE, "OK", new AlertDialog.OnClickListener ()
-										{
+							protected String doInBackground(String... params) {
+								try {
+									if (!serverService.checkInternetConnection()) {
+										AlertDialog alertDialog = App.getAlertDialog(MainMenuActivity.this, AlertType.ERROR, getResources().getString(R.string.data_connection_error));
+										alertDialog.setTitle(getResources().getString(R.string.error_title));
+										alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new AlertDialog.OnClickListener() {
 											@Override
-											public void onClick (DialogInterface dialog, int which)
-											{
-												finish ();
+											public void onClick(DialogInterface dialog, int which) {
+												finish();
 											}
 										});
-										alertDialog.show ();
-									}
-									else
-									{
-										runOnUiThread (new Runnable ()
-										{
+										alertDialog.show();
+									} else {
+										runOnUiThread(new Runnable() {
 											@Override
-											public void run ()
-											{
-												loading.setIndeterminate (true);
-												loading.setCancelable (false);
-												loading.show ();
+											public void run() {
+												loading.setIndeterminate(true);
+												loading.setCancelable(false);
+												loading.show();
 											}
 										});
 										// Update database
-										publishProgress ("Searching...");
-										OpenMrsObject location = serverService.getLocation (selected);
-										if (location != null)
-										{
-											App.setLocation (location.getName ());
+										publishProgress("Searching...");
+										OpenMrsObject location = serverService.getLocation(selected);
+										if (location != null) {
+											App.setLocation(location.getName());
 											// Save location in preferences
-											SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
-											SharedPreferences.Editor editor = preferences.edit ();
-											editor.putString (Preferences.LOCATION, App.getLocation ());
-											editor.apply ();
-										}
-										else
-										{
+											SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+											SharedPreferences.Editor editor = preferences.edit();
+											editor.putString(Preferences.LOCATION, App.getLocation());
+											editor.apply();
+										} else {
 											return "FAIL";
 										}
 									}
-								}
-								catch (Exception e)
-								{
-									Log.e (TAG, e.getMessage ());
+								} catch (Exception e) {
+									Log.e(TAG, e.getMessage());
 								}
 								return "SUCCESS";
 							}
 
 							@Override
-							protected void onProgressUpdate (String... values)
-							{
-								loading.setMessage (values[0]);
-							};
+							protected void onProgressUpdate(String... values) {
+								loading.setMessage(values[0]);
+							}
+
+							;
 
 							@Override
-							protected void onPostExecute (String result)
-							{
-								super.onPostExecute (result);
-								if (!result.equals ("SUCCESS"))
-								{
-									App.getAlertDialog (MainMenuActivity.this, AlertType.ERROR, getResources ().getString (R.string.item_not_found)).show ();
+							protected void onPostExecute(String result) {
+								super.onPostExecute(result);
+								if (!result.equals("SUCCESS")) {
+									App.getAlertDialog(MainMenuActivity.this, AlertType.ERROR, getResources().getString(R.string.item_not_found)).show();
 								}
-								loading.dismiss ();
-								initView (views);
+								loading.dismiss();
+								initView(views);
 							}
 						};
-						updateTask.execute ("");
+						updateTask.execute("");
 					}
 				});
-				builder.setNegativeButton (R.string.cancel, null);
+				builder.setNegativeButton(R.string.cancel, null);
 				dialog = builder.create ();
 				break;
 		}
@@ -446,7 +444,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	@Override
 	public void onBackPressed ()
 	{
-		AlertDialog confirmationDialog = new AlertDialog.Builder (this).create ();
+		AlertDialog confirmationDialog = new AlertDialog.Builder (this).create();
 		confirmationDialog.setTitle (getResources ().getString (R.string.exit_application));
 		confirmationDialog.setMessage (getResources ().getString (R.string.exit_operation));
 		confirmationDialog.setButton (AlertDialog.BUTTON_NEGATIVE, getResources ().getString (R.string.exit), new AlertDialog.OnClickListener ()
@@ -490,8 +488,8 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	@Override
 	protected void onStop ()
 	{
-		super.onStop ();
-		finish ();
+		super.onStop();
+		finish();
 	}
 
 	@Override
@@ -562,5 +560,125 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	public void onNothingSelected (AdapterView<?> arg0)
 	{
 		// Not implemented
+	}
+	
+	public void getScreenerLocationSetup(){
+		// Authenticate from server
+		AsyncTask<String, String, String> loadXmls = new AsyncTask<String, String, String> ()
+		{
+			@Override
+			protected String doInBackground (String... params)
+			{
+				runOnUiThread (new Runnable ()
+				{
+					@Override
+					public void run ()
+					{
+						loading.setIndeterminate (true);
+						loading.setCancelable (false);
+						loading.show ();
+					}
+				});
+					
+				publishProgress (getResources ().getString (R.string.fetching_locations));
+				screenerLocationSetup = serverService.fetchScreenersLocationSetting (App.getUsername());
+				
+				if(screenerLocationSetup == null)
+					   return "FAIL";		
+				  return "SUCCESS";
+			}
+
+			@Override
+			protected void onProgressUpdate (String... values)
+			{
+				loading.setMessage (values[0]);
+			};
+
+			@Override
+			protected void onPostExecute (String result)
+			{
+				super.onPostExecute (result);
+				loading.dismiss ();
+						
+				if(result.equals("SUCCESS")){
+					
+					if(screenerLocationSetup != null){
+						if(!screenerLocationSetup[0].equals("") && !screenerLocationSetup[1].equals(""))
+						{
+							App.setLocation(screenerLocationSetup[0]);
+							App.setFacility(screenerLocationSetup[0]);
+							App.setScreeningType(screenerLocationSetup[1]);
+							App.setScreeningStrategy("Community (General)");
+							
+							SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
+							SharedPreferences.Editor editor = preferences.edit ();
+							editor.putString (Preferences.FACILITY, App.getFacility ());
+							editor.putString (Preferences.LOCATION, App.getLocation ());
+							editor.putString (Preferences.SCREENING_TYPE, App.getScreeningType());
+							editor.putString (Preferences.SCREENING_STRATEGY, App.getScreeningStrategy());
+							editor.apply ();
+							
+							String location = "";
+							
+							String screeningType = App.getScreeningType();
+							String facility = App.getFacility();
+							
+							facility = facility.substring(6);
+							if(screeningType.equalsIgnoreCase("Community")){
+								location = facility + " (Community)";
+	
+								screening.setVisibility(View.VISIBLE);
+								quickScreening.setVisibility(View.VISIBLE);
+							}
+							
+							else if (screeningType.equalsIgnoreCase("Facility")){
+								location = facility + " (Facility)";
+								quickScreening.setVisibility(View.GONE);
+							}
+							
+							locationTextView.setText (location);
+						}
+					}
+
+					/*if(!screenerLocationSetup[2].equals("") || !screenerLocationSetup[3].equals(""))
+						showFeedbackMessageAlert(screenerLocationSetup[2],screenerLocationSetup[3]);
+*/
+				}
+				
+			}
+		};
+		loadXmls.execute ("");
+	}
+
+
+	public void showFeedbackMessageAlert(String overallMessage, String messageYestarday){
+		AlertDialog feedbackMessagesDialog = new AlertDialog.Builder (this).create ();
+		feedbackMessagesDialog.setTitle(getResources().getString(R.string.feedback));
+
+		String message[] = messageYestarday.split(":;:");
+
+		String feedback = "";
+
+		if(!overallMessage.equals(""))
+			feedback = overallMessage + "\n\n";
+
+		for(int i = 0; i<message.length; i++){
+
+			if(!message[i].equals(""))
+				feedback = feedback + message[i] + "\n\n";
+
+		}
+
+		feedbackMessagesDialog.setMessage(feedback);
+
+		feedbackMessagesDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new AlertDialog.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)   // no...
+			{
+			}
+		});
+		feedbackMessagesDialog.show();
+
+
 	}
 }

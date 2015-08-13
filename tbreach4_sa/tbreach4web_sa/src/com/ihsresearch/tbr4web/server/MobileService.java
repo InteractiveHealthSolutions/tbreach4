@@ -258,6 +258,8 @@ public class MobileService
 				response = getPatientReport (formType, jsonObject);
 			else if (formType.equals (FormType.GET_PATIENT_FROM_TEST_ID))
 				response = getPatientIdFromTestId (formType, jsonObject);
+			else if (formType.equals(FormType.GET_LOCATION_SETUP))
+				response = getScreenerLocationSetupFromUsername(formType, jsonObject);
 			else if (formType.equals (FormType.NON_SUSPECT))
 				response = doNonSuspectScreening (formType, jsonObject);
 			else if (formType.equals (FormType.SCREENING) || formType.equals (FormType.NON_PULMONARY) || formType.equals (FormType.PAEDIATRIC_SCREENING) || formType.equals (FormType.QUICK_SCREENING))
@@ -324,6 +326,59 @@ public class MobileService
 		return result;
 	}
 
+	private String getScreenerLocationSetupFromUsername (String formType, JSONObject values)
+	{
+		String json = null;
+		try
+		{
+			String username = values.getString ("username");
+			User user = Context.getUserService().getUserByUsername(username);
+			Person person = user.getPerson();
+			PersonAttribute locationAttribute = person.getAttribute(13);
+			String location = "";
+			if(locationAttribute != null)
+				location = locationAttribute.toString();
+			PersonAttribute screeningTypeAttribute = person.getAttribute(14);
+			String screeningType = "";
+			if(screeningTypeAttribute != null)
+				screeningType = screeningTypeAttribute.toString();
+			
+			JSONObject locationObj = new JSONObject ();
+			locationObj.put ("result", "SUCCESS");
+			locationObj.put ("facility", location);
+			locationObj.put ("screener_type", screeningType);
+			
+			/*String selectQuery = "SELECT * from openmrs_rpt.daily_feedback_message where screener_id = '"+username+"' and sent = '0'";
+			System.out.println(selectQuery);
+		    String[][] data = executeQuery (selectQuery, null);
+		    
+		    if(data != null || data.length != 0){
+			    locationObj.put("overall_message", data[0][1]);
+			    locationObj.put("message", data[0][2]);
+		    }
+		    else{
+		    	locationObj.put("overall_message", "");
+			    locationObj.put("message", "");
+		    }
+			
+		    String updateQuery = "Update openmrs_rpt.daily_feedback_message" +
+					 				" set sent = '1' " +
+					 				" where screener_id = '"+username+"'" ;
+
+		    execute(updateQuery);*/
+		    
+			json = locationObj.toString ();
+			
+		}	
+		
+		catch (JSONException e)
+		{
+			e.printStackTrace ();
+		}
+		return json;
+	}
+	
+	
 	private String getSputumSubmissionStatus (String formType, JSONObject values)
 	{
 		String json = null;
@@ -592,6 +647,8 @@ public class MobileService
 			userObj.put ("result", "SUCCESS");
 			userObj.put ("id", user.getUserId ());
 			userObj.put ("name", user.getUsername ());
+			userObj.put ("sname", user.getGivenName());
+			
 			json = userObj.toString ();
 		}
 		catch (JSONException e)
@@ -874,7 +931,10 @@ public class MobileService
 					json.put ("gender", p.getGender ());
 					json.put ("age", p.getAge ());
 					json.put ("dob", p.getBirthdate ().toString ());
-					json.put ("address", p.getPersonAddress ().getAddress1 ());
+					if (p.getPersonAddress ().getAddress1 () != null)
+						json.put ("address", p.getPersonAddress ().getAddress1 ());
+					else
+						json.put ("address", "");
 					if (p.getPersonAddress ().getAddress2 () != null)
 						json.put ("colony", p.getPersonAddress ().getAddress2 ());
 					else
@@ -887,8 +947,14 @@ public class MobileService
 						json.put ("landmark", p.getPersonAddress ().getAddress4 ());
 					else
 						json.put ("landmark", "");
-					json.put ("city", p.getPersonAddress ().getCityVillage ());
-					json.put ("country", p.getPersonAddress ().getCountry ());
+					if (p.getPersonAddress ().getCityVillage () != null)
+						json.put ("city", p.getPersonAddress ().getCityVillage ());
+					else
+						json.put ("city", "");
+					if (p.getPersonAddress ().getCountry () != null)
+						json.put ("country", p.getPersonAddress ().getCountry ());
+					else
+						json.put ("country", "");
 					json.put ("pid", p.getPatientIdentifier ());
 					PersonAttribute pa = p.getAttribute ("Primary Phone");
 					if (pa != null)
@@ -941,7 +1007,10 @@ public class MobileService
 						{
 							Obs labTestIdO = labTestIdObs.get (0);
 							String labTestIdValue = labTestIdO.getValueText ();
-							json.put ("test_lab_id", labTestIdValue);
+							if(labTestIdValue != null)
+								json.put ("test_lab_id", labTestIdValue);
+							else
+								json.put ("test_lab_id", "");
 						}
 						else
 							json.put ("test_lab_id", "");
@@ -1003,14 +1072,32 @@ public class MobileService
 							json.put ("genexpert_result", genexpertValue);
 							
 							if(genexpertValue.equals("MTB Positive")){
-								List<Encounter> treatmentInitiationEncountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
+								/*List<Encounter> treatmentInitiationEncountersByPatient = Context.getEncounterService ().getEncountersByPatient (p);
 								for (Encounter e : treatmentInitiationEncountersByPatient)
 								{
 									if (e.getEncounterType ().getName ().equals ("Treatment Initiation"))
 									{
 										json.put ("date_treatment_initiation", DateTimeUtil.getSQLDate (e.getEncounterDatetime ()));
 									}
+								}*/
+								
+								Concept treatmentInitiationDateConcept = Context.getConceptService ().getConceptByName ("Treatment Initiation Date");
+								List<Obs> treatmentInitiationObs = new LinkedList<Obs> ();
+								treatmentInitiationObs = Context.getObsService ().getObservationsByPersonAndConcept (p, treatmentInitiationDateConcept);
+								if (treatmentInitiationObs != null)
+								{
+									size = treatmentInitiationObs.size ();
+									if(size != 0){
+										Obs treatmentInititionDateO = treatmentInitiationObs.get (0);
+										String value = DateTimeUtil.getSQLDate(treatmentInititionDateO.getValueDate());
+										json.put ("date_treatment_initiation", value);
+									}
+									else
+										json.put ("date_treatment_initiation", "");
 								}
+								else
+									json.put ("date_treatment_initiation", "");
+								
 							}
 						}
 						else
@@ -1308,7 +1395,7 @@ public class MobileService
 		}
 		catch (Exception e)
 		{
-
+			e.printStackTrace ();
 		}
 		finally
 		{
@@ -1495,10 +1582,10 @@ public class MobileService
 			String encounterLocation = values.getString ("encounter_location");
 			String provider = values.getString ("provider");
 			
-			boolean check = checkForPrerequisite(patientId,encounterType);
+			String check = checkForPrerequisite(patientId,encounterType);
 			
-			if(!check){
-				json.put ("result", "MISSING PREREQUISITE");
+			if(!check.equals("")){
+				json.put ("result", check);
 				return json.toString ();
 			}
 				
@@ -1620,12 +1707,12 @@ public class MobileService
 	}
 
 	
-	public boolean checkForPrerequisite(String patientId, String encounterType){
+	public String checkForPrerequisite(String patientId, String encounterType){
 		
 		List<Patient> patients = new ArrayList<Patient> ();
 		patients = Context.getPatientService ().getPatients (patientId);
 		if(patients == null){
-			return false;
+			return CustomMessage.getErrorMessage(ErrorType.PATIENT_NOT_FOUND);
 		}
 		Patient patient = patients.get(0);
 		
@@ -1648,7 +1735,7 @@ public class MobileService
 				
 				// If Null return false - Prerequisite fails
 				if(sputumSubmissionEncounters == null || sputumSubmissionEncounters.size() == 0)
-					return false;	
+					return CustomMessage.getErrorMessage(ErrorType.SPUTUM_SUBMISSION_NOT_FOUND);	
 				else{
 					
 					// Get 'Sputum Sample'
@@ -1662,11 +1749,11 @@ public class MobileService
 						String ss = sputumSample.getName().toString();
 						if (ss.equals ("Accept"))   // if concept value is 'Accept' - Prerequisite Pass
 						{
-							return true;
+							return "";
 						}
 					}
 					
-					return false;  // Prerequisite fails
+					return CustomMessage.getErrorMessage(ErrorType.NO_ACCEPTED_SPUTUM_SUBMISSION_FOUND);  // Prerequisite fails
 				}
 					
 			}
@@ -1674,7 +1761,7 @@ public class MobileService
 				
 				  
 				if(sputumResultEncounters.size() == sputumSubmissionEncounters.size())  // Prerequisite fails
-					return false;
+					return CustomMessage.getErrorMessage(ErrorType.SPUTUM_SUBMISSION_NOT_FOUND);
 				else {
 					
 					// Get 'Sputum Sample' Concept
@@ -1694,9 +1781,9 @@ public class MobileService
 					}
 					
 					if (count > sputumResultEncounters.size()) //if count is greater than SputumResult encounter size
-						return true; // Prerequisite Pass
+						return ""; // Prerequisite Pass
 					else 
-						return false; // Prerequisite fails
+						return CustomMessage.getErrorMessage(ErrorType.NO_ACCEPTED_SPUTUM_SUBMISSION_FOUND); // Prerequisite fails
 				}
 			}
 			
@@ -1718,7 +1805,7 @@ public class MobileService
 				
 				// if encounter is null
 				if(sputumResultEncounters == null || sputumResultEncounters.size() == 0){
-					return false;   // Prerequisite fails
+					return CustomMessage.getErrorMessage(ErrorType.GENEXPERT_RESULT_NOT_FOUND);   // Prerequisite fails
 				}
 				else{
 					// Get 'GeneXpert Result' Concept
@@ -1732,10 +1819,10 @@ public class MobileService
 						String ss = genexpertResult.getName().toString();
 						if (ss.equals ("MTB Positive")) // if value is MTB Positive
 						{
-							return true; // Prerequisite Pass
+							return ""; // Prerequisite Pass
 						}
 					}
-					return false; // Prerequisite fails
+					return CustomMessage.getErrorMessage(ErrorType.POSITIVE_GENEXPERT_RESULT_NOT_FOUND); // Prerequisite fails
 				}
 			}
 			else{ // if encounter is not null
@@ -1751,10 +1838,10 @@ public class MobileService
 					String ss = treatmentInitiated.getName().toString();
 					if (ss.equals ("Yes"))  // if value is Yes
 					{
-						return false; // Prerequisite fails
+						return CustomMessage.getErrorMessage(ErrorType.TREATMENT_ALREADY_INITIATED); // Prerequisite fails
 					}
 				}
-				return true; // Prerequisite Pass
+				return ""; // Prerequisite Pass
 
 			}
 			
@@ -1775,7 +1862,7 @@ public class MobileService
 			
 			// if encounter is null
 			if(treatmentInitiationEncounters == null || treatmentInitiationEncounters.size() == 0){
-				return false;  // Prerequisite fails
+				return CustomMessage.getErrorMessage(ErrorType.TREATMENT_INITIATION_FORM_NOT_FILLED);  // Prerequisite fails
 			}
 			else{
 				
@@ -1785,10 +1872,10 @@ public class MobileService
 					String ss = treatmentInitiated.getName().toString();  // if value is No
 					if (ss.equals ("Yes"))
 					{
-						return true;  // Prerequisite Pass
+						return "";  // Prerequisite Pass
 					}
 				}
-				return false;  // Prerequisite Fail
+				return CustomMessage.getErrorMessage(ErrorType.TREATMENT_NOT_INITIATED);  // Prerequisite Fail
 				
 			}
 			
@@ -1812,7 +1899,7 @@ public class MobileService
 				
 				// if encounter is null
 				if(treatmentInitiationEncounters == null || treatmentInitiationEncounters.size() == 0)
-					return false;  // Prerequisite Fail
+					return CustomMessage.getErrorMessage(ErrorType.TREATMENT_INITIATION_FORM_NOT_FILLED);  // Prerequisite Fail
 				else{
 					
 					// Get 'Treatment Initiated' Concept
@@ -1826,20 +1913,20 @@ public class MobileService
 						String ss = treatmentInitiated.getName().toString();
 						if (ss.equals ("Yes"))
 						{
-							return true;    // Prerequisite true
+							return "";    // Prerequisite true
 						}
 					}
-					return false;	// Prerequisite Fail				
+					return CustomMessage.getErrorMessage(ErrorType.TREATMENT_NOT_INITIATED); 	// Prerequisite Fail				
 				}
 				
 			}
 			else
 				
-				return false; // Prerequisite Fail
+				return CustomMessage.getErrorMessage(ErrorType.TREATMENT_OUTCOME_ALREADY_FILLED); // Prerequisite Fail
 			
 		} 
 		
-		return true;
+		return "";
 	}
 	
 	

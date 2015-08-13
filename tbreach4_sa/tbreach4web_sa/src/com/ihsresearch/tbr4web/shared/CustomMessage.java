@@ -132,6 +132,33 @@ public class CustomMessage
 			case VERSION_MISMATCH_ERROR:
 				error = "Version does not match. Make sure your application is updated to version " + App.appVersion;
 				break;
+			case PATIENT_NOT_FOUND :
+				error = "Patient not Found! Please check patient id.";
+			case SPUTUM_SUBMISSION_NOT_FOUND:
+				error = "Sputum Submission form not found. If form is already submitted, please check the patient/test id.";
+				break;
+			case NO_ACCEPTED_SPUTUM_SUBMISSION_FOUND:
+				error = "Sputum Submission form not found with accept status. If form is already submitted, please check the patient/test id.";
+				break;
+			case GENEXPERT_RESULT_NOT_FOUND :
+				error = "GeneXpert Result not Found. If form is already submitted, please check the patient/test id.";
+				break;
+			case POSITIVE_GENEXPERT_RESULT_NOT_FOUND :
+				error = "GeneXpert Result with positive result not Found. If form is already submitted, please check the patient/test id.";
+				break;
+			case TREATMENT_ALREADY_INITIATED :
+				error = "Treatment already initiated. If not, please check the patient/test id.";
+				break;
+			case TREATMENT_INITIATION_FORM_NOT_FILLED :
+				error = "Treatment Initiation form not submitted. If form is already submitted, please check the patient/test id.";	
+				break;
+			case TREATMENT_NOT_INITIATED :
+				error = "Treatment not initiated. If already initiated, please check the patient/test id.";	
+				break;
+			case TREATMENT_OUTCOME_ALREADY_FILLED :
+				error = "Treatment outcome form already filled. If not, please check the patient/test id.";
+				break;
+			
 		}
 		return error;
 	}

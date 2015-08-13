@@ -4,6 +4,8 @@
     <string name="demographics_option">Demographics</string>
     <string name="tb_symptoms_option">TB Symptoms</string>
     <string name="other_symptoms_option">Other Disease/Symptoms</string>
+    
+    <string name="dob_unknown">DOB unkown</string>
 
     <!-- Demographics strings -->
     <string name="first_name">First Name</string>
@@ -99,7 +101,8 @@
     <!-- Coustomer Information -->
     <string name="phone1_provided">Are you willing to provide a contact number?</string>
     <string name="phone1">Phone Number 1</string>
-    <string name="phone1_hint">Enter Phone Number</string>
+    <string name="phone1_hint_A">XXX</string>
+    <string name="phone1_hint_B">XXXX</string>
     <string name="phone1_owner">Who Does this Phone Number belong to?</string>
     <string name="phone1_other_owner">Specify Other</string>
     
@@ -172,6 +175,8 @@
     <string name="n">"N"</string>
     <string name="y">"Y"</string>
     <string name="r">"R"</string>
+    
+    <string name="hash">" - "</string>
     
     <string name="positive">Positive</string>
     <string name="negative">Negative</string>

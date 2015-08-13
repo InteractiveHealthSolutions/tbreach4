@@ -55,6 +55,7 @@ public class App
 	private static String   		facility		= "";
 	private static String   		screeningType	= "";
 	private static String   		screeningStrategy = "";
+	private static String			screenerName	= "";
 	private static int				delay			= 3000;
 	private static boolean			useSsl			= true;
 	private static boolean			autoLogin		= true;
@@ -221,6 +222,8 @@ public class App
 	{
 		App.currentLocale = currentLocale;
 	}
+	
+	
 
 	/**
 	 * Returns true if system language is Right-to-Left
@@ -392,5 +395,13 @@ public class App
 
 	public static void setScreeningStrategy(String screeningStrategy) {
 		App.screeningStrategy = screeningStrategy;
+	}
+	
+	public static String getScreenerName() {
+		return screenerName;
+	}
+
+	public static void setScreenerName(String screenerName) {
+		App.screenerName = screenerName;
 	}
 }

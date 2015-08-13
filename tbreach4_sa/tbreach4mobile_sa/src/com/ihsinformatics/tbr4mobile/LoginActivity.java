@@ -15,6 +15,7 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbr4mobile;
 
 
+
 import com.ihsinformatics.tbr4mobile.shared.AlertType;
 import com.ihsinformatics.tbr4mobile.util.ServerService;
 
@@ -61,6 +62,8 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	
 	String                          tempUsername;
 	String							tempPassword;
+	
+	String 							screenerLocationSetup[] = null;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState)
@@ -242,15 +245,22 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 				{
 					super.onPostExecute (result);
 					loading.dismiss ();
-					if (result.equals("SUCCESS"))
+					
+					String resultsPart[] = result.split(":");
+					
+					if (resultsPart[0].equals("SUCCESS"))
 					{
 						serverService.setCurrentUser (App.get (username));
+						
+						if(!App.isOfflineMode())
+							App.setScreenerName(resultsPart[1]);
+						else
+							App.setScreenerName(App.getScreenerName());
 						
 						serverService.updateLoginTime();
 						
 						App.setUsername (App.get (username));
 						App.setPassword (App.get (password));
-						
 						
 						
 						/*
@@ -265,8 +275,11 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						SharedPreferences.Editor editor = preferences.edit ();
 						editor.putString (Preferences.USERNAME, App.getUsername ());
 						editor.putString (Preferences.PASSWORD, App.getPassword ());
+						editor.putString (Preferences.SCREENER_NAME, App.getScreenerName());
 						editor.apply ();
+						
 						Intent intent = new Intent (LoginActivity.this, MainMenuActivity.class);
+						intent.putExtra("new_login", "yes");
 						startActivity (intent);
 						finish ();
 					}
@@ -341,5 +354,94 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 				password.setSelection(position);
 				break;
 		}
+	}
+	
+	
+	public void getScreenerLocationSetup(){
+		// Authenticate from server
+		AsyncTask<String, String, String> loadXmls = new AsyncTask<String, String, String> ()
+		{
+			@Override
+			protected String doInBackground (String... params)
+			{
+				runOnUiThread (new Runnable ()
+				{
+					@Override
+					public void run ()
+					{
+						loading.setIndeterminate (true);
+						loading.setCancelable (false);
+						loading.show ();
+					}
+				});
+					
+				publishProgress (getResources ().getString (R.string.fetching_locations));
+				screenerLocationSetup = serverService.fetchScreenersLocationSetting (App.getUsername());
+				
+				if(screenerLocationSetup == null)
+					   return "FAIL";		
+				  return "SUCCESS";
+			}
+
+			@Override
+			protected void onProgressUpdate (String... values)
+			{
+				loading.setMessage (values[0]);
+			};
+
+			@Override
+			protected void onPostExecute (String result)
+			{
+				super.onPostExecute (result);
+				loading.dismiss ();
+						
+				if(result.equals("SUCCESS")){
+					
+					if(screenerLocationSetup != null){
+						if(!screenerLocationSetup[0].equals("") && !screenerLocationSetup[1].equals(""))
+						{
+							App.setLocation(screenerLocationSetup[0]);
+							App.setFacility(screenerLocationSetup[0]);
+							App.setScreeningType(screenerLocationSetup[1]);
+							App.setScreeningStrategy("Community (General)");
+							
+							SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (LoginActivity.this);
+							SharedPreferences.Editor editor = preferences.edit ();
+							editor.putString (Preferences.FACILITY, App.getFacility ());
+							editor.putString (Preferences.LOCATION, App.getLocation ());
+							editor.putString (Preferences.SCREENING_TYPE, App.getScreeningType());
+							editor.putString (Preferences.SCREENING_STRATEGY, App.getScreeningStrategy());
+							editor.apply ();
+							
+							/*String location = "";
+							
+							String screeningType = App.getScreeningType();
+							String facility = App.getFacility();
+							
+							facility = facility.substring(6);
+							if(screeningType.equalsIgnoreCase("Community")){
+								location = facility + " (Community)";
+	
+								screening.setVisibility(View.VISIBLE);
+								quickScreening.setVisibility(View.VISIBLE);
+							}
+							
+							else if (screeningType.equalsIgnoreCase("Facility")){
+								location = facility + " (Facility)";
+								quickScreening.setVisibility(View.GONE);
+							}
+							
+							locationTextView.setText (location);*/
+						}
+					}
+
+					/*if(!screenerLocationSetup[2].equals("") || !screenerLocationSetup[3].equals(""))
+						showFeedbackMessageAlert(screenerLocationSetup[2],screenerLocationSetup[3]);*/
+
+				}
+				
+			}
+		};
+		loadXmls.execute ("");
 	}
 }
