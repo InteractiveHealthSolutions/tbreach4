@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WeeklySummary" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4aab878-ddc7-4cae-a792-d1355842c72a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="300"/>
+	<parameter name="screener_name" class="java.lang.String"/>
+	<parameter name="first_q_mtb_pos_per" class="java.lang.String"/>
+	<parameter name="first_q_treatment_no" class="java.lang.String"/>
+	<parameter name="first_q_treatment_per" class="java.lang.String"/>
+	<parameter name="first_q_mtb_pos_no" class="java.lang.String"/>
+	<parameter name="second_q_mtb_pos_per" class="java.lang.String"/>
+	<parameter name="second_q_treatment_no" class="java.lang.String"/>
+	<parameter name="second_q_treatment_per" class="java.lang.String"/>
+	<parameter name="second_q_mtb_pos_no" class="java.lang.String"/>
+	<parameter name="third_q_mtb_pos_per" class="java.lang.String"/>
+	<parameter name="third_q_treatment_per" class="java.lang.String"/>
+	<parameter name="third_q_treatment_no" class="java.lang.String"/>
+	<parameter name="third_q_mtb_pos_no" class="java.lang.String"/>
+	<parameter name="fourth_q_mtb_pos_per" class="java.lang.String"/>
+	<parameter name="fourth_q_treatment_per" class="java.lang.String"/>
+	<parameter name="fourth_q_treatment_no" class="java.lang.String"/>
+	<parameter name="fourth_q_mtb_pos_no" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from openmrs_rpt.weekly_screener_summary where username = '01001' order by week_no asc;]]>
+	</queryString>
+	<field name="no_of_screening" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="no_of_suspects" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="no_of_sputum_submitted" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="username" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="week_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<title>
+		<band height="96" splitType="Stretch">
+			<image>
+				<reportElement uuid="7c47a5c1-1070-41d5-ac1f-3280188dfdf6" x="448" y="5" width="107" height="90"/>
+				<imageExpression><![CDATA["C:\\Users\\Rabbia\\Desktop\\images.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="f49006b4-0487-434e-90d0-3e41c6e52bda" x="0" y="28" width="160" height="67"/>
+				<imageExpression><![CDATA["C:\\Users\\Rabbia\\Desktop\\IRD SA logo.JPG"]]></imageExpression>
+			</image>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="de7ddffb-21f8-4362-a6ae-6cee2ce3c2d0" x="160" y="54" width="288" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date Produced: " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d0c16b26-360b-4268-a2d0-a53c4fcab22c" x="160" y="74" width="288" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Screener Name: " + $P{screener_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ee2c0878-c9e0-4ba3-aee5-9055ef9ae989" x="160" y="8" width="288" height="32"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weekly Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="695" splitType="Stretch">
+			<barChart>
+				<chart isShowLegend="false">
+					<reportElement uuid="71f46975-3ffc-4dbf-9649-05a81e1219a3" x="0" y="0" width="555" height="184"/>
+					<chartTitle>
+						<font size="14" isBold="true"/>
+						<titleExpression><![CDATA["Total Screened"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Dummy Series"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{week_no} + " Week"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{no_of_screening}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true">
+					<plot/>
+					<itemLabel/>
+				</barPlot>
+			</barChart>
+			<barChart>
+				<chart isShowLegend="false">
+					<reportElement uuid="3f4ed908-59d0-46c9-823d-1e6018216524" x="0" y="184" width="555" height="184"/>
+					<chartTitle>
+						<font size="14" isBold="true"/>
+						<titleExpression><![CDATA["Total Suspects"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{username}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{week_no} + " Week"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{no_of_suspects}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot/>
+					<itemLabel/>
+				</barPlot>
+			</barChart>
+			<barChart>
+				<chart isShowLegend="false">
+					<reportElement uuid="55310ad3-8911-448e-a0d5-533b3c28a7ca" x="0" y="368" width="555" height="184"/>
+					<chartTitle>
+						<font size="14" isBold="true"/>
+						<titleExpression><![CDATA["Total Sputum Submitted"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{username}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{week_no} + " Week"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{no_of_sputum_submitted}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot/>
+					<itemLabel/>
+				</barPlot>
+			</barChart>
+			<staticText>
+				<reportElement uuid="8dedd5a9-5d39-4e18-8445-38e0e55d6552" x="362" y="552" width="193" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MTB+ on Initiated on Tx]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="36b2e3b6-cb8b-4e0f-9d43-a8d8291031d3" x="174" y="552" width="188" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MTB+ Patients]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d94b6e2d-31e5-4865-a727-e5d31b4d6770" x="174" y="572" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdb709eb-4e01-4df4-9286-6a619064f372" x="262" y="572" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Percentage *]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="554a08c2-8a6c-44a2-b576-a3a35f6af484" x="0" y="592" width="174" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jan - Mar (1st - 13th Week)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="82067e54-3e30-4757-a884-d0375a5af077" x="0" y="612" width="174" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[April - June (14th - 26th Week)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9c7af2b9-1d9c-4ac5-9fa6-2903803a1285" x="0" y="652" width="174" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Oct - Dec (40th to 52nd Week)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7d4ee10f-7776-47a4-ab8e-59a2dc30e133" x="0" y="632" width="174" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jul - Sep (27th - 39th Week)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b799c8c-932a-401c-9c7a-9af87d3f4f63" x="362" y="572" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4c068837-5a60-464c-9ba1-a9cc91e48bea" x="450" y="572" width="105" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Percentage **]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="174" y="592" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{first_q_mtb_pos_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="174" y="612" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{second_q_mtb_pos_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="174" y="632" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{third_q_mtb_pos_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="174" y="652" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fourth_q_mtb_pos_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="262" y="592" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{first_q_mtb_pos_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="262" y="612" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{second_q_mtb_pos_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="262" y="632" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{third_q_mtb_pos_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="262" y="652" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fourth_q_mtb_pos_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="362" y="592" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{first_q_treatment_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="362" y="612" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{second_q_treatment_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="362" y="632" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{third_q_treatment_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="362" y="652" width="88" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fourth_q_treatment_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="450" y="592" width="105" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{first_q_treatment_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="450" y="612" width="105" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{second_q_treatment_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="450" y="632" width="105" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{third_q_treatment_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9a7abcb-7d70-4c69-8f2f-eb1a55e58c66" x="450" y="652" width="105" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fourth_q_treatment_per}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f8a7f4cb-b78a-4f75-aa26-67807b54ceba" x="0" y="674" width="207" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="9" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[* MTB+ % = MTB+ No. / Sputum Submitted No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8235c72f-de83-4366-8b5d-da89bc9547ab" x="326" y="674" width="229" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="9" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[** Initiate on Tx % = Initiated on Tx. No. / MTB+ No.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
