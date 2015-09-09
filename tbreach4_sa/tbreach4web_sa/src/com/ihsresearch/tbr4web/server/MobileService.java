@@ -348,25 +348,23 @@ public class MobileService
 			locationObj.put ("facility", location);
 			locationObj.put ("screener_type", screeningType);
 			
-			/*String selectQuery = "SELECT * from openmrs_rpt.daily_feedback_message where screener_id = '"+username+"' and sent = '0'";
-			System.out.println(selectQuery);
+			String selectQuery = "SELECT * from openmrs_rpt.daily_feedback_message where screener_id = '"+username+"' and sent = '0'";
 		    String[][] data = executeQuery (selectQuery, null);
 		    
-		    if(data != null || data.length != 0){
-			    locationObj.put("overall_message", data[0][1]);
+		    if(data.length != 0){
 			    locationObj.put("message", data[0][2]);
+			    
+			    String updateQuery = "Update openmrs_rpt.daily_feedback_message" +
+		 				" set sent = '1' " +
+		 				" where screener_id = '"+username+"'" ;
+
+			    execute(updateQuery);
+			    
 		    }
 		    else{
-		    	locationObj.put("overall_message", "");
 			    locationObj.put("message", "");
 		    }
-			
-		    String updateQuery = "Update openmrs_rpt.daily_feedback_message" +
-					 				" set sent = '1' " +
-					 				" where screener_id = '"+username+"'" ;
-
-		    execute(updateQuery);*/
-		    
+			 
 			json = locationObj.toString ();
 			
 		}	

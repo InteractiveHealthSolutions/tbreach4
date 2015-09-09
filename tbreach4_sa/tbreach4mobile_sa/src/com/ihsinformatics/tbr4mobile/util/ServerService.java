@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);
@@ -2544,9 +2544,9 @@ public class ServerService
 				String result1 = jsonResponse.getString ("facility");
 				String result2 = jsonResponse.getString ("screener_type");
 				//String result3 = jsonResponse.getString ("overall_message");
-				//String result4 = jsonResponse.getString ("message");
+				String result4 = jsonResponse.getString ("message");
 				
-				String[] results = {result1, result2/*, result3, result4*/};
+				String[] results = {result1, result2/*, result3,*/, result4};
 				return results;
 			}
 			else

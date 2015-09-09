@@ -130,24 +130,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	public void initView (View[] views)
 	{
 
-		getScreenerLocationSetup();
-		/*if (App.getLocation() == "")
-			
 			if(!App.isOfflineMode())
 				getScreenerLocationSetup();
-		else{
-			
-			
-			Intent thisIntent = getIntent();
-			
-			if (thisIntent.hasExtra("new_login")){ 
-				
-				if(!App.isOfflineMode())
-					getScreenerLocationSetup();
-				
-			}
-			
-		}*/
+	
 		
 		String location = "";
 				
@@ -640,9 +625,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 						}
 					}
 
-					/*if(!screenerLocationSetup[2].equals("") || !screenerLocationSetup[3].equals(""))
-						showFeedbackMessageAlert(screenerLocationSetup[2],screenerLocationSetup[3]);
-*/
+					if(!screenerLocationSetup[2].equals("") )
+						showFeedbackMessageAlert(screenerLocationSetup[2]);
+
 				}
 				
 			}
@@ -651,16 +636,13 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	}
 
 
-	public void showFeedbackMessageAlert(String overallMessage, String messageYestarday){
+	public void showFeedbackMessageAlert(String messageYestarday){
 		AlertDialog feedbackMessagesDialog = new AlertDialog.Builder (this).create ();
 		feedbackMessagesDialog.setTitle(getResources().getString(R.string.feedback));
 
 		String message[] = messageYestarday.split(":;:");
 
 		String feedback = "";
-
-		if(!overallMessage.equals(""))
-			feedback = overallMessage + "\n\n";
 
 		for(int i = 0; i<message.length; i++){
 
