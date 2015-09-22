@@ -76,6 +76,11 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
+            android:name=".ScreeningReportActivity"
+            android:configChanges="keyboardHidden|orientation" 
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
             android:name=".FeedbackActivity"
             android:configChanges="keyboardHidden|orientation" 
             android:windowSoftInputMode="stateHidden">

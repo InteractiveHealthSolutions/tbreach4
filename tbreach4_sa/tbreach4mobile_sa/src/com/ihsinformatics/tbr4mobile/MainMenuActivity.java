@@ -68,6 +68,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	Button							sputumResult;
 	Button							treatment;
 	Button							quickScreening;
+	Button							screeningReport;
 	Button							feedback;
 	ImageButton						locationSetup;
 	Animation						alphaAnimation;
@@ -98,6 +99,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		feedback = (Button) findViewById (R.main_id.feedbackButton);
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
 		locationSetup = (ImageButton) findViewById (R.main_id.locationSetupButton);
+		screeningReport = (Button) findViewById (R.main_id.screeningReportButton);
 		
 		// Disable all forms that cannot be filled offline
 		if (App.isOfflineMode ())
@@ -106,9 +108,10 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			patientReport.setVisibility(View.GONE);
 			sputumResult.setVisibility(View.GONE);
 			treatment.setVisibility(View.GONE);
+			screeningReport.setVisibility(View.GONE);
 		}
 		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, treatment, quickScreening,
-				 feedback};
+				 feedback, screeningReport};
 		for (View v : views)
 		{
 			if (v instanceof Spinner)
@@ -130,13 +133,19 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	public void initView (View[] views)
 	{
 
-			if(!App.isOfflineMode())
-				getScreenerLocationSetup();
-	
+			if(!App.isOfflineMode()){
+				
+				// Get data from intent if any...
+				Intent thisIntent = getIntent();
+				if (thisIntent.hasExtra("new_login")){    // main menu is appearing after login
+					getScreenerLocationSetup();			// retrieve screeners location and feedback	 
+				}
+				
+			}
 		
 		String location = "";
 				
-		String screeningType = App.getScreeningType();
+		String screeningType = App.getScreeningType();    // set locations attributes
 		String facility = App.getFacility();
 		
 		
@@ -144,17 +153,18 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			facility = facility.substring(6);
 			
 			if(screeningType.equalsIgnoreCase("Community")){
-				location = facility + " (Community)";
+				location = facility + " (Community)";   // id + screening type
 	
 				screening.setVisibility(View.VISIBLE);
 				quickScreening.setVisibility(View.VISIBLE);
 			}
 			
 			else if (screeningType.equalsIgnoreCase("Facility")){
-				location = facility + " (Facility)";
+				location = facility + " (Facility)";   // id + screening type
 				quickScreening.setVisibility(View.GONE);
 			}
 			
+			// app version no.  + screener's name
 			this.setTitle("   "+getResources ().getString (R.string.version_no) + "                     User: "+App.getScreenerName());
 			
 			locationTextView.setText (location);
@@ -527,7 +537,11 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			case R.main_id.feedbackButton :
 				Intent feedbackIntent = new Intent (this, FeedbackActivity.class);
 				startActivity (feedbackIntent);
-				break;			
+				break;
+			case R.main_id.screeningReportButton :
+				Intent screeningReportIntent = new Intent (this, ScreeningReportActivity.class);
+				startActivity (screeningReportIntent);
+				break;
 			default :
 				toast.setText (getResources ().getString (R.string.form_unavailable));
 				toast.show ();
@@ -547,6 +561,12 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		// Not implemented
 	}
 	
+	
+	/**
+	 * 
+	 * Gets & display screener location and feedback from the server.
+	 * 
+	 */
 	public void getScreenerLocationSetup(){
 		// Authenticate from server
 		AsyncTask<String, String, String> loadXmls = new AsyncTask<String, String, String> ()
@@ -593,8 +613,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 							App.setLocation(screenerLocationSetup[0]);
 							App.setFacility(screenerLocationSetup[0]);
 							App.setScreeningType(screenerLocationSetup[1]);
-							App.setScreeningStrategy("Community (General)");
+							App.setScreeningStrategy("Community (General)");  
 							
+							// Save locations in preferences
 							SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (MainMenuActivity.this);
 							SharedPreferences.Editor editor = preferences.edit ();
 							editor.putString (Preferences.FACILITY, App.getFacility ());
@@ -608,6 +629,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 							String screeningType = App.getScreeningType();
 							String facility = App.getFacility();
 							
+							// Display locations in Location Text View
 							facility = facility.substring(6);
 							if(screeningType.equalsIgnoreCase("Community")){
 								location = facility + " (Community)";
@@ -625,6 +647,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 						}
 					}
 
+					// Display the feedback if any
 					if(!screenerLocationSetup[2].equals("") )
 						showFeedbackMessageAlert(screenerLocationSetup[2]);
 
@@ -635,6 +658,13 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		loadXmls.execute ("");
 	}
 
+	
+	/**
+	 * 
+	 * Splits the message by separator :;: and displays them in alert dialog
+	 * 
+	 * @param messageYestarday
+	 */
 
 	public void showFeedbackMessageAlert(String messageYestarday){
 		AlertDialog feedbackMessagesDialog = new AlertDialog.Builder (this).create ();

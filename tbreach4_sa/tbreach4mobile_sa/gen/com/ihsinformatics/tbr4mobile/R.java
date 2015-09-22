@@ -211,32 +211,34 @@ public final class R {
         public static final int usernameTableRow=0x7f100001;
     }
     public static final class main_id {
-        public static final int customerInfoButton=0x7f11001a;
-        public static final int customerInfoTableRow=0x7f110019;
-        public static final int feedbackButton=0x7f110012;
-        public static final int feedbackTableRow=0x7f110011;
+        public static final int customerInfoButton=0x7f11001c;
+        public static final int customerInfoTableRow=0x7f11001b;
+        public static final int feedbackButton=0x7f110014;
+        public static final int feedbackTableRow=0x7f110013;
         public static final int locationLayout=0x7f110000;
         public static final int locationSetupButton=0x7f110003;
-        public static final int locationSpinner=0x7f110014;
+        public static final int locationSpinner=0x7f110016;
         public static final int locationTextView=0x7f110002;
-        public static final int nonPulmonarySuspectButton=0x7f110018;
-        public static final int nonPulmonaryTableRow=0x7f110017;
-        public static final int paediatricButton=0x7f110016;
-        public static final int paediatricTableRow=0x7f110015;
+        public static final int nonPulmonarySuspectButton=0x7f11001a;
+        public static final int nonPulmonaryTableRow=0x7f110019;
+        public static final int paediatricButton=0x7f110018;
+        public static final int paediatricTableRow=0x7f110017;
         public static final int patientReportButton=0x7f110010;
         public static final int patientReportTableRow=0x7f11000f;
         public static final int quickScreeningButton=0x7f110006;
         public static final int quickScreeningTableRow=0x7f110005;
         public static final int screeningButton=0x7f110008;
+        public static final int screeningReportButton=0x7f110012;
+        public static final int screeningReportTableRow=0x7f110011;
         public static final int screeningTableRow=0x7f110007;
         public static final int scrollView=0x7f110004;
-        public static final int selectLocationsButton=0x7f110013;
+        public static final int selectLocationsButton=0x7f110015;
         public static final int sputumResultButton=0x7f11000c;
         public static final int sputumResultTableRow=0x7f11000b;
         public static final int sputumSubmissionButton=0x7f11000a;
         public static final int sputumSubmissionTableRow=0x7f110009;
-        public static final int testIndicationButton=0x7f11001c;
-        public static final int testIndicationTableRow=0x7f11001b;
+        public static final int testIndicationButton=0x7f11001e;
+        public static final int testIndicationTableRow=0x7f11001d;
         public static final int textView1=0x7f110001;
         public static final int treatmentButton=0x7f11000e;
         public static final int treatmentTableRow=0x7f11000d;
@@ -326,7 +328,7 @@ public final class R {
         public static final int age=0x7f090095;
         public static final int age_group=0x7f09015f;
         public static final int age_hint=0x7f090096;
-        public static final int already_initiated=0x7f090176;
+        public static final int already_initiated=0x7f090180;
         public static final int app_name=0x7f090146;
         public static final int appetite_loss_symptom=0x7f0900f4;
         public static final int authentication_error=0x7f090007;
@@ -364,7 +366,7 @@ public final class R {
         public static final int cough_duration_hint=0x7f0900ed;
         public static final int cough_quick_screening=0x7f09007b;
         public static final int country_address=0x7f090071;
-        public static final int cured=0x7f090185;
+        public static final int cured=0x7f09018f;
         public static final int customer_info=0x7f090049;
         public static final int cxr=0x7f090065;
         public static final int cxr_rif_indication=0x7f09010a;
@@ -379,8 +381,8 @@ public final class R {
         public static final int date_result_recieved=0x7f09012a;
         public static final int date_test_report=0x7f09012b;
         public static final int day=0x7f0900bd;
-        public static final int death=0x7f090189;
-        public static final int default_patient=0x7f090187;
+        public static final int death=0x7f090193;
+        public static final int default_patient=0x7f090191;
         public static final int delete_error=0x7f09000c;
         public static final int delete_forms=0x7f09005f;
         public static final int deleted=0x7f090055;
@@ -423,6 +425,7 @@ public final class R {
         public static final int feedback_type=0x7f090025;
         public static final int female=0x7f090094;
         public static final int fetch_name=0x7f090142;
+        public static final int fetch_screening_info=0x7f09016c;
         public static final int fetching_locations=0x7f09004d;
         public static final int fever=0x7f0900b5;
         public static final int fever_checkbox=0x7f0900bb;
@@ -435,8 +438,8 @@ public final class R {
         public static final int first_name_hint=0x7f09008f;
         /**  Followup Question 
          */
-        public static final int followup_date=0x7f09017e;
-        public static final int followup_space=0x7f09018d;
+        public static final int followup_date=0x7f090188;
+        public static final int followup_space=0x7f090197;
         public static final int food_particles=0x7f090135;
         public static final int forgot_password=0x7f09014f;
         public static final int form_date=0x7f09015e;
@@ -468,8 +471,8 @@ public final class R {
         public static final int incomplete_operation=0x7f090013;
         public static final int incorrect_paperwork=0x7f090121;
         public static final int indeterminate=0x7f090125;
-        public static final int initiated_no_space=0x7f09018c;
-        public static final int initiated_yes_space=0x7f09018b;
+        public static final int initiated_no_space=0x7f090196;
+        public static final int initiated_yes_space=0x7f090195;
         public static final int insert_error=0x7f090012;
         public static final int inserted=0x7f090058;
         public static final int instructions=0x7f0900c6;
@@ -501,7 +504,7 @@ public final class R {
         /**  Heading strings 
          */
         public static final int mineHeading=0x7f0900a3;
-        public static final int missing_contacts=0x7f090174;
+        public static final int missing_contacts=0x7f09017e;
         public static final int more_than_three_days=0x7f090137;
         public static final int mtb_burden=0x7f09011b;
         public static final int mtb_neg=0x7f09011c;
@@ -522,8 +525,9 @@ public final class R {
         public static final int non_pulmonary=0x7f090103;
         public static final int non_pulmonary_suspect=0x7f090048;
         public static final int non_suspect=0x7f090017;
+        public static final int nonsuspects_no=0x7f090170;
         public static final int not_detected=0x7f090123;
-        public static final int offline=0x7f09016b;
+        public static final int offline=0x7f090175;
         public static final int offline_forms=0x7f09005e;
         public static final int operation_cancelled=0x7f090018;
         public static final int operation_successful=0x7f090059;
@@ -531,8 +535,8 @@ public final class R {
         public static final int other=0x7f0900a0;
         public static final int other_symptoms_option=0x7f09008c;
         public static final int out_of_range=0x7f090019;
-        public static final int outcome_date=0x7f09018a;
-        public static final int outcome_space=0x7f09018e;
+        public static final int outcome_date=0x7f090194;
+        public static final int outcome_space=0x7f090198;
         public static final int owner_name_hint=0x7f0900dc;
         public static final int oximetry=0x7f09006d;
         public static final int oxr=0x7f090066;
@@ -543,13 +547,13 @@ public final class R {
         public static final int passcode_hint=0x7f09015b;
         public static final int password=0x7f09014e;
         public static final int password_hint=0x7f09014b;
-        public static final int patient_died=0x7f090175;
+        public static final int patient_died=0x7f09017f;
         public static final int patient_home_gps=0x7f090062;
         public static final int patient_id=0x7f090160;
         public static final int patient_id_hint=0x7f090161;
         public static final int patient_id_missing=0x7f09001c;
         public static final int patient_id_radio=0x7f09006e;
-        public static final int patient_not_found=0x7f090173;
+        public static final int patient_not_found=0x7f09017d;
         public static final int patient_referred=0x7f0900d4;
         public static final int patient_report=0x7f090043;
         public static final int patients=0x7f090079;
@@ -575,18 +579,18 @@ public final class R {
         public static final int physical_address_hint=0x7f0900e5;
         public static final int pneumonia_conclusion=0x7f090108;
         public static final int positive=0x7f090114;
-        public static final int positive_plus=0x7f090182;
-        public static final int positive_plus_plus=0x7f090183;
-        public static final int positive_scanity=0x7f090181;
+        public static final int positive_plus=0x7f09018c;
+        public static final int positive_plus_plus=0x7f09018d;
+        public static final int positive_scanity=0x7f09018b;
         public static final int pulmonary=0x7f090102;
         public static final int quick_screening=0x7f090046;
         public static final int quick_screening_question=0x7f09007f;
         public static final int r=0x7f090112;
-        public static final int reason_treament_uninitiated=0x7f090171;
+        public static final int reason_treament_uninitiated=0x7f09017b;
         public static final int refresh_database=0x7f090162;
         public static final int refuse=0x7f090154;
         public static final int refused=0x7f0900a2;
-        public static final int refused_treatment=0x7f090172;
+        public static final int refused_treatment=0x7f09017c;
         public static final int reject=0x7f090133;
         public static final int rejected=0x7f090120;
         public static final int rejection_reason=0x7f09013b;
@@ -618,11 +622,16 @@ public final class R {
         public static final int screener_instruction_repeat=0x7f090140;
         public static final int screener_instruction_two=0x7f0900d3;
         public static final int screener_instruction_verify_patient=0x7f090141;
+        public static final int screener_location=0x7f090174;
+        public static final int screener_name=0x7f090173;
         public static final int screening=0x7f090041;
         public static final int screening_Strategy=0x7f09002e;
+        public static final int screening_date=0x7f09016b;
         public static final int screening_instruction=0x7f090080;
+        public static final int screening_list=0x7f090172;
         public static final int screening_report=0x7f090082;
         public static final int screening_space=0x7f09010f;
+        public static final int screening_stats=0x7f09016d;
         public static final int screening_strategy_choose=0x7f09003c;
         public static final int screening_strategy_id=0x7f090038;
         public static final int screening_strategy_search_hint=0x7f090039;
@@ -646,8 +655,8 @@ public final class R {
         public static final int show_saved_forms=0x7f090087;
         public static final int similar_form_submitted=0x7f09001e;
         public static final int smear_microscopy=0x7f090068;
-        public static final int smear_result=0x7f090180;
-        public static final int smear_test_location=0x7f09017f;
+        public static final int smear_result=0x7f09018a;
+        public static final int smear_test_location=0x7f090189;
         public static final int someone_else=0x7f090118;
         public static final int specify_other_owner=0x7f0900db;
         public static final int spirometry=0x7f09006c;
@@ -657,6 +666,7 @@ public final class R {
         public static final int sputum_result=0x7f090044;
         public static final int sputum_status=0x7f09013a;
         public static final int sputum_submission=0x7f090042;
+        public static final int sputum_submitted_no=0x7f090171;
         public static final int sputum_time=0x7f090139;
         public static final int sputum_video=0x7f0900ec;
         public static final int submit_by=0x7f090119;
@@ -670,6 +680,7 @@ public final class R {
         /**  Conclusion 
          */
         public static final int suspect_type=0x7f090101;
+        public static final int suspects_no=0x7f09016f;
         public static final int swati=0x7f09009d;
         public static final int symptom_question=0x7f0900b7;
         public static final int symptoms=0x7f0900ee;
@@ -690,30 +701,31 @@ public final class R {
         public static final int third_day=0x7f090130;
         public static final int tobacco_current=0x7f0900d0;
         public static final int tobacco_past=0x7f090100;
+        public static final int total_screened=0x7f09016e;
         public static final int town_address=0x7f0900e8;
         public static final int town_address_hint=0x7f0900e9;
-        public static final int tranfer_out_date=0x7f09017c;
-        public static final int tranfer_out_location=0x7f09017a;
-        public static final int transferred_out=0x7f090178;
-        public static final int treament_followup=0x7f09016e;
+        public static final int tranfer_out_date=0x7f090186;
+        public static final int tranfer_out_location=0x7f090184;
+        public static final int transferred_out=0x7f090182;
+        public static final int treament_followup=0x7f090178;
         /**  Treatment Initiation Question 
          */
-        public static final int treament_initiated=0x7f090170;
-        public static final int treament_initiation=0x7f09016d;
-        public static final int treament_outcome=0x7f09016f;
+        public static final int treament_initiated=0x7f09017a;
+        public static final int treament_initiation=0x7f090177;
+        public static final int treament_outcome=0x7f090179;
         public static final int treatment=0x7f090045;
-        public static final int treatment_clinic=0x7f090179;
-        public static final int treatment_comleted=0x7f090186;
-        public static final int treatment_failure=0x7f090188;
-        public static final int treatment_initiation=0x7f090177;
-        public static final int treatment_initiation_date=0x7f09017d;
-        public static final int treatment_initiation_location=0x7f09017b;
+        public static final int treatment_clinic=0x7f090183;
+        public static final int treatment_comleted=0x7f090190;
+        public static final int treatment_failure=0x7f090192;
+        public static final int treatment_initiation=0x7f090181;
+        public static final int treatment_initiation_date=0x7f090187;
+        public static final int treatment_initiation_location=0x7f090185;
         /**  Treatment Outcome Question 
          */
-        public static final int treatment_outcome_string=0x7f090184;
+        public static final int treatment_outcome_string=0x7f09018e;
         public static final int trust_store_password=0x7f090000;
         public static final int tswana=0x7f09009e;
-        public static final int type_treament_form=0x7f09016c;
+        public static final int type_treament_form=0x7f090176;
         public static final int unknown=0x7f090155;
         public static final int unknown_error=0x7f090020;
         public static final int unsuccessful=0x7f09011f;

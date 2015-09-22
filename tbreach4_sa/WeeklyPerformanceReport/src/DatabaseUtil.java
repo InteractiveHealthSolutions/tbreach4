@@ -68,6 +68,13 @@ public final class DatabaseUtil {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * Execute Query
+	 * 
+	 * @param query
+	 * @return result set
+	 */
 	
 	public String[][] executeQuery (String query, String[] parameterValues)
 	{
@@ -141,7 +148,13 @@ public final class DatabaseUtil {
 		return result;
 	} 
 	
-	
+	/**
+	 * 
+	 * Execute Query
+	 * 
+	 * @param query
+	 * @return result set
+	 */
 	public String[][] resultSetToArray(ResultSet rs){
 		
 		String[][] result = null;

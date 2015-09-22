@@ -37,10 +37,14 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.xerces.impl.dv.util.Base64;
 import org.hibernate.NonUniqueObjectException;
+
 import com.ihsresearch.tbr4web.server.MobileService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +71,7 @@ import org.openmrs.module.ModuleMustStartException;
 import org.openmrs.util.DatabaseUpdateException;
 import org.openmrs.util.InputRequiredException;
 import org.openmrs.util.OpenmrsUtil;
+
 import com.ihsresearch.tbr4web.server.util.DateTimeUtil;
 import com.ihsresearch.tbr4web.server.util.JsonUtil;
 import com.ihsresearch.tbr4web.shared.App;
@@ -274,6 +279,8 @@ public class MobileService
 				response = doGenericForm (formType, jsonObject);
 			else if (formType.equals("DATA_UPLOAD"))
 			    response = doDataUpload();
+			else if  (formType.equals(FormType.GET_SCREENING_INFO))
+				response = getScreeningInfo(formType, jsonObject);
 			else
 				throw new Exception ();
 		}
@@ -367,6 +374,70 @@ public class MobileService
 			 
 			json = locationObj.toString ();
 			
+		}	
+		
+		catch (JSONException e)
+		{
+			e.printStackTrace ();
+		}
+		return json;
+	}
+	
+	private String getScreeningInfo (String formType, JSONObject values)
+	{
+		String json = null;
+		try
+		{
+			String username = values.getString ("username");
+			String date = values.getString ("date");
+			User user = Context.getUserService().getUserByUsername(username);
+			
+			if(user == null){
+				
+				JSONObject locationObj = new JSONObject ();
+				locationObj.put ("result", "FAIL");
+				json = locationObj.toString ();
+				return json;
+			}
+			
+			JSONObject locationObj = new JSONObject ();
+			locationObj.put ("result", "SUCCESS");
+			
+			String selectQuery2 = "select IFNULL(SUM(case when (e.encounter_type = 1) then 1 else 0 end),0) , IFNULL(SUM(case when (e.encounter_type = 2) then 1 else 0 end),0) , IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) , IFNULL(SUM(case when ( pa.value = 'Non-Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) " + 
+					"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa  " +
+					"where e.encounter_datetime = '"+date+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and (e.encounter_type = 1 or e.encounter_type = 2) and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
+			String[][] data = executeQuery (selectQuery2, null);
+		    
+		    if(data.length != 0){
+			    locationObj.put("total_screened", data[0][0]);
+			    locationObj.put("total_sputum_submitted", data[0][1]);
+			    locationObj.put("total_suspect", data[0][2]);
+			    locationObj.put("total_non_suspect", data[0][3]);
+			    
+			    if(!data[0][0].equals("0")){
+			    	
+			    	String selectQuery1 = "select concat(pn.given_name, ' ', pn.family_name), pr.gender, DATEDIFF(curdate(), pr.birthdate) / 365.25 as age " +
+							"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_name pn, openmrs.person pr "+
+							"where e.encounter_datetime = '"+date+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 1 and e.patient_id = pn.person_id and e.patient_id = pr.person_id;";
+			    	String[][] screeningNames = executeQuery (selectQuery1, null);
+			    	
+			    	for(int i = 0; i<screeningNames.length; i++){
+			    		
+			    		Float f = Float.parseFloat(screeningNames[i][2]);
+			    		int no = f.intValue();
+			    		locationObj.put("name_"+i, screeningNames[i][0]+" - "+screeningNames[i][1]+" - "+no);
+			    		
+			    	}
+			    	
+			    }
+			    
+		    }
+		    else{
+			    locationObj.put("result", "FAIL");
+		    }
+			 
+			json = locationObj.toString ();
+			System.out.println(json);
 		}	
 		
 		catch (JSONException e)

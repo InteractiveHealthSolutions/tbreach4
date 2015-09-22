@@ -261,7 +261,7 @@ public class ServerService
 					}
 					user = getOpenMrsObjectFromDb (Metadata.USER, name);
 					if(user != null){
-						return "SUCCESS:"+screenerName;
+						return "SUCCESS:"+screenerName;     
 					}
 				}
 			}
@@ -1690,20 +1690,16 @@ public class ServerService
 	
 	public Boolean renewLoginStatus () {
 		
+		// get date of last login
 		String lastTimeStamp = dbUtil.getObject(Metadata.METADATA_TABLE,"name","type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'");
 		
 		Date date = new Date();
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String newTimeStamp = formatter.format(date);
 		
-		if (lastTimeStamp == null){
+		if (lastTimeStamp == null){  
 			
-			ContentValues values = new ContentValues();
-			values.put ("id", App.getUsername());
-			values.put ("type", Metadata.TIME_STAMP);
-			values.put ("name", newTimeStamp);
-			
-			dbUtil.insert(Metadata.METADATA_TABLE, values);
+			return true;
 		}
 			
 		if(newTimeStamp.equals(lastTimeStamp)){
@@ -2516,14 +2512,32 @@ public class ServerService
 	
 	public void updateLoginTime(){
 		
+		String lastTimeStamp = dbUtil.getObject(Metadata.METADATA_TABLE,"name","type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'");
+		
 		Date date = new Date();
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String newTimeStamp = formatter.format(date);
 		
-		ContentValues values = new ContentValues();
-		values.put ("name", newTimeStamp);
-		
-		dbUtil.update(Metadata.METADATA_TABLE, values, "type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'", null);
+		if(lastTimeStamp == null){
+			
+			ContentValues values = new ContentValues();
+			values.put ("name", newTimeStamp);
+			values.put ("type", Metadata.TIME_STAMP);
+			values.put ("id", App.getUsername());
+			
+			dbUtil.insert(Metadata.METADATA_TABLE, values);
+			
+		}
+		else{
+			
+			ContentValues values = new ContentValues();
+			values.put ("name", newTimeStamp);
+			
+			dbUtil.update(Metadata.METADATA_TABLE, values, "type='"+Metadata.TIME_STAMP+"' and id='"+App.getUsername()+"'", null);
+			
+			
+		}
+
 		
 	}
 	
@@ -2566,5 +2580,62 @@ public class ServerService
 		return null;
 	}
 	
+	
+	public ArrayList getScreeningStats(String user, String date){
+		
+		String response = "";
+		try
+		{
+			JSONObject json = new JSONObject ();
+			json.put ("app_ver", App.getVersion ());
+			json.put ("form_name", FormType.GET_SCREENING_INFO);
+			json.put ("username", user);
+			json.put ("date", date);
+			response = post ("?content=" + JsonUtil.getEncodedJson (json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			
+			ArrayList arrayList = new ArrayList();
+			
+			if (jsonResponse.has ("result"))
+			{
+				String result1 = jsonResponse.getString ("total_screened");
+				arrayList.add(result1);
+				String result2 = jsonResponse.getString ("total_sputum_submitted");
+				arrayList.add(result2);
+				String result3 = jsonResponse.getString ("total_suspect");
+				arrayList.add(result3);
+				String result4 = jsonResponse.getString ("total_non_suspect");
+				arrayList.add(result4);
+				
+				int total = Integer.parseInt(result1);
+				if(total != 0){
+					
+					for(int i = 0; i <total; i++){
+						
+						String result5 = jsonResponse.getString ("name_"+i);
+						arrayList.add(result5);
+						
+					}
+					
+				}
+				
+				return arrayList;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (JSONException e)
+		{
+			Log.e (TAG, e.getMessage ());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e (TAG, e.getMessage ());
+		}
+		
+		return null;
+	}
 	
 }

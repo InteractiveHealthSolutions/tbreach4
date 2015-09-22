@@ -40,6 +40,18 @@
     <string name="submit_form">SUBMIT FORM</string>
     <string name="show_pass">Show Password</string>
     
+    
+    <string name="screening_date">Screening Date</string>
+    <string name="fetch_screening_info">Fetch Screening Information</string>
+    <string name="screening_stats">Screening Stats for</string>
+    <string name="total_screened">Total Screened:</string>
+    <string name="suspects_no"># of suspect:</string>
+    <string name="nonsuspects_no"># of non-suspect:</string>
+    <string name="sputum_submitted_no"># of Sputum Submitted:</string>
+    <string name="screening_list">-- List of screened patients --</string>
+    <string name="screener_name">Screener\'s Name -</string>
+    <string name="screener_location">Location -</string>
+    
     <string-array name="gender">
         <item>Male</item>
         <item>Female</item>

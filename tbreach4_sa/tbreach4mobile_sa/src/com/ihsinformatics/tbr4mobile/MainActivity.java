@@ -55,22 +55,7 @@ public class MainActivity extends Activity
 		{
 			Log.e (TAG, e.getMessage ());
 		}
-		// Check connection with server
-//		if (!serverService.checkInternetConnection ())
-//		{
-//			AlertDialog alertDialog = App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.data_connection_error));
-//			alertDialog.setTitle (getResources ().getString (R.string.error_title));
-//			alertDialog.setButton (AlertDialog.BUTTON_POSITIVE, "OK", new AlertDialog.OnClickListener ()
-//			{
-//				@Override
-//				public void onClick (DialogInterface dialog, int which)
-//				{
-//					finish ();
-//				}
-//			});
-//			alertDialog.show ();
-//		}
-//		else
+		
 		{
 			String versionMatch = "SUCCESS";
 			// versionMatch = serverService.matchVersions();

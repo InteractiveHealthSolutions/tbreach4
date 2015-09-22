@@ -62,4 +62,5 @@ public class FormType
 	public static final String  QUICK_SCREENING 		= "Quick Screening";
 	public static final String  GET_SPUTUM_SUBMISSION_STATUS = "Get Sputum Submission Status";
 	public static final String  GET_LOCATION_SETUP = "Get Location Setup";
+	public static final String  GET_SCREENING_INFO = "Get Screening Information";
 }

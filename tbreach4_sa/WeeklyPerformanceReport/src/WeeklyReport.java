@@ -38,9 +38,9 @@ public class WeeklyReport {
 		workingdirectory = workingdirectory+"\\Documents";
 		String tomcatDirectory = "C:\\Program Files\\Apache Software Foundation\\Tomcat 7.0\\webapps\\Openmrs";
 		
-		// Assume it's Sunday Evening
+		// Runs at every sunday evening
 		
-		File directory = new File(workingdirectory+"\\WeeklyReports");
+		File directory = new File(workingdirectory+"\\WeeklyReports");  // Reports created at
 		if (!directory.exists()) {
 			if (directory.mkdir()) {
 				System.out.println("Directory is created!");
@@ -61,7 +61,7 @@ public class WeeklyReport {
 			}
 		}
 		
-		
+		// Current Weeks date & week no. calculation
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		String today = dateFormat.format(cal.getTime());
@@ -70,51 +70,54 @@ public class WeeklyReport {
 		cal.add(Calendar.DATE, -6);
 		String dateFrom = dateFormat.format(cal.getTime());
 		
+		//insert in db
 		String insertQuery = "insert into openmrs_rpt.working_weeks (week_no,date_start,date_end) " +
 		                             "values (WEEKOFYEAR('"+dateTo+"'),'"+dateFrom+"','"+dateTo+"')";
-								
 		DatabaseUtil.getDbCon().execute (insertQuery);
 		
+		// Clear the current table
 		String query = "truncate table openmrs_rpt.weekly_screener_summary";
 		DatabaseUtil.getDbCon().execute (query);
 		
-		/*String dateTo = "2015-07-25";
-		String dateFrom = "2015-07-19";
-		*/
+		// Get all the users
 		String userList = "Select username from openmrs.users where username like '0%' and retired = 0";
 		String[][] users  = DatabaseUtil.getDbCon().executeQuery (userList, null);
 		
+		// Get all weeks dates
 		String weekList = "Select week_no, date_start, date_end from openmrs_rpt.working_weeks";
 		String[][] weeks  = DatabaseUtil.getDbCon().executeQuery (weekList, null);
 		
+		// for all users
 		for(int count = 0;count<users.length; count ++) {
 	
 			String username = users[count][0]; 
 		
+			// Calculate numbers for every week
 			for(int x = 0;x<weeks.length; x ++) {
 			
+				//  Get nos: total screened, total suspects and total sputum submitted & insert
 				insertQuery = "insert into openmrs_rpt.weekly_screener_summary (no_of_suspects, no_of_screening, no_of_sputum_submitted, no_of_sputum_result, no_of_mtb_pos, no_of_treatment_initiated, username, week_no) " +
 										"select IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 1 then 1 else 0 end),0) ,  IFNULL(SUM(case when e.encounter_type = 2 then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 3 then 1 else 0 end),0),0, 0 ,'"+username+"', WEEKOFYEAR('"+weeks[x][2]+"') " +
 										"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa " +
 										"where e.encounter_datetime >= '"+weeks[x][1]+" %' and e.encounter_datetime <= '"+weeks[x][2]+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
-				
 				DatabaseUtil.getDbCon().execute (insertQuery);
 				
+				// Calculate nos: mtb positive cases and treatment initiated
 				String selectQuery = "select IFNULL(SUM(case when (o.value_coded = 71 and e.encounter_type = 3 and o.concept_id = 75) then 1 else 0 end),0) , IFNULL(SUM(case when (o.value_coded = 1 and e.encounter_type = 4 and o.concept_id = 99) then 1 else 0 end),0) " +
 									"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa, openmrs.obs o " +
 									"where e.encounter_datetime >= '"+weeks[x][1]+" %' and e.encounter_datetime <= '"+weeks[x][2]+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12 and e.encounter_id = o.encounter_id and (e.encounter_type = 3 or e.encounter_type = 4) and (o.concept_id = 99 or o.concept_id = 75);";
-		
 				String[][] data  = DatabaseUtil.getDbCon().executeQuery (selectQuery, null);
 				
+				// insert and update the numbers
 				String updateQuery = "Update openmrs_rpt.weekly_screener_summary" +
 									 " set no_of_mtb_pos = " + data[0][0] +
 									 " , no_of_treatment_initiated = " + data[0][1] +
 									 " where username = '"+username+"' and week_no = WEEKOFYEAR('"+weeks[x][2]+"')" ;
-				
 				DatabaseUtil.getDbCon().execute(updateQuery);
 			
 			}
 			
+			// Get all the weeks no
 			String getScreenerReportData = "select * from openmrs_rpt.weekly_screener_summary where username = '"+username+"' order by week_no asc;";
 			ResultSet resultSetData = DatabaseUtil.getDbCon().executeQueryResultSet(getScreenerReportData);
 			
@@ -122,11 +125,13 @@ public class WeeklyReport {
 				// Make Jasper Report
 				JRResultSetDataSource resultSource = new JRResultSetDataSource (resultSetData);	
 				
+				// get Screener info
 				String getScreenerNameQuery = "SELECT pn.given_name, pn.family_name FROM openmrs.users u, openmrs.person_name pn where username = '"+username+"' and u.person_id = pn.person_id;";
 				String[][] data1  = DatabaseUtil.getDbCon().executeQuery (getScreenerNameQuery, null);
 				
 				String[][] dataArray =  DatabaseUtil.getDbCon().executeQuery (getScreenerReportData, null);
 				
+				// Get data for parameters
 				int firstQuraterTotalSputumResult = 0;
 				int firstQuratertotalMtbPositive = 0;
 				int firstQuratertotalTreatmentInitiated = 0;
@@ -143,6 +148,7 @@ public class WeeklyReport {
 				int fourthQuratertotalMtbPositive = 0;
 				int fourthQuratertotalTreatmentInitiated = 0;
 				
+				// calculations for all quaters
 				for(int o=0; o<dataArray.length; o++){
 					
 					int week = Integer.parseInt(dataArray[o][7]);
@@ -179,6 +185,7 @@ public class WeeklyReport {
 				double percentage = 0.0;
 				DecimalFormat df = new DecimalFormat("#.##");
 				
+				// Get data in HashMap
 				Map hashMap = new HashMap();    
 				hashMap.put("screener_name", data1[0][0]+" "+data1[0][1]);
 				
@@ -246,9 +253,10 @@ public class WeeklyReport {
 				else
 					hashMap.put("fourth_q_treatment_per", "0.0 %");
 				
-				JasperReport jasperReport = JasperCompileManager.compileReport (workingdirectory+"\\WeeklySummary.jrxml");
+				// Pass Hashmap and result source to the jasper report 
+				JasperReport jasperReport = JasperCompileManager.compileReport (workingdirectory+"\\WeeklySummary.jrxml"); // fetch the report from the path
 				JasperPrint print = JasperFillManager.fillReport (jasperReport, hashMap, resultSource);
-				String dest = workingdirectory+"\\WeeklyReports\\"+username+".pdf"; 
+				String dest = workingdirectory+"\\WeeklyReports\\"+username+".pdf";  // destination path
 				
 				// Delete file if existing
 				try
@@ -263,7 +271,7 @@ public class WeeklyReport {
 				JRAbstractExporter exporter;
 				exporter = new JRPdfExporter ();
 				//exporter = new JRHtmlExporter ();
-				exporter.setParameter (JRExporterParameter.JASPER_PRINT, print);
+				exporter.setParameter (JRExporterParameter.JASPER_PRINT, print);            // print report on destination file
 				exporter.setParameter (JRExporterParameter.OUTPUT_FILE, new File (dest));
 				exporter.exportReport ();	
 				
@@ -274,15 +282,17 @@ public class WeeklyReport {
 		
 		}
 		
-		zipFileName = tomcatDirectory+"\\WeeklyReports-"+ today +".zip";
+		zipFileName = tomcatDirectory+"\\WeeklyReports-"+ today +".zip";  // Zip file destination  
 		
 		 try {
-			zipFolder(workingdirectory+"\\WeeklyReports", zipFileName);
+			zipFolder(workingdirectory+"\\WeeklyReports", zipFileName);  // zipping the folder
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		// Mailing the folder... 
+		 
 		/*// SMTP info
         String host = "smtp.gmail.com";
         String port = "587";

@@ -91,10 +91,10 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	public void initView (View[] views)
 	{
 		
-		Boolean status = serverService.renewLoginStatus();
+		Boolean status = serverService.renewLoginStatus(); // Check if it's first login of a day.
 		
-		if(!status){
-			if (App.isAutoLogin ())
+		if(!status){  // if not
+			if (App.isAutoLogin ())  // if app on auto login mode, bypass login page to Main Menu
 			{
 				serverService.setCurrentUser (App.get (username));
 				Intent intent = new Intent (this, MainMenuActivity.class);
@@ -181,7 +181,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	@Override
 	public boolean submit ()
 	{
-		// Check connection with server or offline mode
+		// Check connection with server
 		if (!serverService.checkInternetConnection () && !offline.isChecked ())
 		{
 			AlertDialog alertDialog = App.getAlertDialog (this, AlertType.ERROR, getResources ().getString (R.string.data_connection_error));
@@ -215,7 +215,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 							loading.show ();
 						}
 					});
-					if (offline.isChecked ())
+					if (offline.isChecked ()) // if offline mode match credentials with preferences
 					{
 						if (App.getUsername ().equalsIgnoreCase (App.get (username)) && App.getPassword ().equals (App.get (password)))
 						{
@@ -243,14 +243,15 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 				@Override
 				protected void onPostExecute (String result)
 				{
-					super.onPostExecute (result);
+					super.onPostExecute (result); // Sample result value "Success:Rabbia"
 					loading.dismiss ();
 					
 					String resultsPart[] = result.split(":");
 					
-					if (resultsPart[0].equals("SUCCESS"))
+					// first part show status of request
+					if (resultsPart[0].equals("SUCCESS"))  // if success 
 					{
-						serverService.setCurrentUser (App.get (username));
+						serverService.setCurrentUser (App.get (username));  // retrive username
 						
 						if(!App.isOfflineMode())
 							App.setScreenerName(resultsPart[1]);
@@ -278,12 +279,13 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						editor.putString (Preferences.SCREENER_NAME, App.getScreenerName());
 						editor.apply ();
 						
+						//open next activity
 						Intent intent = new Intent (LoginActivity.this, MainMenuActivity.class);
 						intent.putExtra("new_login", "yes");
 						startActivity (intent);
 						finish ();
 					}
-					else if(result.equals("FAIL"))
+					else if(result.equals("FAIL")) // if fails
 					{
 						/*App.setUsername ("");
 						App.setPassword ("");*/
@@ -295,7 +297,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
 					}
-					else if(result.equals("CONNECTION_ERROR"))
+					else if(result.equals("CONNECTION_ERROR")) 
 					{
 						/*App.setUsername ("");
 						App.setPassword ("");*/
@@ -357,91 +359,4 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	}
 	
 	
-	public void getScreenerLocationSetup(){
-		// Authenticate from server
-		AsyncTask<String, String, String> loadXmls = new AsyncTask<String, String, String> ()
-		{
-			@Override
-			protected String doInBackground (String... params)
-			{
-				runOnUiThread (new Runnable ()
-				{
-					@Override
-					public void run ()
-					{
-						loading.setIndeterminate (true);
-						loading.setCancelable (false);
-						loading.show ();
-					}
-				});
-					
-				publishProgress (getResources ().getString (R.string.fetching_locations));
-				screenerLocationSetup = serverService.fetchScreenersLocationSetting (App.getUsername());
-				
-				if(screenerLocationSetup == null)
-					   return "FAIL";		
-				  return "SUCCESS";
-			}
-
-			@Override
-			protected void onProgressUpdate (String... values)
-			{
-				loading.setMessage (values[0]);
-			};
-
-			@Override
-			protected void onPostExecute (String result)
-			{
-				super.onPostExecute (result);
-				loading.dismiss ();
-						
-				if(result.equals("SUCCESS")){
-					
-					if(screenerLocationSetup != null){
-						if(!screenerLocationSetup[0].equals("") && !screenerLocationSetup[1].equals(""))
-						{
-							App.setLocation(screenerLocationSetup[0]);
-							App.setFacility(screenerLocationSetup[0]);
-							App.setScreeningType(screenerLocationSetup[1]);
-							App.setScreeningStrategy("Community (General)");
-							
-							SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences (LoginActivity.this);
-							SharedPreferences.Editor editor = preferences.edit ();
-							editor.putString (Preferences.FACILITY, App.getFacility ());
-							editor.putString (Preferences.LOCATION, App.getLocation ());
-							editor.putString (Preferences.SCREENING_TYPE, App.getScreeningType());
-							editor.putString (Preferences.SCREENING_STRATEGY, App.getScreeningStrategy());
-							editor.apply ();
-							
-							/*String location = "";
-							
-							String screeningType = App.getScreeningType();
-							String facility = App.getFacility();
-							
-							facility = facility.substring(6);
-							if(screeningType.equalsIgnoreCase("Community")){
-								location = facility + " (Community)";
-	
-								screening.setVisibility(View.VISIBLE);
-								quickScreening.setVisibility(View.VISIBLE);
-							}
-							
-							else if (screeningType.equalsIgnoreCase("Facility")){
-								location = facility + " (Facility)";
-								quickScreening.setVisibility(View.GONE);
-							}
-							
-							locationTextView.setText (location);*/
-						}
-					}
-
-					/*if(!screenerLocationSetup[2].equals("") || !screenerLocationSetup[3].equals(""))
-						showFeedbackMessageAlert(screenerLocationSetup[2],screenerLocationSetup[3]);*/
-
-				}
-				
-			}
-		};
-		loadXmls.execute ("");
-	}
 }
