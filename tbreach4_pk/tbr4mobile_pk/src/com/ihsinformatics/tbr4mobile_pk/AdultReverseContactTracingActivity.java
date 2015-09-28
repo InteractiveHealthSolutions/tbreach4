@@ -76,6 +76,9 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		MyTextView 		contactTracingStrategyTextView;
 		MySpinner 		contactTracingStrategy;
 		
+		MyTextView		visitTypeTextView;
+		MySpinner		visitType;
+		
 		MyTextView		screenedBeforeTextView;
 		MySpinner		screenedBefore;
 		
@@ -230,6 +233,9 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		contactTracingStrategyTextView = new MyTextView(context, R.style.text, R.string.contact_tracing_strategy);
 		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
 		
+		visitTypeTextView = new MyTextView(context, R.style.text, R.string.visit_type);
+		visitType = new MySpinner(context, getResources().getStringArray(R.array.visit_type_options), R.string.visit_type, R.string.option_hint);
+		
 		screenedBeforeTextView = new MyTextView(context, R.style.text, R.string.screened_before);
 		screenedBefore = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.screened_before, R.string.option_hint);
 		
@@ -294,7 +300,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_barcode, R.string.scan_barcode);
 		validatePatientId = new MyButton(context, R.style.button, R.drawable.custom_button_beige, R.string.validateID, R.string.validateID);
 	
-		View[][] viewGroups = { {formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
+		View[][] viewGroups = { {formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, visitTypeTextView, visitType, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
 								{genderTextView, gender,ageTextView, age}, 
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId,  indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis},
 								{coughTextView, cough, coughDurationTextView, coughDuration, productiveCoughTextView, productiveCough, feverTextView, fever},
@@ -330,7 +336,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
 				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, contactTracingStrategy, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, lymphNodeSwelling, jointSpineSwelling, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, lymphNodeSwelling, jointSpineSwelling, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -761,6 +767,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
 			observations.add(new String[] {"Contact Tracing Strategy",App.get(contactTracingStrategy)});
+			observations.add(new String[] {"Visit Type", App.get(visitType)});
 			observations.add(new String[] {"Screened Before", App.get(screenedBefore)});
 			
 			observations.add(new String[] {"Index Case ID", App.get(indexCaseId)});

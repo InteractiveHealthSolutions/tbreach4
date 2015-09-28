@@ -47,6 +47,7 @@ Contributors: Tahira Niazi -->
     <string name="goto_first">&lt;&lt;</string>
     <string name="goto_last">>></string>
     <string name="empty_string"></string>
+    <string name="visit_type">Type of Visit?</string>
     <string name="screened_before">Were you screened in the last 2 weeks at any of the facilities?</string>
     <string name="validateID">Validate Index Case ID</string>
     
@@ -101,5 +102,11 @@ Contributors: Tahira Niazi -->
         <item>Suggestion</item>
         <item>Other</item>
     </string-array>
+    
+    <string-array name="visit_type_options">
+        <item >Clinical Visit</item>
+        <item >Home Visit</item>
+    </string-array>
+    
         <string name="offline">Work Offline</string>
 </resources>

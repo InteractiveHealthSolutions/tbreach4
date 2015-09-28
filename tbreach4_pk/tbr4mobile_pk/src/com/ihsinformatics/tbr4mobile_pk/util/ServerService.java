@@ -1393,7 +1393,6 @@ public class ServerService
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
 		
-		
 		try
 		{
 			String id = getPatientId(patientId);

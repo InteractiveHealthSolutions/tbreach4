@@ -81,6 +81,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	Button							bloodSugarResults;
 	Button							clinicalEvaluation;
 	Button							drugDispersal;
+	Button							clinicalVisitBarriers;
 	Button							feedback;
 	Button							patientGps;
 	Button							hctRecordCard;
@@ -121,6 +122,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		//bloodSugarResults = (Button) findViewById (R.main_id.bloodSugarResultButton);
 		//clinicalEvaluation = (Button) findViewById (R.main_id.clinicalEvaluationButton);
 		//drugDispersal = (Button) findViewById (R.main_id.drugDispersalButton);
+		clinicalVisitBarriers = (Button) findViewById(R.main_id.clinicalVisitBarriersButton);
 		feedback = (Button) findViewById (R.main_id.feedbackButton);
 		//patientGps = (Button) findViewById (R.main_id.patientGpsButton);
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
@@ -137,7 +139,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			//patientGps.setEnabled (false);
 			patientRegistration.setEnabled(false);
 		}
-		views = new View[] {locationTextView, selectLocations, paediatricScreening, adultScreening, patientRegistration, reverseContactTracing, paediatricContactTracing, adultReverseContactTracing, feedback /* tbScreening, screening, nonPulmonarySuspect, customerInfoButton, testIndication, bloodSugarTest, bloodSugarResults,
+		views = new View[] {locationTextView, selectLocations, paediatricScreening, adultScreening, patientRegistration, reverseContactTracing, paediatricContactTracing, adultReverseContactTracing, clinicalVisitBarriers, feedback /* tbScreening, screening, nonPulmonarySuspect, customerInfoButton, testIndication, bloodSugarTest, bloodSugarResults,
 				clinicalEvaluation, drugDispersal, patientGps, hctRecordCard,  */};
 		for (View v : views)
 		{
@@ -515,6 +517,11 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			case R.main_id.adultScreeningButton:
 				Intent adultScreeningIntent = new Intent(this, AdultScreeningActivity.class);
 				startActivity(adultScreeningIntent);
+				break;
+				
+			case R.main_id.clinicalVisitBarriersButton:
+				Intent clinicalVisitBarriersIntent = new Intent (this, ClinicalVisitBarriersActivity.class);
+				startActivity (clinicalVisitBarriersIntent);
 				break;
 			
 			case R.main_id.feedbackButton :

@@ -192,6 +192,15 @@
                 android:tag="@string/adult_reverse_contact_tracing"
                 android:text="@string/adult_reverse_contact_tracing" />
             
+            <Button
+                android:id="@+main_id/clinicalVisitBarriersButton"
+                style="@style/button"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:drawableTop="@drawable/menu_non_pulmonary_suspect"
+                android:tag="@string/clinical_visit_barriers"
+                android:text="@string/clinical_visit_barriers" />
+            
               <Button
                 android:id="@+main_id/feedbackButton"
                 style="@style/button"

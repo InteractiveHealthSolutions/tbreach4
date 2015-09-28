@@ -314,7 +314,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 		positiveReport = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.positive_report, R.string.option_hint);
 		
 		lymphNodeSwellingTextView = new MyTextView(context, R.style.text, R.string.lymph_node_swelling);
-		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options_with_poor), R.string.lymph_node_swelling, R.string.option_hint);
+		lymphNodeSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.lymph_node_swelling, R.string.option_hint);
 		
 		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
 		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
