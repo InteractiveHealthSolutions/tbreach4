@@ -63,7 +63,7 @@ public class ServerService
 	{
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl () ? "s" : "") + "://";
-		tbr3Uri = prefix + App.getServer () + "/tbreach4web_sa";
+		tbr3Uri = prefix + App.getServer () + "/tbreach4webSA";
 		httpClient = new HttpRequest (this.context);
 		httpsClient = new HttpsClient (this.context);
 		dbUtil = new DatabaseUtil (this.context);

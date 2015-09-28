@@ -400,6 +400,7 @@ public class MobileService
 				return json;
 			}
 			
+			//"+username+"
 			JSONObject locationObj = new JSONObject ();
 			locationObj.put ("result", "SUCCESS");
 			

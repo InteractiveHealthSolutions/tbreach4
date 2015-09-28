@@ -88,6 +88,7 @@ public class ScreeningReportActivity extends AbstractFragmentActivity
 	MyTextView			numberOfSputumSubmittedTextView;
 	MyTextView			ListOfScreenedTextView;
 	
+	LinearLayout		screeningStatsLinearLayout;
 	LinearLayout		screeningInfoLinearLayout;
 	
 	Context				mContext;
@@ -189,69 +190,77 @@ public class ScreeningReportActivity extends AbstractFragmentActivity
 		formDateButton.setTextSize(17);
 		
 		fetchScreeningButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.fetch_screening_info, R.string.fetch_screening_info);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params.setMargins(0, 10, 0, 0);
-		params.gravity = Gravity.CENTER;
-		fetchScreeningButton.setLayoutParams(params);
+		LinearLayout.LayoutParams paramsCenter = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		paramsCenter.setMargins(0, 10, 0, 0);
+		paramsCenter.gravity = Gravity.CENTER;
+		fetchScreeningButton.setLayoutParams(paramsCenter);
 		fetchScreeningButton.setTextSize(17);
-		
-
+	
 		screenerNameTextView = new MyTextView (context, R.style.text, R.string.screener_name);
-		LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		param1.setMargins(0, 20, 0, 0);
-		param1.gravity = Gravity.CENTER;
-		screenerNameTextView.setLayoutParams(param1);
+		LinearLayout.LayoutParams paramCenter1 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		paramCenter1.setMargins(0, 20, 0, 0);
+		paramCenter1.gravity = Gravity.CENTER;
+		screenerNameTextView.setLayoutParams(paramCenter1);
 		screenerNameTextView.setTextSize(17);
+		
 		locationTextView = new MyTextView (context, R.style.text, R.string.screener_location);
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		param.gravity = Gravity.CENTER;
 		locationTextView.setLayoutParams(param);
 		locationTextView.setTextSize(17);
 		
+		LinearLayout.LayoutParams paramLeft2 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		paramLeft2.setMargins(0, 20, 0, 0);
+		paramLeft2.gravity = Gravity.LEFT;
+		
 		screeningStatsTextView= new MyTextView (context, R.style.text, R.string.screening_stats);
-		screeningStatsTextView.setLayoutParams(param1);
+		screeningStatsTextView.setLayoutParams(paramLeft2);
 		screeningStatsTextView.setTextSize(17);
 		
+		LinearLayout.LayoutParams paramsLeft = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		paramsLeft.setMargins(0, 10, 0, 0);
+		paramsLeft.gravity = Gravity.LEFT;
 		totalScreenedTextView= new MyTextView (context, R.style.text, R.string.screening_stats);
-		totalScreenedTextView.setLayoutParams(params);
+		totalScreenedTextView.setLayoutParams(paramsLeft);
 		totalScreenedTextView.setTextSize(17);
 		
+		LinearLayout.LayoutParams paramsLeft1 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		paramsLeft1.gravity = Gravity.LEFT;
+		
 		numberOfSuspectTextView= new MyTextView (context, R.style.text, R.string.suspects_no);
-		params = new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params.gravity = Gravity.CENTER;
-		numberOfSuspectTextView.setLayoutParams(params);
+		numberOfSuspectTextView.setLayoutParams(paramsLeft1);
 		numberOfSuspectTextView.setTextSize(17);
 		
 		numberOfNonSuspectTextView= new MyTextView (context, R.style.text, R.string.nonsuspects_no);
-		numberOfNonSuspectTextView.setLayoutParams(params);
+		numberOfNonSuspectTextView.setLayoutParams(paramsLeft1);
 		numberOfNonSuspectTextView.setTextSize(17);
 		
 		numberOfSputumSubmittedTextView= new MyTextView (context, R.style.text, R.string.sputum_submitted_no);
-		numberOfSputumSubmittedTextView.setLayoutParams(params);
+		numberOfSputumSubmittedTextView.setLayoutParams(paramsLeft1);
 		numberOfSputumSubmittedTextView.setTextSize(17);
 		
 		ListOfScreenedTextView= new MyTextView (context, R.style.text, R.string.screening_list);
-		params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		params.setMargins(0, 10, 0, 0);
-		ListOfScreenedTextView.setLayoutParams(params);
+		paramsLeft1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		paramsLeft1.setMargins(0, 10, 0, 0);
+		ListOfScreenedTextView.setLayoutParams(paramsLeft1);
 		ListOfScreenedTextView.setTextSize(17);
 		ListOfScreenedTextView.setTextColor(getResources().getColor(R.color.IRDTitle));
 				
 		
 		screeningInfoLinearLayout = new LinearLayout(context);
-		params = new LinearLayout.LayoutParams(
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params.setMargins(0, 10, 0, 0);
 		params.gravity = Gravity.CENTER;
 		screeningInfoLinearLayout.setLayoutParams(params);
 		screeningInfoLinearLayout.setOrientation(LinearLayout.VERTICAL);
 		
+		
 		clearButton.setVisibility(View.GONE);
 		
 		View[][] viewGroups = { 
 				    
-				    {screeningDateTextView, formDateButton, fetchScreeningButton, screenerNameTextView, locationTextView, screeningStatsTextView, totalScreenedTextView, numberOfSuspectTextView, numberOfNonSuspectTextView, numberOfSputumSubmittedTextView,},
+				    {screeningDateTextView, formDateButton, fetchScreeningButton, screenerNameTextView, locationTextView, /*screeningStatsLinearLayout*/screeningStatsTextView, totalScreenedTextView, numberOfSuspectTextView, numberOfNonSuspectTextView, numberOfSputumSubmittedTextView,},
 				    {ListOfScreenedTextView, screeningInfoLinearLayout},
 					
 		};
@@ -468,7 +477,26 @@ public class ScreeningReportActivity extends AbstractFragmentActivity
 								for(int i = 0; i<total; i++){
 									
 									final MyTextView tv1 = new MyTextView(mContext);
-									tv1.setText(results.get(j).toString());
+									int count = i + 1;
+									
+									String s = String.valueOf(count);
+									
+									if(total < 90){
+									
+										if(count < 10)
+											s = "0"+s;
+									}
+									else{
+										
+										if(count < 10)
+											s = "00"+s;
+										else if (count < 100)
+											s = "0"+s;
+										
+									}
+									
+									String text = "<font color=#f58220> " +  s  +". </font>"+ results.get(j).toString();
+									tv1.setText(Html.fromHtml(text));
 									j++;
 									screeningInfoLinearLayout.addView(tv1);
 									
