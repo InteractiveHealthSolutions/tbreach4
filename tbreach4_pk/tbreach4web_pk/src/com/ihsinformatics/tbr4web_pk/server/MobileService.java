@@ -88,11 +88,11 @@ public class MobileService
 
 	// OpenMRS-related
 	
-	//static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	static final String				propFilePath	= "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	//static final String propFilePath = "c:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
 	
 	//static final String				propFilePath	= "C:\\workspace\\tbreach3web\\openmrs-runtime.properties";
-	static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+//	static final String				propFilePath	= "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 	private static File				propsFile;
 	private static Properties		props;
 	private static Properties		tbreachProps;
@@ -272,11 +272,12 @@ public class MobileService
 			// change from Reverse Contact tracing to Contact Tracing  
 			else if(formType.equals(FormType.REVERSE_CONTACT_TRACING))
 				response = doReverseContactTracing(formType, jsonObject);
-			
 			else if(formType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
 				response = doAdultReverseContactTracing(formType, jsonObject);
 			else if(formType.equals(FormType.PAEDIATRIC_CONTACT_TRACING))
 				response = doPaeditricContactTracing(formType, jsonObject);
+			else if(formType.equals(FormType.CLINICAL_VISIT_BARRIERS))
+				response = doClinicalVisitBarriers(formType, jsonObject);
 			else
 				throw new Exception ();
 		}
@@ -1481,8 +1482,7 @@ public class MobileService
 			}
 		}
 		return json.toString ();
-	}
-	
+	}	
 	
 	private String doPaeditricContactTracing(String formType, JSONObject values)
 	{
@@ -1844,7 +1844,129 @@ public class MobileService
 		return json.toString ();
 	}
 	
+	private String doClinicalVisitBarriers(String formType, JSONObject values)
+	{
+		JSONObject json = new JSONObject();
+		String error = "";
+		try
+		{
+			String patientId = values.getString("patient_id");
+			String location = values.getString ("location").toString ();
+			String username = values.getString ("username").toString ();
+			String encounterType = values.getString ("encounter_type");
+			String formDate = values.getString ("form_date");
+			Date encounterDatetime = DateTimeUtil.getDateFromString (formDate, DateTimeUtil.SQL_DATE);
+			String encounterLocation = values.getString ("encounter_location");
+			String provider = values.getString ("provider");
+			JSONArray obs = new JSONArray (values.getString ("obs"));
+			
+			// Get Creator
+			User creatorObj = Context.getUserService ().getUserByUsername (username);
+			// Get Location
+			Location locationObj = Context.getLocationService ().getLocation (location);
+			// Get Encounter type
+			EncounterType encounterTypeObj = Context.getEncounterService ().getEncounterType (encounterType);
+			// Get Patient object
+			List<Patient> patients = Context.getPatientService ().getPatients (patientId);
+			if (patients.isEmpty ())
+				throw new Exception ();
+			Patient patient = Context.getPatientService ().getPatients (patientId).get (0);
+			// Get Person object
+			Person person = Context.getPersonService ().getPerson (patient.getPersonId ());
+			
+			Encounter encounter = new Encounter ();
+			encounter.setEncounterType (encounterTypeObj);
+			encounter.setPatient (patient);
+			// In case of Encounter location different than login location
+			if (!encounterLocation.equalsIgnoreCase (location))
+			{
+				locationObj = Context.getLocationService ().getLocation (encounterLocation);
+			}
+			encounter.setLocation (locationObj);
+			encounter.setEncounterDatetime (encounterDatetime);
+			encounter.setCreator (creatorObj);
+			encounter.setDateCreated (new Date ());
+			// Create Observations set
+			{
+				for (int i = 0; i < obs.length (); i++)
+				{
+					Obs ob = new Obs ();
+					// Create Person object
+					{
+						Person personObj = Context.getPersonService ().getPerson (patient.getPatientId ());
+						ob.setPerson (personObj);
+					}
+					// Create question/answer Concept object
+					{
+						JSONObject pair = obs.getJSONObject (i);
+						Concept concept = Context.getConceptService ().getConcept (pair.getString ("concept"));
+						ob.setConcept (concept);
+						String hl7Abbreviation = concept.getDatatype ().getHl7Abbreviation ();
+						if (hl7Abbreviation.equals ("NM"))
+						{
+							ob.setValueNumeric (Double.parseDouble (pair.getString ("value")));
+						}
+						else if (hl7Abbreviation.equals ("CWE"))
+						{
+							Concept valueObj = Context.getConceptService ().getConcept (pair.getString ("value"));
+							ob.setValueCoded (valueObj);
+						}
+						else if (hl7Abbreviation.equals ("ST"))
+						{
+							ob.setValueText (pair.getString ("value"));
+						}
+						else if (hl7Abbreviation.equals ("DT"))
+						{
+							ob.setValueDate (DateTimeUtil.getDateFromString (pair.getString ("value"), DateTimeUtil.SQL_DATE));
+						}
+					}
+					ob.setObsDatetime (encounterDatetime);
+					ob.setLocation (locationObj);
+					ob.setCreator (creatorObj);
+					ob.setDateCreated (new Date ());
+					encounter.addObs (ob);
+				}
+				if (creatorObj.getUsername ().equals (provider))
+					encounter.setProvider (creatorObj);
+			}
+			Context.getEncounterService ().saveEncounter (encounter);
+			json.put ("result", "SUCCESS");
+			
+		}
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.INVALID_DATA_ERROR); 
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+			error += CustomMessage.getErrorMessage(ErrorType.PARSING_ERROR); 
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace ();
+			error = "PatientID: " + CustomMessage.getErrorMessage (ErrorType.ITEM_NOT_FOUND);
+		}
 
+		finally
+		{
+			try
+			{
+				if (!json.has ("result"))
+				{
+					json.put ("result", "FAIL. " + error);
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace ();
+			}
+		}
+		return json.toString ();
+	}
+	
+	
 	/**
 	 * Save Client's Contact and Address information. Also creates and Encounter
 	 * without Observations

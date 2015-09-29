@@ -42,7 +42,8 @@ public class FormType
 	public static final String  HCT_RECORD_CARD					= "HCT Record Card";
 	public static final String	ADULT_SCREENING					= "Adult Screening";
 	public static final String  PATIENT_REGISTRATION 			= "Patient Registration";
-	public static final String  REVERSE_CONTACT_TRACING 		= "Reverse Contact Tracing"; // it is in actual Contact Tracing, it was changed later to incorporate both strategies
+	public static final String  REVERSE_CONTACT_TRACING 		= "Reverse Contact Tracing"; // in actual, it is Contact Tracing, it was changed later to incorporate both strategies
 	public static final String  ADULT_REVERSE_CONTACT_TRACING 	= "Adult Reverse Contact Tracing";
 	public static final String 	PAEDIATRIC_CONTACT_TRACING 		= "Paediatric Contact Tracing";
+	public static final String	CLINICAL_VISIT_BARRIERS			= "Clinical Visit Barriers";
 }

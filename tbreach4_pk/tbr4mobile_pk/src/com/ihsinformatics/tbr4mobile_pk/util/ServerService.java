@@ -1627,6 +1627,91 @@ public class ServerService
 	}
 	
 	
+	public String saveClinicalVisitBarriers(String encounterType, ContentValues values, String[][] observations)
+	{
+		String response = "";
+		
+		// Demographics
+//		String givenName = TextUtil.capitalizeFirstLetter(values.getAsString("firstName"));
+//		String familyName = TextUtil.capitalizeFirstLetter(values.getAsString("lastName"));
+		
+//		String gender = values.getAsString("gender");
+		String patientId = values.getAsString("patientId"); 
+		String location = values.getAsString("location");
+		String formDate = values.getAsString("formDate");
+		
+		try
+		{
+			String id = getPatientId(patientId);
+			if (id != null)
+				return context.getResources().getString(R.string.duplication);
+			
+			JSONObject json = new JSONObject();
+			
+//			if(encounterType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
+//			{
+//				int age = values.getAsInteger("age");
+//				json.put("age", age);
+//			}
+				
+			json.put("app_ver", App.getVersion());
+			json.put("form_name", encounterType);
+			json.put("username", App.getUsername());
+			json.put("patient_id", patientId);
+			json.put("location", location);
+			
+			JSONArray obs = new JSONArray();
+			for (int i = 0; i < observations.length; i++)
+			{
+				if ("".equals(observations[i][0])
+						|| "".equals(observations[i][1]))
+					continue;
+				JSONObject obsJson = new JSONObject();
+				obsJson.put("concept", observations[i][0]);
+				obsJson.put("value", observations[i][1]);
+				obs.put(obsJson);
+			}
+			
+			json.put("encounter_type", encounterType);
+			json.put("form_date", formDate);
+			json.put("encounter_location", location);
+			json.put("provider", App.getUsername());
+			json.put("obs", obs.toString());
+				
+				// Save form locally if in offline mode
+//				if (App.isOfflineMode())
+//				{
+//					saveOfflineForm(encounterType, json.toString());
+//					return "SUCCESS";
+//				}
+				
+			response = post("?content=" + JsonUtil.getEncodedJson(json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
+			
+			if(jsonResponse == null)
+			{
+				return response;
+			}
+			else if (jsonResponse.has("result"))
+			{
+				String result = jsonResponse.getString("result");
+				return result;
+			}
+			
+			return response;
+		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+			response = context.getResources().getString(R.string.invalid_data);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG, e.getMessage());
+			response = context.getResources().getString(R.string.unknown_error);
+		}
+		return response;
+	}
 	
 	public String saveHctInfo(String encounterType, ContentValues values, String[][] observations)
 	{

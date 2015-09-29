@@ -200,7 +200,7 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
 
 		typeOfVisitTextView = new MyTextView(context, R.style.text, R.string.visit_type);
-		typeOfVisit = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.visit_type, R.string.option_hint);
+		typeOfVisit = new MySpinner(context, getResources().getStringArray(R.array.visit_type_options), R.string.visit_type, R.string.option_hint);
 		
 		indexCaseIdTextView = new MyTextView(context, R.style.text,
 				R.string.index_case_id);
@@ -231,8 +231,8 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 		others = new MyEditText(context, R.string.others, R.string.others_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 100, false);
 
 		
-		View[][] viewGroups = { { formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, typeOfVisitTextView, typeOfVisit, indexCaseIdTextView, indexCaseId, scanBarcode, validateIndexCaseId}, 
-				{ indexDistrictTbNumberTextView, indexDistrictTbNumber, familyScreeningTextView, familyScreening, unableToBringFamilyTextView, unableToBringFamily, othersTextView, others} };
+		View[][] viewGroups = { { formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, typeOfVisitTextView, typeOfVisit, indexCaseIdTextView, indexCaseId, scanBarcode, validateIndexCaseId, indexDistrictTbNumberTextView, indexDistrictTbNumber}, 
+				{ familyScreeningTextView, familyScreening, unableToBringFamilyTextView, unableToBringFamily, othersTextView, others} };
 
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup>();
@@ -458,7 +458,7 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 		boolean valid = true;
 		StringBuffer message = new StringBuffer();
 		// Validate mandatory controls
-		View[] mandatory = { indexCaseId };
+		View[] mandatory = { indexCaseId, indexDistrictTbNumber };
 		for (View v : mandatory)
 		{
 			if (App.get(v).equals(""))
@@ -529,7 +529,7 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
 			observations.add(new String[] {"Contact Tracing Strategy",App.get(contactTracingStrategy)});
-			observations.add(new String[] {"", App.get(typeOfVisit)});
+			observations.add(new String[] {"Visit Type", App.get(typeOfVisit)});
 			
 			observations.add(new String[] { "Index Case District TB Number", App.get(indexDistrictTbNumber) });
 //			observations.add(new String[] { "Index Case Diagnosis",	App.get(diagnosis) });
@@ -537,7 +537,7 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 			observations.add(new String[] {"Family Screening", App.get(familyScreening)});
 			observations.add(new String[] {"Family Unavailability for Screening", App.get(unableToBringFamily)});
 			
-			if(unableToBringFamily.getSelectedItem().toString().equals("Others"))
+			if(unableToBringFamily.getSelectedItem().toString().equals("Other Reason"))
 			{
 				observations.add(new String[] {"Other Reason", App.get(others)});
 			}
@@ -563,7 +563,7 @@ public class ClinicalVisitBarriersActivity extends AbstractFragmentActivity
 
 					String result = "";
 					result = serverService.saveReverseContact(
-							FormType.REVERSE_CONTACT_TRACING, values,
+							FormType.CLINICAL_VISIT_BARRIERS, values,
 							observations.toArray(new String[][] {}));
 
 					return result;
