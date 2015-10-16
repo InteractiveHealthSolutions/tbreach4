@@ -15,7 +15,6 @@ Interactive Health Solutions, hereby disclaims all copyright interest in this pr
 package com.ihsinformatics.tbr4mobile;
 
 
-
 import com.ihsinformatics.tbr4mobile.shared.AlertType;
 import com.ihsinformatics.tbr4mobile.util.ServerService;
 
@@ -64,6 +63,8 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 	String							tempPassword;
 	
 	String 							screenerLocationSetup[] = null;
+	
+	int loginAttempts;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState)
@@ -103,6 +104,7 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 			}
 		}
 		username.setText (App.getUsername ());
+		loginAttempts = 0;
 	}
 
 	@Override
@@ -221,6 +223,16 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						{
 							return "SUCCESS";
 						}
+						
+						loginAttempts++;
+						
+						if(loginAttempts == 3){
+							
+							tempUsername = "";
+							tempPassword = "";
+							
+						}
+						
 						return "FAIL";
 					}
 					

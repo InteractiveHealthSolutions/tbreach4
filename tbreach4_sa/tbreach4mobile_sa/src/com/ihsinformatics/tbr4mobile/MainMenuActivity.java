@@ -39,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -46,6 +47,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -667,6 +669,44 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	 */
 
 	public void showFeedbackMessageAlert(String messageYestarday){
+		
+		/*
+		// Create custom dialog object
+        final Dialog dialog = new Dialog(MainMenuActivity.this);
+        // Include dialog.xml file
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        dialog.setContentView(R.layout.dialog);
+            
+        // set values for custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.textDialog);
+        
+        String message[] = messageYestarday.split(":;:");
+        String feedback = "";
+        for(int i = 0; i<message.length; i++){
+
+			if(!message[i].equals(""))
+				feedback = feedback + message[i] + "\n\n";
+
+		}
+        text.setText(feedback);
+        
+        ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
+        image.setImageResource(R.drawable.exclamation);
+
+        dialog.show();
+         
+        Button declineButton = (Button) dialog.findViewById(R.id.declineButton);
+        // if decline button is clicked, close the custom dialog
+        declineButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Close dialog
+                dialog.dismiss();
+            }
+        });*/
+		
+		
 		AlertDialog feedbackMessagesDialog = new AlertDialog.Builder (this).create ();
 		feedbackMessagesDialog.setTitle(getResources().getString(R.string.feedback));
 
