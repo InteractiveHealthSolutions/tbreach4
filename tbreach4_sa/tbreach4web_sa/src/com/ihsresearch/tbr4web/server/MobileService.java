@@ -359,7 +359,9 @@ public class MobileService
 		    String[][] data = executeQuery (selectQuery, null);
 		    
 		    if(data.length != 0){
-			    locationObj.put("message", data[0][2]);
+			    locationObj.put("percentage", data[0][6]);
+			    locationObj.put("total_screened", data[0][4]);
+			    locationObj.put("sputum_submitted", data[0][5]);
 			    
 			    String updateQuery = "Update openmrs_rpt.daily_feedback_message" +
 		 				" set sent = '1' " +

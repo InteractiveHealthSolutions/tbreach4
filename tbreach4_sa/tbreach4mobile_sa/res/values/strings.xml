@@ -20,6 +20,7 @@
     <string name="unknown">Unknown</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="close">x Close</string>
     <string name="clear">Clear</string>
     <string name="exit">Exit</string>
     <string name="passcode">Short Password</string>

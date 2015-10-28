@@ -14,9 +14,9 @@ public final class DatabaseUtil {
         String dbName = "openmrs_rpt";
         String driver = "com.mysql.jdbc.Driver";
         //String userName = "root";
-       String userName = "";
+       String userName = "root";
        // String password = "root";
-        String password = "";
+        String password = "root";
         try {
             Class.forName(driver).newInstance();
             this.conn = (Connection)DriverManager.getConnection(url+dbName,userName,password);

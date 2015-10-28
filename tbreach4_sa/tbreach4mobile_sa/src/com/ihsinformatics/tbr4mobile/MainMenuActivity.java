@@ -26,26 +26,33 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -650,9 +657,41 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 					}
 
 					// Display the feedback if any
-					if(!screenerLocationSetup[2].equals("") )
-						showFeedbackMessageAlert(screenerLocationSetup[2]);
-
+					if(!screenerLocationSetup[2].equals("") ){
+						
+						int screenedToday = Integer.parseInt(screenerLocationSetup[3]);
+						int sputumSubmittedToday = Integer.parseInt(screenerLocationSetup[4]);
+						int percentage = Integer.parseInt(screenerLocationSetup[2]);
+				        
+				        String message = "";
+						int count = 0;
+				        
+						// Messages...
+						if(percentage >= 80){
+							message = "\n" + "Great job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)\n";
+							count++;
+						}else if (percentage <= 50)
+							message =  "\n" + "Eish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.\n";
+						
+						if(screenedToday > 50){
+							message = message + "\n" + "Well done! You screened over 50 people yesterday!\n";
+							count++;
+						}else if (screenedToday < 20)
+							message = message + "\n" + "You need to screen more. You screened fewer than 20 people yesterday.\n";
+						
+						if(sputumSubmittedToday > 10){
+							message = message + "\n" + "Awesome! You collected more than 10 sputum samples yesterday! :-)\n";
+							count++;
+						}else if (sputumSubmittedToday < 4)
+							message = message + "\n" + "Try harder- you collected fewer than 4 sputum samples yesterday.\n";
+						
+						if(!message.equals("")){
+							if(count < 2)
+								showFeedbackMessageAlert(message, false);
+							else
+								showFeedbackMessageAlert(message, true);
+						}
+					}
 				}
 				
 			}
@@ -663,74 +702,47 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	
 	/**
 	 * 
-	 * Splits the message by separator :;: and displays them in alert dialog
+	 * Displays message in alert dialog
 	 * 
 	 * @param messageYestarday
 	 */
 
-	public void showFeedbackMessageAlert(String messageYestarday){
-		
-		/*
+	public void showFeedbackMessageAlert(String message, Boolean status){
+			
 		// Create custom dialog object
         final Dialog dialog = new Dialog(MainMenuActivity.this);
+        
         // Include dialog.xml file
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         dialog.setContentView(R.layout.dialog);
-            
-        // set values for custom dialog components - text, image and button
-        TextView text = (TextView) dialog.findViewById(R.id.textDialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));    
+        dialog.show(); 
         
-        String message[] = messageYestarday.split(":;:");
-        String feedback = "";
-        for(int i = 0; i<message.length; i++){
-
-			if(!message[i].equals(""))
-				feedback = feedback + message[i] + "\n\n";
-
-		}
-        text.setText(feedback);
-        
-        ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
-        image.setImageResource(R.drawable.exclamation);
-
-        dialog.show();
-         
-        Button declineButton = (Button) dialog.findViewById(R.id.declineButton);
-        // if decline button is clicked, close the custom dialog
-        declineButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close dialog
-                dialog.dismiss();
-            }
-        });*/
+     // set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.textView);
+		text.setText(message);
 		
-		
-		AlertDialog feedbackMessagesDialog = new AlertDialog.Builder (this).create ();
-		feedbackMessagesDialog.setTitle(getResources().getString(R.string.feedback));
-
-		String message[] = messageYestarday.split(":;:");
-
-		String feedback = "";
-
-		for(int i = 0; i<message.length; i++){
-
-			if(!message[i].equals(""))
-				feedback = feedback + message[i] + "\n\n";
-
-		}
-
-		feedbackMessagesDialog.setMessage(feedback);
-
-		feedbackMessagesDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new AlertDialog.OnClickListener() {
+		TextView close = (TextView) dialog.findViewById(R.id.close);
+		close.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(DialogInterface dialog, int which)   // no...
-			{
+			public void onClick(View v) {
+				dialog.dismiss();
 			}
 		});
-		feedbackMessagesDialog.show();
+		
+		final Animation animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
+	    animation.setDuration(500); // duration - half a second
+	    animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+	    animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+	    animation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+	    ImageView image = (ImageView) dialog.findViewById(R.id.imageView);
+	    image.startAnimation(animation);
 
+	    if(status)
+	    	image.setVisibility(View.VISIBLE);
+	    else
+	    	image.setVisibility(View.GONE);
 
 	}
 }

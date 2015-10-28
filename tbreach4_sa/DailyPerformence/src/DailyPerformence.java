@@ -34,7 +34,7 @@ public class DailyPerformence {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);
 		//String dateTo = dateFormat.format(cal.getTime());
-		String dateTo = "2015-09-07";
+		String dateTo = "2015-04-07";
 		
 		//Check for Weekend
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -53,11 +53,11 @@ public class DailyPerformence {
 		
 		// Keep backup
 		String query = "insert into openmrs_rpt.daily_feedback_message_backup (screener_id, date, message, total_screened, total_sputum_collected, total_suspect, percentage, sent) "+
-		                             "Select screener_id, date, message, total_screened, total_sputum_collected, total_suspect, percentage, sent from openmrs_rpt.daily_feedback_message";
+		                             "Select screener_id, date, message, total_screened, total_sputum_collected, total_suspect, percentage, sent from openmrs_rpt.daily_feedback_message where sent = 1";
 		DatabaseUtil.getDbCon().execute (query);
 		
 		//truncate table
-		String truncateQuery = "truncate table openmrs_rpt.daily_feedback_message";
+		String truncateQuery = "delete from openmrs_rpt.daily_feedback_message where sent = 1";
 		DatabaseUtil.getDbCon().execute (truncateQuery);
 		
 		//Get all screeners
@@ -68,55 +68,60 @@ public class DailyPerformence {
 		for(int count = 0;count<users.length; count ++) {
 			
 			String username = users[count][0]; 
-			//String username = "01006";
 			
-			// get today's screening and sputums submitted numbers
-			String selectQuery2 = "select IFNULL(SUM(case when (e.encounter_type = 1) then 1 else 0 end),0) , IFNULL(SUM(case when (e.encounter_type = 2) then 1 else 0 end),0) , IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) " + 
-					"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa  " +
-					"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and (e.encounter_type = 1 or e.encounter_type = 2) and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
-
-			String[][] data2  = DatabaseUtil.getDbCon().executeQuery (selectQuery2, null);
+			String user = "Select * from openmrs_rpt.daily_feedback_message where screener_id like '"+username+"'";
+			String[][] u  = DatabaseUtil.getDbCon().executeQuery (user, null);
 			
-			String querySputumFromScreeningToday = "select count(distinct e.patient_id) from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p "+
-														"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 2 and e.patient_id IN ( " +
-																"select e.patient_id from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa " +
-																	"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 1 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12 and pa.value = 'Suspect');";
-			String[][] pidCount  = DatabaseUtil.getDbCon().executeQuery (querySputumFromScreeningToday, null);
+			if(u.length == 0){
+				// get today's screening and sputums submitted numbers
+				String selectQuery2 = "select IFNULL(SUM(case when (e.encounter_type = 1) then 1 else 0 end),0) , IFNULL(SUM(case when (e.encounter_type = 2) then 1 else 0 end),0) , IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) " + 
+						"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa  " +
+						"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and (e.encounter_type = 1 or e.encounter_type = 2) and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
+	
+				String[][] data2  = DatabaseUtil.getDbCon().executeQuery (selectQuery2, null);
+				
+				String querySputumFromScreeningToday = "select count(distinct e.patient_id) from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p "+
+															"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 2 and e.patient_id IN ( " +
+																	"select e.patient_id from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa " +
+																		"where e.encounter_datetime = '"+dateTo+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 1 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12 and pa.value = 'Suspect');";
+				String[][] pidCount  = DatabaseUtil.getDbCon().executeQuery (querySputumFromScreeningToday, null);
+				
+				
+				float percentage = 0;
+				if(!(pidCount[0][0].equals("0") || data2[0][2].equals("0"))){
+					 percentage = (Integer.parseInt(pidCount[0][0]) * 100/ Integer.parseInt(data2[0][2]));
+				}
+				int screenedToday = Integer.parseInt(data2[0][0]);
+				int sputumSubmittedToday = Integer.parseInt(data2[0][1]);
+				int suspectToday = Integer.parseInt(data2[0][2]);
+				
+				/*
+				
+				// Messages...
+				if(percentage >= 80)
+					message = "Great job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)";
+				else if (data2[0][2].equals("0"))
+					message = "";
+				else if (percentage <= 50)
+					message =  "Eish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.";
 			
-			// calculaion 
-			float percentage = 0;
-			if(!(pidCount[0][0].equals("0") || data2[0][2].equals("0"))){
-				 percentage = (Integer.parseInt(pidCount[0][0]) * 100/ Integer.parseInt(data2[0][2]));
+				
+				if(screenedToday > 50)
+					message = message + ":;:" + "Shap shap! You screened over 50 people yesterday!";
+				else if (screenedToday < 20)
+					message = message + ":;:" + "You need to screen more. You screened under 20 people yesterday. ";
+				
+				if(sputumSubmittedToday > 10)
+					message = message + ":;:" + "Awesome! You collected more than 10 sputum samples yesterday! :-)";
+				else if (sputumSubmittedToday < 4)
+					message = message + ":;:" + "Try harder- you collected fewer than 4 sputum samples yesterday.";*/
+				
+				String message = "";
+				
+				// insert
+				String insertQuery = "insert into openmrs_rpt.daily_feedback_message (screener_id, date, message, total_screened, total_sputum_collected, total_suspect, percentage, sputum_Submitted_of_screened_today) values ('"+username+"','"+dateTo+"','"+message+"',"+screenedToday+","+sputumSubmittedToday+","+suspectToday+","+percentage+","+pidCount[0][0]+");";
+				DatabaseUtil.getDbCon().execute (insertQuery);
 			}
-			int screenedToday = Integer.parseInt(data2[0][0]);
-			int sputumSubmittedToday = Integer.parseInt(data2[0][1]);
-			int suspectToday = Integer.parseInt(data2[0][2]);
-			
-			String message = "";
-			String insertQuery = "";
-			
-			// Messages...
-			if(percentage >= 80)
-				message = "Great job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)";
-			else if (data2[0][2].equals("0"))
-				message = "";
-			else if (percentage <= 50)
-				message =  "Eish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.";
-		
-			
-			if(screenedToday > 50)
-				message = message + ":;:" + "Shap shap! You screened over 50 people yesterday!";
-			else if (screenedToday < 20)
-				message = message + ":;:" + "You need to screen more. You screened under 20 people yesterday. ";
-			
-			if(sputumSubmittedToday > 10)
-				message = message + ":;:" + "Awesome! You collected more than 10 sputum samples yesterday! :-)";
-			else if (sputumSubmittedToday < 4)
-				message = message + ":;:" + "Try harder- you collected fewer than 4 sputum samples yesterday.";
-			
-			// insert
-			insertQuery = "insert into openmrs_rpt.daily_feedback_message (screener_id, date, message, total_screened, total_sputum_collected, total_suspect, percentage, sputum_Submitted_of_screened_today) values ('"+username+"','"+dateTo+"','"+message+"',"+screenedToday+","+sputumSubmittedToday+","+suspectToday+","+percentage+","+pidCount[0][0]+");";
-			DatabaseUtil.getDbCon().execute (insertQuery);
 			
 		}
 		
