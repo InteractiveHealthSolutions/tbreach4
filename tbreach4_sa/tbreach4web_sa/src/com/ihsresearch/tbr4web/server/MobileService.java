@@ -64,6 +64,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.Provider;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
@@ -264,7 +265,7 @@ public class MobileService
 			else if (formType.equals (FormType.GET_PATIENT_FROM_TEST_ID))
 				response = getPatientIdFromTestId (formType, jsonObject);
 			else if (formType.equals(FormType.GET_LOCATION_SETUP))
-				response = getScreenerLocationSetupFromUsername(formType, jsonObject);
+				response = getLocationSetupAndPerformanceFeedback(formType, jsonObject);
 			else if (formType.equals (FormType.NON_SUSPECT))
 				response = doNonSuspectScreening (formType, jsonObject);
 			else if (formType.equals (FormType.SCREENING) || formType.equals (FormType.NON_PULMONARY) || formType.equals (FormType.PAEDIATRIC_SCREENING) || formType.equals (FormType.QUICK_SCREENING))
@@ -333,7 +334,7 @@ public class MobileService
 		return result;
 	}
 
-	private String getScreenerLocationSetupFromUsername (String formType, JSONObject values)
+	private String getLocationSetupAndPerformanceFeedback (String formType, JSONObject values)
 	{
 		String json = null;
 		try
@@ -355,23 +356,28 @@ public class MobileService
 			locationObj.put ("facility", location);
 			locationObj.put ("screener_type", screeningType);
 			
+			// Get screener numbers...
 			String selectQuery = "SELECT * from openmrs_rpt.daily_feedback_message where screener_id = '"+username+"' and sent = '0'";
 		    String[][] data = executeQuery (selectQuery, null);
 		    
-		    if(data.length != 0){
+		    if(data.length != 0){ // if any ...
 			    locationObj.put("percentage", data[0][6]);
 			    locationObj.put("total_screened", data[0][4]);
 			    locationObj.put("sputum_submitted", data[0][5]);
+			    locationObj.put("date", data[0][1]);
 			    
 			    String updateQuery = "Update openmrs_rpt.daily_feedback_message" +
 		 				" set sent = '1' " +
 		 				" where screener_id = '"+username+"'" ;
 
-			    execute(updateQuery);
+			    execute(updateQuery);  // mark as sent.
 			    
 		    }
 		    else{
-			    locationObj.put("message", "");
+			    locationObj.put("percentage", "");
+			    locationObj.put("total_screened", "");
+			    locationObj.put("sputum_submitted", "");
+			    locationObj.put("date", "");
 		    }
 			 
 			json = locationObj.toString ();
@@ -715,11 +721,24 @@ public class MobileService
 		{
 			String username = values.getString ("username");
 			User user = Context.getUserService ().getUserByUsername (username);
+			Person person = user.getPerson();
+			Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(person);
+			
 			JSONObject userObj = new JSONObject ();
-			userObj.put ("result", "SUCCESS");
-			userObj.put ("id", user.getUserId ());
-			userObj.put ("name", user.getUsername ());
-			userObj.put ("sname", user.getGivenName());
+			
+			if(providers.size() == 0){
+				
+				userObj.put ("ERROR", "MISSING_PROVIDER");
+				
+			}
+			else{
+			
+				userObj.put ("result", "SUCCESS");
+				userObj.put ("id", user.getUserId ());
+				userObj.put ("name", user.getUsername ());
+				userObj.put ("sname", user.getGivenName());
+			
+			}
 			
 			json = userObj.toString ();
 		}

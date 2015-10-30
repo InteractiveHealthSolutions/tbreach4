@@ -595,7 +595,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 				});
 					
 				publishProgress (getResources ().getString (R.string.fetching_locations));
-				screenerLocationSetup = serverService.fetchScreenersLocationSetting (App.getUsername());
+				screenerLocationSetup = serverService.fetchScreenerLocationAndPerformanceFeedback (App.getUsername());
 				
 				if(screenerLocationSetup == null)
 					   return "FAIL";		
@@ -662,34 +662,83 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 						int screenedToday = Integer.parseInt(screenerLocationSetup[3]);
 						int sputumSubmittedToday = Integer.parseInt(screenerLocationSetup[4]);
 						int percentage = Integer.parseInt(screenerLocationSetup[2]);
+						String date = screenerLocationSetup[5];
 				        
-				        String message = "";
-						int count = 0;
-				        
-						// Messages...
-						if(percentage >= 80){
-							message = "\n" + "Great job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)\n";
-							count++;
-						}else if (percentage <= 50)
-							message =  "\n" + "Eish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.\n";
+						if(!(screenedToday == 0 && sputumSubmittedToday == 0)){
 						
-						if(screenedToday > 50){
-							message = message + "\n" + "Well done! You screened over 50 people yesterday!\n";
-							count++;
-						}else if (screenedToday < 20)
-							message = message + "\n" + "You need to screen more. You screened fewer than 20 people yesterday.\n";
-						
-						if(sputumSubmittedToday > 10){
-							message = message + "\n" + "Awesome! You collected more than 10 sputum samples yesterday! :-)\n";
-							count++;
-						}else if (sputumSubmittedToday < 4)
-							message = message + "\n" + "Try harder- you collected fewer than 4 sputum samples yesterday.\n";
-						
-						if(!message.equals("")){
-							if(count < 2)
-								showFeedbackMessageAlert(message, false);
-							else
-								showFeedbackMessageAlert(message, true);
+							String[][] messageArray = new String[3][3];
+					        String message = "";
+							boolean flag = false;
+							int count = 0;
+					        
+							// Messages...
+							
+							if(screenedToday > 50){
+								message = "\nWell done! You screened over 50 people yesterday!\n";
+								messageArray[0][0] = message;
+								messageArray[0][1] = "+";
+								count++;
+							}else if (screenedToday < 20){
+								message = "\nYou need to screen more. You screened fewer than 20 people yesterday.\n";
+								messageArray[0][0] = message;
+								messageArray[0][1] = "-";
+								
+							}else{
+								messageArray[0][0] = "";
+								messageArray[0][1] = "";
+							}
+							
+							if(sputumSubmittedToday > 10){
+								message = "\nAwesome! You collected more than 10 sputum samples yesterday! :-)\n";
+								messageArray[1][0] = message;
+								messageArray[1][1] = "+";
+								count++;
+							}else if (sputumSubmittedToday < 4){
+								message = "\nTry harder- you collected fewer than 4 sputum samples yesterday.\n";
+								messageArray[1][0] = message;
+								messageArray[1][1] = "-";
+							}else{
+								messageArray[1][0] = "";
+								messageArray[1][1] = "";
+							}
+							
+							if(percentage >= 80){
+								message = "\nGreat job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)\n";
+								messageArray[2][0] = message;
+								messageArray[2][1] = "+";
+								count++;
+							}else if (percentage <= 50){
+								message =  "\nEish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.\n";
+								messageArray[2][0] = message;
+								messageArray[2][1] = "-";
+							}else{
+								messageArray[2][0] = "";
+								messageArray[2][1] = "";
+							}
+							
+							message = "";
+							
+							for(int i = 0; i<3; i++){
+								
+								if(messageArray[i][1].equals("+"))
+									message = message + messageArray[i][0];
+									
+							}
+							
+							for(int j = 0; j<3; j++){
+								
+								if(messageArray[j][1].equals("-"))
+									message = message + messageArray[j][0];
+									
+							}
+							
+							if(count > 1)
+								flag = true;
+							
+							if(!message.equals("")){
+								showFeedbackMessageAlert(message, flag, date);
+							}
+							
 						}
 					}
 				}
@@ -707,7 +756,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	 * @param messageYestarday
 	 */
 
-	public void showFeedbackMessageAlert(String message, Boolean status){
+	public void showFeedbackMessageAlert(String message, Boolean status, String date){
 			
 		// Create custom dialog object
         final Dialog dialog = new Dialog(MainMenuActivity.this);
@@ -722,6 +771,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
      // set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.textView);
 		text.setText(message);
+		
+		TextView d = (TextView) dialog.findViewById(R.id.date);
+		d.setText("Feedback for date: \n"+ date);
 		
 		TextView close = (TextView) dialog.findViewById(R.id.close);
 		close.setOnClickListener(new OnClickListener() {

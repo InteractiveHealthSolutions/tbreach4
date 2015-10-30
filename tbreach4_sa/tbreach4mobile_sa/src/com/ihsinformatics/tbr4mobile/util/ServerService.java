@@ -2542,7 +2542,7 @@ public class ServerService
 	}
 	
 	
-	public String[] fetchScreenersLocationSetting(String username){
+	public String[] fetchScreenerLocationAndPerformanceFeedback(String username){
 		
 		String response = "";
 		try
@@ -2561,8 +2561,9 @@ public class ServerService
 				String result4 = jsonResponse.getString ("percentage");
 				String result5 = jsonResponse.getString ("total_screened");
 				String result6 = jsonResponse.getString ("sputum_submitted");
+				String result7 = jsonResponse.getString ("date");
 				
-				String[] results = {result1, result2/*, result3,*/, result4, result5, result6};
+				String[] results = {result1, result2/*, result3,*/, result4, result5, result6, result7};
 				return results;
 			}
 			else

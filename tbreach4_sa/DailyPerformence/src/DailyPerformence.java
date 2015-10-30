@@ -33,8 +33,8 @@ public class DailyPerformence {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);
-		//String dateTo = dateFormat.format(cal.getTime());
-		String dateTo = "2015-04-07";
+		String dateTo = dateFormat.format(cal.getTime());
+		//String dateTo = "2015-04-07";
 		
 		//Check for Weekend
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -94,27 +94,6 @@ public class DailyPerformence {
 				int screenedToday = Integer.parseInt(data2[0][0]);
 				int sputumSubmittedToday = Integer.parseInt(data2[0][1]);
 				int suspectToday = Integer.parseInt(data2[0][2]);
-				
-				/*
-				
-				// Messages...
-				if(percentage >= 80)
-					message = "Great job! Yesterday you got sputum samples from at least 80% of the suspects you screened! :-)";
-				else if (data2[0][2].equals("0"))
-					message = "";
-				else if (percentage <= 50)
-					message =  "Eish! You got sputum samples from less than 50% of suspects yesterday. Your target is 100%.";
-			
-				
-				if(screenedToday > 50)
-					message = message + ":;:" + "Shap shap! You screened over 50 people yesterday!";
-				else if (screenedToday < 20)
-					message = message + ":;:" + "You need to screen more. You screened under 20 people yesterday. ";
-				
-				if(sputumSubmittedToday > 10)
-					message = message + ":;:" + "Awesome! You collected more than 10 sputum samples yesterday! :-)";
-				else if (sputumSubmittedToday < 4)
-					message = message + ":;:" + "Try harder- you collected fewer than 4 sputum samples yesterday.";*/
 				
 				String message = "";
 				

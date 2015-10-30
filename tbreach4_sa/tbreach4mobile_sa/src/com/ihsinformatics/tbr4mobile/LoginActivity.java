@@ -321,6 +321,18 @@ public class LoginActivity extends Activity implements IActivity, OnClickListene
 						toast.setGravity (Gravity.CENTER, 0, 0);
 						toast.show ();
 					}
+					else if(result.equals("MISSING_PROVIDER")) 
+					{
+						/*App.setUsername ("");
+						App.setPassword ("");*/
+						
+						App.setUsername (tempUsername);
+						App.setPassword (tempPassword);
+						
+						Toast toast = Toast.makeText (LoginActivity.this, getResources ().getString (R.string.missing_provider), App.getDelay ());
+						toast.setGravity (Gravity.CENTER, 0, 0);
+						toast.show ();
+					}
 					else {
 						
 						/*App.setUsername ("");
