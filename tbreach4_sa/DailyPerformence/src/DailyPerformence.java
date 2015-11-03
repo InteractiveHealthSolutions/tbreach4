@@ -8,6 +8,8 @@ public class DailyPerformence {
 
 	public static void main(String[] args) {
 	
+		
+		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);

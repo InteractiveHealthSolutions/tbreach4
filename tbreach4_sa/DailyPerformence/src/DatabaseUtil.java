@@ -27,8 +27,7 @@ public final class DatabaseUtil {
     	
     	try {
     		
-    		
-    		input = new FileInputStream("resources/config.properties");
+    		input = getClass().getResourceAsStream("/config.properties");
 
     		// load a properties file
     		prop.load(input);
