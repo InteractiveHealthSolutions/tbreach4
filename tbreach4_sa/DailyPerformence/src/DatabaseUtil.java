@@ -3,6 +3,7 @@ import com.mysql.jdbc.Connection;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.*;
 import java.util.Properties;
 
@@ -25,8 +26,9 @@ public final class DatabaseUtil {
     	InputStream input = null;
     	
     	try {
-
-    		input = new FileInputStream("config.properties");
+    		
+    		
+    		input = new FileInputStream("resources/config.properties");
 
     		// load a properties file
     		prop.load(input);
@@ -36,6 +38,7 @@ public final class DatabaseUtil {
     		dbName = prop.getProperty("database");
     		userName = prop.getProperty("dbuser");
     		password = prop.getProperty("dbpassword");
+    		driver = prop.getProperty("driver");
 
     	} catch (IOException ex) {
     		ex.printStackTrace();
