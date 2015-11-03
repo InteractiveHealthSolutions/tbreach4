@@ -1,6 +1,10 @@
 import com.mysql.jdbc.Connection;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
+import java.util.Properties;
 
 
 
@@ -10,13 +14,42 @@ public final class DatabaseUtil {
     
     
     private DatabaseUtil() {
-    	String url= "jdbc:mysql://localhost:3306/";
-        String dbName = "openmrs_rpt";
-        String driver = "com.mysql.jdbc.Driver";
-        //String userName = "root";
-       String userName = "";
-       // String password = "root";
+    	
+    	String url= ""; 
+        String dbName = "";
+        String driver = "";
+        String userName = "";
         String password = "";
+        
+    	Properties prop = new Properties();
+    	InputStream input = null;
+    	
+    	try {
+
+    		input = new FileInputStream("config.properties");
+
+    		// load a properties file
+    		prop.load(input);
+
+    		// get the property value and print it out
+    		url = prop.getProperty("url");
+    		dbName = prop.getProperty("database");
+    		userName = prop.getProperty("dbuser");
+    		password = prop.getProperty("dbpassword");
+    		driver = prop.getProperty("driver");
+
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+    	} finally {
+    		if (input != null) {
+    			try {
+    				input.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+    	
         try {
             Class.forName(driver).newInstance();
             this.conn = (Connection)DriverManager.getConnection(url+dbName,userName,password);
