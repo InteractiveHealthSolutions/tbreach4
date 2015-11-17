@@ -50,6 +50,7 @@ Contributors: Tahira Niazi -->
     <string name="visit_type">Type of Visit?</string>
     <string name="screened_before">Were you screened in the last 2 weeks at any of the facilities?</string>
     <string name="validateID">Validate Index Case ID</string>
+    <string name="screening_type">Screening Type</string>
     
     <string name="first_name">First Name</string>
     <string name="first_name_hint">Enter First Name</string>
@@ -62,6 +63,8 @@ Contributors: Tahira Niazi -->
     <string name="Age_modifier">Age Modifier</string>
     <string name="age_hint">Enter Age</string>
     <string name="dob">Date of Birth</string>
+
+    <string name="offline">Work Offline</string>
     
     <string-array name="gender">
         <item>Male</item>
@@ -108,5 +111,9 @@ Contributors: Tahira Niazi -->
         <item >Home Visit</item>
     </string-array>
     
-        <string name="offline">Work Offline</string>
+    <string-array name="screening_types">
+        <item >OPD Screening</item>
+        <item >Field Screening</item>
+    </string-array>
+    
 </resources>

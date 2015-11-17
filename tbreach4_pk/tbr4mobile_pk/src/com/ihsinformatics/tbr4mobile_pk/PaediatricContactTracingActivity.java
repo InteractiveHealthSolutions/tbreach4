@@ -183,6 +183,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		MyTextView		exposureScoreTextView3;
 		MyTextView		exposureScore3;
 		
+		MyTextView		ppaScoreTextView;
+		MyEditText		ppaScore;
+		
 		MyTextView		sourceCaseMotherTextView;
 		MySpinner		sourceCaseMother;
 		
@@ -436,6 +439,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		exposureScore3 = new MyTextView(context, R.style.text, R.string.exposure_value);
 //		exposureScore3 = new MyEditText(context, R.string.exposure_score, R.string.exposure_score_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
 
+		ppaScoreTextView = new MyTextView(context, R.style.text, R.string.ppa_score);
+		ppaScore = new MyEditText(context, R.string.ppa_score, R.string.ppa_score_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 3, false);
 		
 		sourceCaseMotherTextView = new MyTextView(context, R.style.text, R.string.source_case_mother);
 		sourceCaseMother = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.source_case_mother, R.string.option_hint);
@@ -496,7 +501,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 								{sourceCaseSleepSameRoomTextView, sourceCaseSleepSameRoom, sourceCaseLiveSameHouseholdTextView, sourceCaseLiveSameHousehold, sourceCaseSeeChildEverydayTextView, sourceCaseSeeChildEveryday, exposureScoreTextView1, exposureScore1},
 								{sourceCaseCoughingTextView, sourceCaseCoughing, sourceCaseHasPulmonaryTBTextView, sourceCaseHasPulmonaryTB, exposureScoreTextView2, exposureScore2 },
 								{sourceCasePositiveSputumSmearTextView, sourceCasePositiveSputumSmear, moreThanOneSourceCaseTextView, moreThanOneSourceCase, exposureScoreTextView3, exposureScore3},
-								{tbSuspect, patientIdTextView, patientId, scanBarcode}};
+								{ppaScoreTextView, ppaScore, tbSuspect, patientIdTextView, patientId, scanBarcode}};
 		
 		// Create layouts and store in ArrayList
 		groups = new ArrayList<ViewGroup> ();
@@ -529,7 +534,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				views = new View[] {age, ageModifier, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, 
 						contactAppetite, lymphNodeSwelling, jointSpineSwelling, chestExamination, lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, 
 						confirmSputumSmearPositiveTB, exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, 
-						sourceCaseHasPulmonaryTB, sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId};
+						sourceCaseHasPulmonaryTB, sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId, ppaScore};
 
 		for (View v : views)
 		{
@@ -838,7 +843,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		boolean valid = true;
 		StringBuffer message = new StringBuffer ();
 		// Validate mandatory controls
-		View[] mandatory = {firstName, lastName, age, indexCaseId, otherExamination, exposureScore};
+		View[] mandatory = {firstName, lastName, age, indexCaseId, otherExamination, exposureScore, ppaScore};
 		for (View v : mandatory)
 		{
 			if (App.get (v).equals (""))
@@ -939,8 +944,6 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				message.append (formDateButton.getTag () + ": " + getResources ().getString (R.string.invalid_date_or_time) + "\n");
 			}
 			
-			
-			
 //			// Age range
 //			if (Calendar.getInstance ().get (Calendar.YEAR) - dob.get (Calendar.YEAR) > 99)
 //			{
@@ -1022,6 +1025,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			observations.add(new String[] {"Source Case Pulmonary TB", App.get(sourceCaseHasPulmonaryTB)});
 			observations.add(new String[] {"Source Case Positive Sputum Smear", App.get(sourceCasePositiveSputumSmear)});
 			observations.add(new String[] {"More Source Cases", App.get(moreThanOneSourceCase)});
+			observations.add(new String[] {"PPA Score", App.get(ppaScore)});
 			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No"});
 			
 //			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No" });

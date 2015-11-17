@@ -85,69 +85,72 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 		OnEditorActionListener
 {
 
-	MyTextView formDateTextView;
-	MyButton formDateButton;
+	MyTextView	formDateTextView;
+	MyButton 	formDateButton;
 
-	MyTextView screenedBeforeTextView;
-	MySpinner screenedBefore;
+	MyTextView 	screenedBeforeTextView;
+	MySpinner 	screenedBefore;
+	
+	MyTextView 	screeningTypeTextView;
+	MySpinner 	screeningType;
 
-	MyTextView firstNameTextView;
-	MyEditText firstName;
-	MyTextView lastNameTextView;
-	MyEditText lastName;
+	MyTextView 	firstNameTextView;
+	MyEditText 	firstName;
+	MyTextView 	lastNameTextView;
+	MyEditText 	lastName;
 
-	MyTextView genderTextView;
-	MyRadioGroup gender;
-	MyRadioButton male;
-	MyRadioButton female;
+	MyTextView 		genderTextView;
+	MyRadioGroup 	gender;
+	MyRadioButton 	male;
+	MyRadioButton 	female;
 
-	MyTextView ageTextView;
-	MyEditText age;
+	MyTextView 	ageTextView;
+	MyEditText 	age;
 	// MySpinner ageModifier;
 
-	MyTextView coughTextView;
-	MySpinner cough;
-	MyTextView coughDurationTextView;
-	MySpinner coughDuration;
-	MyTextView coughProductiveTextView;
-	MySpinner coughProductive;
+	MyTextView 	coughTextView;
+	MySpinner 	cough;
+	MyTextView 	coughDurationTextView;
+	MySpinner 	coughDuration;
+	MyTextView 	coughProductiveTextView;
+	MySpinner 	coughProductive;
 
-	MyTextView tbBeforeTextView;
-	MySpinner tbBefore;
+	MyTextView 	tbBeforeTextView;
+	MySpinner 	tbBefore;
 
-	MyTextView tbMedicationTextView;
-	MySpinner tbMedication;
+	MyTextView 	tbMedicationTextView;
+	MySpinner 	tbMedication;
 
-	MyTextView tbInFamilyTextView;
-	MySpinner tbInFamily;
+	MyTextView 	tbInFamilyTextView;
+	MySpinner 	tbInFamily;
 
-	MyTextView feverWeeksTextView;
-	MySpinner feverWeeks;
+	MyTextView 	feverWeeksTextView;
+	MySpinner 	feverWeeks;
 
-	MyTextView nightSweatsTextView;
-	MySpinner nightSweats;
+	MyTextView 	nightSweatsTextView;
+	MySpinner 	nightSweats;
 
-	MyTextView weightLossTextView;
-	MySpinner weightLoss;
+	MyTextView 	weightLossTextView;
+	MySpinner 	weightLoss;
 	
-	MyTextView		positiveReportTextView;
-	MySpinner		positiveReport;
+	MyTextView	positiveReportTextView;
+	MySpinner	positiveReport;
 	
-	MyTextView		lymphNodeSwellingTextView;
-	MySpinner		lymphNodeSwelling;
+	MyTextView	lymphNodeSwellingTextView;
+	MySpinner	lymphNodeSwelling;
 	
-	MyTextView		jointSpineSwellingTextView;
-	MySpinner		jointSpineSwelling;
+	MyTextView	jointSpineSwellingTextView;
+	MySpinner	jointSpineSwelling;
 
-	MyTextView tbSuspectTextView;
-	MyCheckBox tbSuspect;
+	MyTextView 	tbSuspectTextView;
+	MyCheckBox 	tbSuspect;
 
-	MyTextView patientIdTextView;
-	MyEditText patientId;
+	MyTextView 	patientIdTextView;
+	MyEditText 	patientId;
 
-	MyButton scanBarcode;
+	MyButton 	scanBarcode;
 
-	boolean isSuspect;
+	boolean 	isSuspect;
 
 	/**
 	 * Subclass representing Fragment for adult-screeening suspect form
@@ -247,6 +250,9 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 				R.array.four_options), R.string.screened_before,
 				R.string.option_hint);
 
+		screeningTypeTextView = new MyTextView(context, R.style.text, R.string.screening_type);
+		screeningType = new MySpinner(context, getResources().getStringArray(R.array.screening_types), R.string.screening_type, R.string.option_hint);
+		
 		firstNameTextView = new MyTextView(context, R.style.text,
 				R.string.first_name);
 		firstName = new MyEditText(context, R.string.first_name,
@@ -351,7 +357,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 
 		View[][] viewGroups = {
 				{ formDateTextView, formDateButton, screenedBeforeTextView,
-						screenedBefore, firstNameTextView, firstName,
+						screenedBefore, screeningTypeTextView, screeningType, firstNameTextView, firstName,
 						lastNameTextView, lastName },
 				{ genderTextView, gender, ageTextView, age },
 				{ coughTextView, cough, coughDurationTextView, coughDuration,
@@ -389,7 +395,7 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 		scanBarcode.setOnClickListener(this);
 		navigationSeekbar.setOnSeekBarChangeListener(this);
 		age.setOnEditorActionListener(this);
-		views = new View[] { age, screenedBefore, cough, coughDuration,
+		views = new View[] { age, screenedBefore, screeningType, cough, coughDuration,
 				coughProductive, tbBefore, tbMedication, tbInFamily, feverWeeks, nightSweats,
 				weightLoss, positiveReport, lymphNodeSwelling, jointSpineSwelling, firstName, lastName, tbSuspect, patientId };
 		for (View v : views)
@@ -717,6 +723,8 @@ public class AdultScreeningActivity extends AbstractFragmentActivity implements
 			values.put("patientId", App.get(patientId));
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
+			observations.add(new String[] {"Screened Before", App.get(screenedBefore)});
+			observations.add(new String[] { "Screening Type", App.get(screeningType) });
 			observations.add(new String[] { "Cough", App.get(cough) });
 			if (cough.getSelectedItem().toString()
 					.equals(getResources().getString(R.string.yes)))

@@ -75,6 +75,9 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 		MyTextView		screenedBeforeTextView;
 		MySpinner		screenedBefore;
 		
+		MyTextView 		screeningTypeTextView;
+		MySpinner		screeningType;
+		
 		MyTextView		firstNameTextView;
 		MyEditText		firstName;
 		MyTextView		lastNameTextView;
@@ -220,6 +223,9 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 		screenedBeforeTextView = new MyTextView(context, R.style.text, R.string.screened_before);
 		screenedBefore = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.screened_before, R.string.option_hint);
 		
+		screeningTypeTextView = new MyTextView(context, R.style.text, R.string.screening_type);
+		screeningType = new MySpinner(context, getResources().getStringArray(R.array.screening_types), R.string.screening_type, R.string.option_hint);
+		
 		firstNameTextView = new MyTextView (context, R.style.text, R.string.first_name);
 		firstName = new MyEditText (context, R.string.first_name, R.string.first_name_hint, InputType.TYPE_TEXT_VARIATION_PERSON_NAME, R.style.edit, 20, false);
 		lastNameTextView = new MyTextView (context, R.style.text, R.string.last_name);
@@ -283,7 +289,7 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 		patientId = new MyEditText (context, R.string.patient_id, R.string.patient_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, RegexUtil.idLength, false);
 		scanBarcode = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.scan_barcode, R.string.scan_barcode);
 	
-		View[][] viewGroups = { {formDateTextView, formDateButton, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
+		View[][] viewGroups = { {formDateTextView, formDateButton, screenedBeforeTextView, screenedBefore, screeningTypeTextView, screeningType, firstNameTextView, firstName, lastNameTextView, lastName},
 								{genderTextView, gender,ageTextView, age, ageModifier}, 
 								{dobTextView, dobPicker},
 								{coughTextView, cough, coughDurationTextView, coughDuration, feverTextView, fever, nightSweatsTextView, nightSweats, weightLossTextView, weightLoss },
@@ -316,7 +322,7 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 				scanBarcode.setOnClickListener (this);
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
-				views = new View[] {age, ageModifier, screenedBefore, cough, coughDuration, fever,  nightSweats, weightLoss, childAppetite, positiveReport, lymphNodeSwelling, jointSpineSwelling, contactHistory, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, ageModifier, screenedBefore, screeningType, cough, coughDuration, fever,  nightSweats, weightLoss, childAppetite, positiveReport, lymphNodeSwelling, jointSpineSwelling, contactHistory, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -695,6 +701,9 @@ public class PediatricScreeningActivity extends AbstractFragmentActivity impleme
 			values.put ("gender", male.isChecked () ? "M" : "F");
 			values.put ("patientId", App.get (patientId));
 			final ArrayList<String[]> observations = new ArrayList<String[]> ();
+			
+			observations.add(new String[] {"Screened Before", App.get(screenedBefore)});
+			observations.add(new String[] { "Screening Type", App.get(screeningType) });
 			
 			observations.add(new String[] {"Age", App.get(age)});
 			observations.add(new String[] {"Age Modifier", App.get(ageModifier)});
