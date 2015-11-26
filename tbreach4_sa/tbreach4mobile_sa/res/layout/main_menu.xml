@@ -90,8 +90,6 @@
                     android:text="@string/sputum_submission" />
             </TableRow>
 
-
-
             <TableRow
                 android:id="@+main_id/sputumResultTableRow"
                 android:layout_width="fill_parent"
@@ -123,6 +121,22 @@
                     android:drawableTop="@drawable/menu_drugs"
                     android:tag="@string/treatment"
                     android:text="@string/treatment" />
+            </TableRow>
+            
+            <TableRow
+                android:id="@+main_id/hivTestingTableRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/micro" >
+
+                <Button
+                    android:id="@+main_id/hivTestingButton"
+                    style="@style/button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/menu_test_indication"
+                    android:tag="@string/hiv_testing"
+                    android:text="@string/hiv_testing" />
             </TableRow>
             
             <TableRow

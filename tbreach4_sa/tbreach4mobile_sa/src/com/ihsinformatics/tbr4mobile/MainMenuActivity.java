@@ -76,6 +76,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 	Button							patientReport;
 	Button							sputumResult;
 	Button							treatment;
+	Button							hivTesting;
 	Button							quickScreening;
 	Button							screeningReport;
 	Button							feedback;
@@ -104,6 +105,7 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 		patientReport = (Button) findViewById (R.main_id.patientReportButton);
 		sputumResult = (Button) findViewById (R.main_id.sputumResultButton);
 		treatment = (Button) findViewById (R.main_id.treatmentButton);
+		hivTesting = (Button) findViewById (R.main_id.hivTestingButton);
 		quickScreening = (Button) findViewById (R.main_id.quickScreeningButton);
 		feedback = (Button) findViewById (R.main_id.feedbackButton);
 		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
@@ -118,8 +120,9 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			sputumResult.setVisibility(View.GONE);
 			treatment.setVisibility(View.GONE);
 			screeningReport.setVisibility(View.GONE);
+			hivTesting.setVisibility(View.GONE);
 		}
-		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, treatment, quickScreening,
+		views = new View[] {locationTextView,  screening, sputumCollection, patientReport, sputumResult, treatment, quickScreening, hivTesting,
 				 feedback, screeningReport};
 		for (View v : views)
 		{
@@ -550,6 +553,10 @@ public class MainMenuActivity extends Activity implements IActivity, OnClickList
 			case R.main_id.screeningReportButton :
 				Intent screeningReportIntent = new Intent (this, ScreeningReportActivity.class);
 				startActivity (screeningReportIntent);
+				break;
+			case R.main_id.hivTestingButton :
+				Intent hivTestingIntent = new Intent (this, HIVTestingActivity.class);
+				startActivity (hivTestingIntent);
 				break;
 			default :
 				toast.setText (getResources ().getString (R.string.form_unavailable));

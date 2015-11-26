@@ -41,7 +41,7 @@ public class DailyPerformence {
 		DatabaseUtil.getDbCon().execute (truncateQuery);
 		
 		//Get all screeners
-		String userList = "Select username from openmrs.users where username like '0%' and retired = 0";
+		String userList = "Select username from openmrs.users u, openmrs.person_attribute pa where u.username like '0%' and u.retired = 0 and u.person_id = pa.person_id and pa.person_attribute_type_id = 14 and pa.value = 49;";
 		String[][] users  = DatabaseUtil.getDbCon().executeQuery (userList, null);
 		
 		// for evrery screener

@@ -1080,6 +1080,7 @@ public class ServerService
 					String city = "";
 					String country = jsonResponse.get ("country").toString ();
 					String phone1 = jsonResponse.get ("phone1").toString ();
+					String phone2 = jsonResponse.get ("phone2").toString ();
 					String contactTb = jsonResponse.get ("contact_tb").toString ();
 					String diabetes = jsonResponse.get ("diabetes").toString ();
 					String dateSputumSubmission = jsonResponse.get ("date_sputum_submission").toString ();
@@ -1096,7 +1097,7 @@ public class ServerService
 					if (!treatmentInitiationDate.equals(""))
 						treatmentInitiationDate = treatmentInitiationDate.substring(0,treatmentInitiationDate.indexOf(" "));
 					
-					details = new String[20][];
+					details = new String[21][];
 					details[0] = new String[] {"First_Name", firstName};
 					details[1] = new String[] {"Last_Name", lastName};
 					details[2] = new String[] {"DOB", dob};
@@ -1117,6 +1118,7 @@ public class ServerService
 					details[17] = new String[] {"genexpertResult", genexpertResult};
 					details[18] = new String[] {"lastHivResult", lastHivResult};
 					details[19] = new String[] {"treatmentInitiationDate", treatmentInitiationDate};
+					details[20] = new String[] {"Phone2", phone2};
 				}
 				catch (JSONException e)
 				{
@@ -1957,6 +1959,93 @@ public class ServerService
 		}
 		return response;
 	
+	}
+	
+	public String saveHIVTesting(String encounterType, ContentValues values, String[][] observations)
+	{
+		String response = "";
+		// Demographics
+		
+		String patientId = values.getAsString ("patientId");
+		String formDate = values.getAsString ("formDate");
+		String phone1 = values.getAsString("phone1");
+		String phone2 = values.getAsString("phone2");
+		
+		try
+		{
+			
+			// Save Patient
+			JSONObject json = new JSONObject ();
+			json.put ("app_ver", App.getVersion ());
+			json.put ("form_name", encounterType);
+			json.put ("username", App.getUsername ());
+			json.put ("patient_id", patientId);
+			json.put ("location",App.getLocation());
+			
+			 // Add contacts as array of person attributes
+			JSONArray attributes = new JSONArray ();
+			JSONObject attributeJson = new JSONObject ();
+			
+			if(!(phone1 == null || phone1.equals(""))){
+					
+				attributeJson.put ("attribute", "Primary Phone");
+				attributeJson.put ("value", phone1);
+				attributes.put (attributeJson);
+				
+			}
+			
+			if(!(phone2 == null || phone2.equals(""))){
+				
+				attributeJson = new JSONObject ();
+				attributeJson.put ("attribute", "Secondary Phone");
+				attributeJson.put ("value", phone2);
+				attributes.put (attributeJson);
+				
+			}
+			
+			json.put ("attributes", attributes.toString ());
+			
+			JSONArray obs = new JSONArray ();
+			for (int i = 0; i < observations.length; i++)
+			{
+				if ("".equals (observations[i][0]) || "".equals (observations[i][1]))
+					continue;
+				JSONObject obsJson = new JSONObject ();
+				obsJson.put ("concept", observations[i][0]);
+				obsJson.put ("value", observations[i][1]);
+				obs.put (obsJson);
+			}
+			
+			json.put ("encounter_type", encounterType);
+			json.put ("form_date", formDate);
+			json.put ("encounter_location", App.getLocation());
+			json.put ("provider", App.getUsername ());
+			json.put ("obs", obs.toString ());
+			
+			response = post ("?content=" + JsonUtil.getEncodedJson (json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject (response);
+			if (jsonResponse == null)
+			{
+				return response;
+			}
+			if (jsonResponse.has ("result"))
+			{
+				String result = jsonResponse.getString ("result");
+				return result;
+			}
+			return response;
+		}
+		catch (JSONException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.invalid_data);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			Log.e (TAG, e.getMessage ());
+			response = context.getResources ().getString (R.string.unknown_error);
+		}
+		return response;
 	}
 	
 	public String saveCustomerInfo (String encounterType, ContentValues values)

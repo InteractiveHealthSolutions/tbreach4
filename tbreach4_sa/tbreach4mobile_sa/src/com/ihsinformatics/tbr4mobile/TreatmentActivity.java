@@ -775,7 +775,7 @@ public class TreatmentActivity extends AbstractFragmentActivity
 					observations.add(new String[] { "Smear Result",  negativeSmearResult.isChecked() ? "Negative" : (positiveScantySmearResult.isChecked() ? "Positive (Scanty)" : (positivePlusPlusSmearResult.isChecked() ? "Positive (++)" : (positivePlusPlusPlusSmearResult.isChecked() ? "Positive (+++)" : "Leaked")) )});
 				
 				if(treatmentOutcomeGroup.getVisibility() == View.VISIBLE)
-					observations.add(new String[] { "Treatment Outcome",  curedTreatmentOutcome.isChecked() ? "Cured" : (completedTreatmentOutcome.isChecked() ? "Completed" : (defaultTreatmentOutcome.isChecked() ? "Default" : (failureTreatmentOutcome.isChecked() ? "Failure" : "Death"))) });
+					observations.add(new String[] { "Treatment Outcome",  curedTreatmentOutcome.isChecked() ? "Cured" : (completedTreatmentOutcome.isChecked() ? "Completed" : (defaultTreatmentOutcome.isChecked() ? "Default" : (failureTreatmentOutcome.isChecked() ? "Failure" : (deathTreatmentOutcome.isChecked() ? "Death" : "Transferred Out")))) });
 				
 				if(transferOutLocationTreatmentOutcome.getVisibility() == View.VISIBLE)
 					observations.add(new String[] { "Transfer Out Location",  App.get(transferOutLocationTreatmentOutcome)});

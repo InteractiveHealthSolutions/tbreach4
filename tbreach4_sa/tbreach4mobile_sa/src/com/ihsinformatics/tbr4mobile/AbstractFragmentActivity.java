@@ -93,7 +93,9 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	protected ArrayList<ViewGroup>	groups;
 	protected View[]				views;
 	protected Animation				alphaAnimation;
-	protected Boolean 				skipValue;
+	protected Boolean 				screeningSkipFlag;
+	protected Boolean				hivTestingConsentSkipFlag;
+	protected Boolean				hivTestingFirstScreeningSkipFlag;
 
 	/**
 	 * Set theme, create and initialize members on Activity Create
@@ -101,7 +103,9 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	@Override
 	protected void onCreate (Bundle savedInstanceState)
 	{
-		skipValue = false;
+		screeningSkipFlag = false;
+		hivTestingConsentSkipFlag = false;
+		hivTestingFirstScreeningSkipFlag = true;
 		setTheme (App.getTheme ());
 		super.onCreate (savedInstanceState);
 		setContentView (R.layout.template);
@@ -276,13 +280,34 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	protected void gotoPage (int pageNo)
 	{
 		
-		if(skipValue){
+		if(screeningSkipFlag){
 			if(pageNo == 9){
 				pageNo = 12;
 			}else
 			if(pageNo == 11 || pageNo == 10){
 				pageNo = 8;
 			}
+		}
+		
+		if(hivTestingConsentSkipFlag){
+			if(pageNo == 2){
+				pageNo = 7;
+			}else if (pageNo == 6){
+				pageNo = 1;
+			}
+		}
+		
+		if(hivTestingFirstScreeningSkipFlag){
+			
+			String pno = pageNumber.getText().toString();
+			
+			if(pageNo == 3 && pno.equals("3")){
+				pageNo = 4;
+			}
+			else if(pageNo == 3 && pno.equals("5")){
+				pageNo = 2;
+			}
+			
 		}
 		
 		pager.setCurrentItem (pageNo);

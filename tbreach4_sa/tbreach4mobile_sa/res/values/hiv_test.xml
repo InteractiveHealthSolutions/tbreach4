@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="client_consent">Did the client consent?</string>
+    <string name="client_sign">Is the client signature present?</string>
+    <string name="counselor_sign">Is the counselor signature present?</string>
+    <string name="first_hiv_test_result">What is the first HIV screening result?</string>
+    <string name="inconclusive">Inconclusive</string>
+    <string name="second_hiv_test_result">If first HIV result is positive or inconclusive, mention the second HIV screening result?</string>
+    <string name="elisa_sample_taken">Was an ELISA blood sample collected?</string>
+    <string name="final_hiv_test_result">What is the final HIV test result?</string>
+    <string name="contact_consent">Do you agree to follow up contact by counsellor/case manager/care facilitator?</string>
+    <string name="client_referred">Was the client referred to the clinic?</string>
+    <string name="referred_clinic">What is the name of the clinic where the client was referred?</string>
+    <string name="referred_clinic_hint">Enter clinic name.</string>
+    <string name="caller_pseudonym">In order to protect your privacy and confidentiality, how would you like us to identify ourselves if we call?</string>
+ 	<string name="caller_pseudonym_hint">Enter pseudonym name.</string>
+ 	<string name="space_hiv_testing">\n\n\n</string>
+    
+</resources>

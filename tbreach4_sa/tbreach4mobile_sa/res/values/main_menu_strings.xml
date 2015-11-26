@@ -10,6 +10,7 @@
     <string name="patient_report">Patient Report</string>
     <string name="sputum_result">3. Sputum Result Form</string>
     <string name="treatment">4. Treatment Form</string>
+    <string name="hiv_testing">5. HIV Testing</string>
     <string name="quick_screening">Quick Screening Form</string>
     <string name="paediatric_screening">Child Screen</string>
     <string name="non_pulmonary_suspect">Non-Pulmonary Suspect</string>

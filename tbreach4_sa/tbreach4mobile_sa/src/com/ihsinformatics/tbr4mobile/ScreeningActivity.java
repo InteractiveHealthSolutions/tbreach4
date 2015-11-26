@@ -1036,7 +1036,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 		yesSputumVideoInstruction.setChecked(false);
 		unavailableSputumVideoInstruction.setChecked(false);
 		
-		skipValue = true;
+		screeningSkipFlag = true;
 
 	}
 
@@ -1855,7 +1855,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				phone1.setEnabled(true);
 				phone2.setEnabled(true);
 				
-				skipValue = false;
+				screeningSkipFlag = false;
 				
 			} else {
 				patientIdTextView.setVisibility(View.GONE);
@@ -1895,7 +1895,7 @@ public class ScreeningActivity extends AbstractFragmentActivity implements
 				phone1.setEnabled(false);
 				phone2.setEnabled(false);
 				
-				skipValue = true;
+				screeningSkipFlag = true;
 			}
 		}else if(button == dateOfBirthUnknown){
 			
