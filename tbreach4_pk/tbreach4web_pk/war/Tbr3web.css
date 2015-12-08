@@ -8,6 +8,7 @@ h1 {
   color: #777777;
   margin: 40px 0px 70px;
   text-align: center;
+  font-style: italic;
 }
 
 .sendButton {
@@ -31,4 +32,13 @@ h1 {
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
+}
+
+.centerDiv
+{
+	width: 60%; 
+	height:200px; 
+	margin: 0 auto; 
+	background-color:#FFA500; 
+	text-decoration: underline;
 }
