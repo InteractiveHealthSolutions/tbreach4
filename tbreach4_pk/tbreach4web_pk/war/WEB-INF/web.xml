@@ -22,7 +22,7 @@ Contributors: Tahira Niazi -->
 		<welcome-file>tbr4web.jsp</welcome-file>
 	</welcome-file-list>
 	
-	<servlet>
+  <servlet>
     <servlet-name>NonSuspectLoginServlet</servlet-name>
     <servlet-class>com.ihsinformatics.tbr4web_pk.server.NonSuspectLoginServlet</servlet-class>
   </servlet>
@@ -40,6 +40,26 @@ Contributors: Tahira Niazi -->
   <servlet-mapping>
     <servlet-name>NonSuspectDataServlet</servlet-name>
     <url-pattern>/NonSuspectDataServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ScreeningDashboardLoginServlet</servlet-name>
+    <servlet-class>com.ihsinformatics.tbr4web_pk.server.ScreeningDashboardLoginServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>ScreeningDashboardLoginServlet</servlet-name>
+    <url-pattern>/ScreeningDashboardLoginServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ScreeningDashboardServlet</servlet-name>
+    <servlet-class>com.ihsinformatics.tbr4web_pk.server.ScreeningDashboardServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>ScreeningDashboardServlet</servlet-name>
+    <url-pattern>/ScreeningDashboardServlet</url-pattern>
   </servlet-mapping>
 
  <!-- This block makes sure that all the resources are accessed via HTTPS -->

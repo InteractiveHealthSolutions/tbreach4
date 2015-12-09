@@ -15,6 +15,7 @@ Contributors: Tahira Niazi -->
 
 <resources>
     <string name="contact_tracing_strategy">Contact Tracing Strategy</string>
+    <string name="index_patient_type">Index Patient Type</string>
     <string name="index_case_id">Index Case ID</string>
     <string name="index_case_id_hint">Enter Index Case ID</string>
     <string name="index_district_number">Index case District TB Number</string>
@@ -42,6 +43,8 @@ Contributors: Tahira Niazi -->
     <string name="names_paediatric_symptomatic_members">Names of Paediatric Symptomatic household members</string>
     <string name="names_paediatric_symptomatic_members_hint">Enter names separately</string>
     
+    <string name="tbr4pk_patient">TBR4 Patient</string>
+    
     <string-array name="diagnosis_options">
         <item >Pulmonary</item>
         <item >Extra-Pulmonary</item>
@@ -50,6 +53,11 @@ Contributors: Tahira Niazi -->
     <string-array name="tracing_strategies">
         <item >Contact Tracing</item>
         <item >Reverse Contact Tracing</item>
+    </string-array>
+    
+    <string-array name="index_patient_types">
+        <item >TBR4 Patient</item>
+        <item >Private Patient</item>
     </string-array>
     
 </resources>

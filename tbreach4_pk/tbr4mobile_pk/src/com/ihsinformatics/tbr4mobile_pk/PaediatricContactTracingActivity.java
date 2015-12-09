@@ -76,6 +76,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		MyTextView		formDateTextView;
 		MyButton		formDateButton;
 		
+		MyTextView 		indexPatientTypeTextView;
+		MySpinner		indexPatientType;
+		
 		MyTextView 		contactTracingStrategyTextView;
 		MySpinner 		contactTracingStrategy;
 		
@@ -317,6 +320,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		formDateTextView = new MyTextView (context, R.style.text, R.string.form_date);
 		formDateButton = new MyButton (context, R.style.button, R.drawable.custom_button_beige, R.string.form_date, R.string.form_date);
 		
+		indexPatientTypeTextView = new MyTextView(context, R.style.text, R.string.index_patient_type);
+		indexPatientType = new MySpinner(context, getResources().getStringArray(R.array.index_patient_types), R.string.index_patient_type, R.string.option_hint);
+	
 		contactTracingStrategyTextView = new MyTextView(context, R.style.text, R.string.contact_tracing_strategy);
 		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
 		
@@ -488,7 +494,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		
 		//TODO: complete it and remove the fields from the Pediatiric Screening forms
 		
-		View[][] viewGroups = { {formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, visitTypeTextView, visitType, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
+		View[][] viewGroups = { {formDateTextView, formDateButton, indexPatientTypeTextView, indexPatientType, contactTracingStrategyTextView, contactTracingStrategy, visitTypeTextView, visitType, screenedBeforeTextView, screenedBefore, firstNameTextView, firstName, lastNameTextView, lastName},
 								{genderTextView, gender,ageTextView, age, ageModifier}, 
 								{dobTextView, dobPicker},
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis, weightTextView, weight, weightPercentileTextView, weightPercentile},
@@ -531,7 +537,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
 				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, ageModifier, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, 
+				views = new View[] {age, ageModifier, indexPatientType, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, 
 						contactAppetite, lymphNodeSwelling, jointSpineSwelling, chestExamination, lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, 
 						confirmSputumSmearPositiveTB, exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, 
 						sourceCaseHasPulmonaryTB, sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId, ppaScore};

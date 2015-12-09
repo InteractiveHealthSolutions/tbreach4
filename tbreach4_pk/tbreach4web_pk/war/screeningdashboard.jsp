@@ -62,6 +62,7 @@ String bothChecked =" checked";
 <tr>
 <td><input class="button" type="button" id="view" value="View Data" name="generate" onclick="getParameters()"/></td>
 <td><input class="button" type="submit" id="csv" value="Download CSV" name="generateCsv"/></td>
+<td><input class="button" type="submit" value="Logout" name="Logout" id="logoutId"/></td>
 </tr>
 </table>
 </div>
@@ -76,10 +77,12 @@ String bothChecked =" checked";
 		<td>Location</td>
 		<td>Username</td>
 		<td>Type</td>
+		<td>Suspects</td>
 		<td>Non Suspects</td>
 	</tr>
 		<%
 			String sc = "";
+			int susp = 0;
 			int nSusp = 0;
 			//(screeningData != null && screeningData.length > 0)
 			//{
@@ -90,6 +93,7 @@ String bothChecked =" checked";
 // 					String location = screeningData[i][0];
 					String user = "" ;
 					String type = "";
+					String suspectsCount = "";
 					String nonSuspectsCount = "";
 
 // 					String user = screeningData[i][1];
@@ -107,6 +111,7 @@ String bothChecked =" checked";
 							<td></td>
 							<td></td>
 							<td>Total</td>
+							<td><%=susp%></td>
 							<td><%=nSusp%></td>
 						</tr>
 						<tr></tr>
@@ -123,6 +128,7 @@ String bothChecked =" checked";
 						<td><%=sc%></td>
 						<td><%=user%></td>
 						<td><%=type%></td>
+						<td><%=suspectsCount%></td>
 						<td><%=nonSuspectsCount%></td>
 					</tr>
 					
@@ -132,6 +138,7 @@ String bothChecked =" checked";
 				<td></td>
 				<td></td>
 				<td>Total</td>
+				<td><%=susp%></td>
 				<td><%=nSusp%></td>
 			</tr>
 			<tr></tr>
@@ -147,8 +154,6 @@ String bothChecked =" checked";
 <!--     </ul> -->
 <!-- </div>  -->
 </div>
-
-
 </div>
 
 

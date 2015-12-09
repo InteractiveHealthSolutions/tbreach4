@@ -75,6 +75,9 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 	MyTextView formDateTextView;
 	MyButton formDateButton;
 
+	MyTextView indexPatientTypeTextView;
+	MySpinner indexPatientType;
+	
 	MyTextView contactTracingStrategyTextView;
 	MySpinner contactTracingStrategy;
 	
@@ -211,6 +214,9 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 				R.drawable.custom_button_beige, R.string.form_date,
 				R.string.form_date);
 		
+		indexPatientTypeTextView = new MyTextView(context, R.style.text, R.string.index_patient_type);
+		indexPatientType = new MySpinner(context, getResources().getStringArray(R.array.index_patient_types), R.string.index_patient_type, R.string.option_hint);
+		
 		contactTracingStrategyTextView = new MyTextView(context, R.style.text, R.string.contact_tracing_strategy);
 		contactTracingStrategy = new MySpinner(context, getResources().getStringArray(R.array.tracing_strategies), R.string.contact_tracing_strategy, R.string.option_hint);
 
@@ -274,7 +280,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 				R.string.scan_barcode);
 
 		View[][] viewGroups = {
-				{ formDateTextView, formDateButton, contactTracingStrategyTextView, contactTracingStrategy, indexCaseIdTextView,
+				{ formDateTextView, formDateButton, indexPatientTypeTextView, indexPatientType, contactTracingStrategyTextView, contactTracingStrategy, indexCaseIdTextView,
 						indexCaseId, scanBarcode, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis },
 				{ totalNumberAdultMembersTextView, totalNumberAdultMembers, totalNumberAdultMembersWithSymptomsTextView,
 				  totalNumberAdultMembersWithSymptoms, namesAdultSymptomaticMembersTextView, namesAdultSymptomaticMembers },
@@ -443,7 +449,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 			}
 		});
 		
-		views = new View[] { contactTracingStrategy, indexCaseId, indexDistrictTbNumber, diagnosis, totalNumberAdultMembers,
+		views = new View[] {indexPatientType, contactTracingStrategy, indexCaseId, indexDistrictTbNumber, diagnosis, totalNumberAdultMembers,
 				totalNumberAdultMembersWithSymptoms, totalNumberPaediatricMembers, totalNumberPaediatricMembersWithSymptoms,
 				namesAdultSymptomaticMembers, namesPaediatricSymptomaticMembers};
 
@@ -610,7 +616,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 		boolean valid = true;
 		StringBuffer message = new StringBuffer();
 		// Validate mandatory controls
-		View[] mandatory = { indexCaseId, totalNumberAdultMembers, totalNumberPaediatricMembers };
+		View[] mandatory = { totalNumberAdultMembers, totalNumberPaediatricMembers };
 		for (View v : mandatory)
 		{
 			if (App.get(v).equals(""))
@@ -631,6 +637,8 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 //				totalNumberMembersWithSymptoms.setHintTextColor(getResources().getColor(R.color.Red));
 //			}
 //		}
+		
+		
 		if(!"".equals(App.get(totalNumberAdultMembersWithSymptoms)))
 		{
 			if (Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) > 0
@@ -744,6 +752,11 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 			values.put("patientId", App.get(indexCaseId));
 			final ArrayList<String[]> observations = new ArrayList<String[]>();
 
+//			if(App.get(indexPatientType).equals(getResources().getString(R.string.tbr4pk_patient)))
+//			{
+//				
+//			}
+			
 			observations.add(new String[] {"Contact Tracing Strategy",App.get(contactTracingStrategy)});
 			
 			observations.add(new String[] { "Index Case District TB Number",
