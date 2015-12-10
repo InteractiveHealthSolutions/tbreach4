@@ -43,7 +43,7 @@ public class ScreeningDashboardServlet extends HttpServlet
 			HttpSession userSession = request.getSession(false);
 			if(userSession!=null)
 			{
-				userSession.removeAttribute("username");
+				userSession.removeAttribute("user_name");
 				userSession.invalidate();
 			}
 			

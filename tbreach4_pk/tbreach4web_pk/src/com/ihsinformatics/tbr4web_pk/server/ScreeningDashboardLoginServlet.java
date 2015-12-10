@@ -73,8 +73,8 @@ public class ScreeningDashboardLoginServlet extends HttpServlet
         if(result.equals("SUCCESS"))
         {
         	HttpSession userSession = request.getSession();
-        	userSession.setAttribute("username", username);
-        	userSession.setAttribute("password", password);
+        	userSession.setAttribute("user_name", username);
+        	userSession.setAttribute("pwd", password);
         	userSession.setMaxInactiveInterval(30*60);
         	
         	rd = request.getRequestDispatcher("/screeningdashboard.jsp");

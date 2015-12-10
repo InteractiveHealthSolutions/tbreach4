@@ -57,7 +57,11 @@
 	color: #2B4F81;
 	height: 22px;
 	width: 120px;
-	
+}
+
+.button:hover
+{
+	background-color: #9AC0CD;
 }
 
 .table {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.ihsinformatics.tbr4web_pk.server.MobileService"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <title>Insert title here</title>
@@ -7,18 +8,76 @@
 <base href="${pageContext.request.contextPath}">
 <link rel="stylesheet" href="tbreach4web_pk/tbr3design.css" type="text/css"/>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+$(document).ready(function() 
+{
+ 	if(jQuery)
+ 	{
+	    $('#treatment_type').click(function() {
+	    	$('input[name="paramTreatmentTypeRadio"]').prop('disabled', !this.checked);
+		});
+		$('#patient_type').click(function() {
+	    	$('input[name="paramPatientTypeRadio"]').prop('disabled', !this.checked);
+		});
+	}
+	
+// 	var household = document.getElementById("household");
+// 	var hospital = document.getElementById("hospital");
+// 	if(household.checked == true)
+// 	{
+// 		alert('household');
+// 	}
+// 	else if(hospital.checked == true)
+// 	{
+// 		alert('hospital');
+// 	}
+});
+ 
+    </script>
+
 <%
 String bothChecked =" checked";
 	String householdChecked ="";
 	String hospitalChecked = "";
 %>
 <div class="centerDiv">
+<form id="screeningDashboardForm" name="ScreeningDashboard" action="tbreach4web_pk/ScreeningDashboardServlet" method="get">
+<% 
+//allow access if only login is successful
+
+String username = "";
+String password = "";
+String[] users = null;
+String[] locations = null;
+
+HttpSession userSession = request.getSession(false);
+String userName = (String) session.getAttribute("user_name");
+if(userName == null) 
+{
+	//response.sendRedirect("/tbreach4web_pk/dashboardlogin.jsp");
+	RequestDispatcher rd = request.getRequestDispatcher("screeningdashboardlogin.jsp");
+	   rd.forward(request, response);
+}
+else
+{
+	username = (String) userSession.getAttribute("user_name");
+	password = (String) userSession.getAttribute("pwd");
+	users = MobileService.getService().getUsers(username, password);
+	locations = MobileService.getService().getLocations(username, password);
+}
+%>
 <label class="titleHeading">Screening Summary</label>
 <div class="inputDiv">
 <div>
 <table class="table">
+		<tr>
+			<td><label class="criteriaLabel">Username</label></td>
+			<td><label class="criteriaLabel"><%=username %></label></td>
+		</tr>
 		<tr>
 			<td><label class="criteriaLabel">Time</label></td>
 			<td><select class="criteriaDropdown" name="time" id="timeOptions">
@@ -29,12 +88,16 @@ String bothChecked =" checked";
 			</td>
 		</tr>
 		<tr >
-			<td><label class="criteriaLabel">Treatment Type</label></h4></td>
-			<td class="criteriaDropdown"><input type="checkbox" name="id" value="type"><input type="radio" name="paramRadio" id="household" value="Household" <%= householdChecked %>>Household <input type="radio" name="paramRadio" id="hospital" value="Hospital" <%= hospitalChecked %>>Hospital</td>
+			<td><label class="criteriaLabel">Treatment Type</label></td>
+			<td class="criteriaDropdown"><input type="checkbox" id="treatment_type" name="treatment_type">
+			<input type="radio" name="paramTreatmentTypeRadio" id="household" value="Household" disabled="disabled" checked>Household 
+			<input type="radio" name="paramTreatmentTypeRadio" id="hospital" value="Hospital" disabled="disabled" >Hospital</td>
 		</tr>
 		<tr >
-			<td><label class="criteriaLabel">Patient Type</label></h4></td>
-			<td class="criteriaDropdown"><input type="checkbox" name="id" value="type"><input type="radio" name="paramRadio" id="adult" value="Adult" <%= householdChecked %>>Adult <input type="radio" name="paramRadio" id="Paediatric" value="Paediatric" <%= hospitalChecked %>>Paediatric</td>
+			<td><label class="criteriaLabel">Patient Type</label></td>
+			<td class="criteriaDropdown"><input type="checkbox" name="patient_type" id="patient_type">
+			<input type="radio" name="paramPatientTypeRadio" id="adult" value="Adult" disabled="disabled" checked>Adult 
+			<input type="radio" name="paramPatientTypeRadio" id="paediatric" value="Paediatric" disabled="disabled">Paediatric</td>
 		</tr>
 		<tr>
 			<td><label class="criteriaLabel">Treatment Centre</label></td>
@@ -55,7 +118,7 @@ String bothChecked =" checked";
 			</td>
 		</tr>
 	</table>
-	</div>
+</div>
 
 <div>
 <table class="table">
@@ -68,7 +131,6 @@ String bothChecked =" checked";
 </div>
 </div>
 </br>
-
 
 <div class="outputDiv">
 </br>
@@ -145,6 +207,7 @@ String bothChecked =" checked";
 	</table>
 	</br>
 </div>
+</form>
 </div>
 <!-- <div id="menu"> -->
 <!--    <ul id="menu"> -->
@@ -153,10 +216,7 @@ String bothChecked =" checked";
 <!-- 	<li><a href="#" title="Logout">Logout</a></li> -->
 <!--     </ul> -->
 <!-- </div>  -->
-</div>
-</div>
-
-
 
 </body>
+
 </html>
