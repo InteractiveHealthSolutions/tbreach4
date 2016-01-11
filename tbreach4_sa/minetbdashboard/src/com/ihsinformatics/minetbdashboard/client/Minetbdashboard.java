@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
@@ -35,7 +36,9 @@ import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.ihsinformatics.minetbdashboard.shared.CustomMessage;
 import com.ihsinformatics.minetbdashboard.shared.ErrorType;
 import com.ihsinformatics.minetbdashboard.shared.InfoType;
+import com.ihsinformatics.minetbdashboard.shared.LocationDimension;
 import com.ihsinformatics.minetbdashboard.shared.MineTB;
+import com.ihsinformatics.minetbdashboard.shared.TimeDimenstion;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -50,6 +53,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	static VerticalPanel verticalPanel = new VerticalPanel();
 	private FlexTable headerFlexTable = new FlexTable();
 	private FlexTable loginFlexTable = new FlexTable();
+	private FlexTable optionsTable = new FlexTable();
 
 	private Label formHeadingLabel = new Label("USER AUTHENTICATION");
 	private Label userNameLabel = new Label("User ID:");
@@ -58,10 +62,15 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private TextBox userTextBox = new TextBox();
 	private PasswordTextBox passwordTextBox = new PasswordTextBox();
 
+	private ListBox reportsList = new ListBox();
+	private ListBox locationDimensionList = new ListBox();
+	private ListBox timeDimensionList = new ListBox();
+
 	private Button loginButton = new Button("Login");
+	private Button showButton = new Button("Show Report");
 
 	/* Chart objects */
-	ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
+	ChartLoader chartLoader;
 	private SimpleLayoutPanel layoutPanel;
 	private PieChart pieChart;
 
@@ -122,11 +131,18 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		loginFlexTable.getCellFormatter().setVerticalAlignment(0, 1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		
-		initiateCharts();
-		// verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setBorderWidth(1);
+
+		fillLists();
+		optionsTable.setWidget(0, 0, new Label("Report:"));
+		optionsTable.setWidget(0, 1, reportsList);
+		optionsTable.setWidget(1, 0, new Label("Reporting Level:"));
+		optionsTable.setWidget(1, 1, locationDimensionList);
+		optionsTable.setWidget(2, 0, new Label("Grouping:"));
+		optionsTable.setWidget(2, 1, timeDimensionList);
+
 		loginButton.addClickHandler(this);
+		showButton.addClickHandler(this);
 		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				boolean enterPressed = event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER;
@@ -136,15 +152,41 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 			}
 		});
 	}
-	
-	public void initiateCharts() {
-//		Window.enableScrolling(false);
-//		Window.setMargin("0px");
+
+	public void fillLists() {
+		String[] reports = { "Screening", "Presumptive & High Risk",
+				"Submission", "Pending", "MTB Positive", "RIF Resistant",
+				"Negative", "Error", "Rejected", "No Result",
+				"Sensitive Cases Initiation", "MDR Cases Initiation" };
+		for (String str : reports) {
+			reportsList.addItem(str);
+		}
+		for (LocationDimension dim : LocationDimension.values()) {
+			locationDimensionList.addItem(dim.toString());
+		}
+		for (TimeDimenstion dim : TimeDimenstion.values()) {
+			timeDimensionList.addItem(dim.toString());
+		}
+	}
+
+	public void drawChart() {
+		// Get Selected Report
+		String report = MineTBClient.get(reportsList);
+		String location = MineTBClient.get(locationDimensionList);
+		String time = MineTBClient.get(timeDimensionList);
+
+		ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
 		chartLoader.loadApi(new Runnable() {
 			@Override
 			public void run() {
-//				getSimpleLayoutPanel().setWidget(getPieChart());
-//				drawPieChart();
+				if (layoutPanel == null) {
+					layoutPanel = new SimpleLayoutPanel();
+				}
+				if (pieChart == null) {
+					pieChart = new PieChart();
+				}
+				verticalPanel.add(pieChart);
+				drawPieChart(pieChart);
 			}
 		});
 	}
@@ -234,6 +276,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 							} else {
 								Window.alert(CustomMessage
 										.getErrorMessage(ErrorType.AUTHENTICATION_ERROR));
+								load(false);
 							}
 						}
 
@@ -274,14 +317,18 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 			service.setCurrentUser(userName, new AsyncCallback<Void>() {
 				public void onSuccess(Void result) {
 					verticalPanel.clear();
+					verticalPanel.add(optionsTable);
+					load(false);
 				}
 
 				public void onFailure(Throwable caught) {
 					caught.printStackTrace();
+					load(false);
 				}
 			});
 		} catch (Exception e) {
 			loginFlexTable.setVisible(true);
+			load(false);
 		}
 	}
 
@@ -307,21 +354,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 						"Application has been shut down. It is now safe to close the Browser window."));
 	}
 
-	public SimpleLayoutPanel getSimpleLayoutPanel() {
-		if (layoutPanel == null) {
-			layoutPanel = new SimpleLayoutPanel();
-		}
-		return layoutPanel;
-	}
-
-	public Widget getPieChart() {
-		if (pieChart == null) {
-			pieChart = new PieChart();
-		}
-		return pieChart;
-	}
-
-	public void drawPieChart() {
+	public void drawPieChart(PieChart chart) {
 		// Prepare the data
 		DataTable dataTable = DataTable.create();
 		dataTable.addColumn(ColumnType.STRING, "Name");
@@ -336,15 +369,17 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		dataTable.setValue(2, 1, 3);
 		dataTable.setValue(3, 1, 2);
 		// Draw the chart
-		pieChart.draw(dataTable);
+		chart.draw(dataTable);
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
 		Widget sender = (Widget) event.getSource();
+		load(true);
 		if (sender == loginButton) {
 			doLogin();
-			load(false);
+		} else if (sender == showButton) {
+			drawChart();
 		}
 	}
 
