@@ -23,7 +23,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import com.ihsinformatics.minetbdashboard.server.LogType;
-import com.ihsinformatics.minetbdashboard.shared.MineTB;
 
 /**
  * @author owais.hussain@ihsinformatics.com
@@ -33,7 +32,6 @@ public class HibernateUtil implements Serializable {
 	private static final long serialVersionUID = -2333198879612643152L;
 	public static HibernateUtil util = new HibernateUtil();
 	private static SessionFactory sessionFactory;
-	private Class<?>[] classes;
 
 	/**
 	 * Default Constructor to initialize Session
@@ -42,21 +40,10 @@ public class HibernateUtil implements Serializable {
 		/* Use when trying Annotation */
 		// sessionFactory = getInitializedConfiguration().buildSessionFactory();
 		try {
-			sessionFactory = new Configuration().configure()
-					.buildSessionFactory();
-			classes = getClasses(MineTB.packageName + ".shared.model");
+			sessionFactory = new Configuration().configure().buildSessionFactory();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Get a list of classes in the Hibernate model
-	 * 
-	 * @return
-	 */
-	public Class<?>[] getModelClasses() {
-		return classes;
 	}
 
 	/**

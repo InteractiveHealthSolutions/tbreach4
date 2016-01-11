@@ -11,8 +11,7 @@ package com.ihsinformatics.minetbdashboard.shared;
  */
 public final class MineTB {
 	public static final String hashingAlgorithm = "SHA";
-	public static final String packageName = "com.ihsinformatics.tbr3reporterweb";
-	public static final String projectTitle = "Sehatmand Zindagi Reporter";
+	public static final String projectTitle = "MINE-TB Dashboard";
 	public static final char separatorChar = ',';
 	public static final int sessionLimit = 900000;
 	public static final MineTB xsms = new MineTB();
@@ -20,11 +19,7 @@ public final class MineTB {
 	private static String currentUser;
 	private static String passCode;
 	public static String[] formOptions = { "YES", "NO", "DONT KNOW", "REJECTED" };
-	public static String[] locationTypes = { "DISTRICT", "HEALTH FACILITY",
-			"LABORATORY" };
-	public static String[] menuNames = { "DATALOG", "ENCOUNTER", "LOCATION",
-			"PATIENT", "SETUP", "SMS", "USERS" };
-	public static String[] userRoles = { "ADMIN", "GUEST", "SCREENER" };
+	public static String[] userRoles = { "ADMIN", "GUEST"};
 	public static String[] userStatuses = { "ACTIVE", "SUSPENDED" };
 
 	private MineTB() {
@@ -71,10 +66,6 @@ public final class MineTB {
 	 */
 	public static String[] getList(ListType listType) {
 		switch (listType) {
-		case LOCATION_TYPE:
-			return locationTypes;
-		case MENU_NAME:
-			return menuNames;
 		case FORM_OPTION:
 			return formOptions;
 		case USER_ROLE:

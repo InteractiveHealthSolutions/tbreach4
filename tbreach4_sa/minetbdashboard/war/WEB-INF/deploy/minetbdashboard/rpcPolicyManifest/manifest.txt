@@ -1,2 +1,3 @@
 # Module minetbdashboard
 # RPC service class, partial path of RPC policy file
+com.ihsinformatics.minetbdashboard.client.ServerService, A1AC12311509A09AAB7B6AD2A59DBC20.gwt.rpc
