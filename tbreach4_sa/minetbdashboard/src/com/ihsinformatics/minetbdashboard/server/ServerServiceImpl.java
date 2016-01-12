@@ -1,5 +1,5 @@
 /**
- * Copyright(C) 2015 Interactive Health Solutions, Pvt. Ltd.
+ * Copyright(C) 2016 Interactive Health Solutions, Pvt. Ltd.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License (GPLv3), or any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -32,7 +32,7 @@ import com.ihsinformatics.minetbdashboard.shared.Parameter;
 import com.ihsinformatics.minetbdashboard.shared.Report;
 
 /**
- * @author Owais
+ * @author owais.hussain@ihsinformatics.com
  * 
  */
 public class ServerServiceImpl extends RemoteServiceServlet implements
@@ -217,6 +217,21 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 		return DateTimeUtil.getSQLDate(dt);
 	}
 
+	public String[][] getTableData(String sqlQuery) {
+		Object[][] data = HibernateUtil.util.selectData(sqlQuery);
+		String[][] stringData = new String[data.length][];
+		for (int i = 0; i < data.length; i++) {
+			stringData[i] = new String[data[i].length];
+			for (int j = 0; j < stringData[i].length; j++) {
+				if (data[i][j] == null)
+					data[i][j] = "";
+				String str = data[i][j].toString();
+				stringData[i][j] = str;
+			}
+		}
+		return stringData;
+	}
+
 	public String[][] getTableData(String tableName, String[] columnNames,
 			String filter) throws Exception {
 		StringBuilder columnList = new StringBuilder();
@@ -225,20 +240,8 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 			columnList.append(",");
 		}
 		columnList.deleteCharAt(columnList.length() - 1);
-
-		Object[][] data = HibernateUtil.util.selectData("select "
-				+ columnList.toString() + " from " + tableName + " "
-				+ arrangeFilter(filter));
-		String[][] stringData = new String[data.length][columnNames.length];
-		for (int i = 0; i < data.length; i++) {
-			for (int j = 0; j < columnNames.length; j++) {
-				if (data[i][j] == null)
-					data[i][j] = "";
-				String str = data[i][j].toString();
-				stringData[i][j] = str;
-			}
-		}
-		return stringData;
+		return getTableData("select " + columnList.toString() + " from "
+				+ tableName + " " + arrangeFilter(filter));
 	}
 
 	public int execute(String query) throws Exception {

@@ -32,4 +32,6 @@ public interface ServerService extends RemoteService {
 			boolean export) throws Exception;
 
 	Report[] getReportsList() throws Exception;
+	
+	String[][] getTableData(String sqlQuery) throws Exception;
 }

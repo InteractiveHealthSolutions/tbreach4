@@ -1,0 +1,3 @@
+WARN qtp1399685946-31 org.hibernate.util.JDBCExceptionReporter - SQL Error: 1054, SQLState: 42S22
+ ERROR qtp1399685946-31 org.hibernate.util.JDBCExceptionReporter - Unknown column 'suspect' in 'having clause'
+ 

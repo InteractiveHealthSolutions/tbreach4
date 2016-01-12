@@ -32,12 +32,19 @@ import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
-import com.googlecode.gwt.charts.client.corechart.PieChart;
+import com.googlecode.gwt.charts.client.corechart.CoreChartWidget;
+import com.googlecode.gwt.charts.client.corechart.LineChart;
+import com.googlecode.gwt.charts.client.corechart.LineChartOptions;
+import com.googlecode.gwt.charts.client.options.HAxis;
+import com.googlecode.gwt.charts.client.options.PointShapeType;
+import com.googlecode.gwt.charts.client.options.TitlePosition;
+import com.googlecode.gwt.charts.client.options.VAxis;
 import com.ihsinformatics.minetbdashboard.shared.CustomMessage;
 import com.ihsinformatics.minetbdashboard.shared.ErrorType;
 import com.ihsinformatics.minetbdashboard.shared.InfoType;
 import com.ihsinformatics.minetbdashboard.shared.LocationDimension;
 import com.ihsinformatics.minetbdashboard.shared.MineTB;
+import com.ihsinformatics.minetbdashboard.shared.Parameter;
 import com.ihsinformatics.minetbdashboard.shared.TimeDimenstion;
 
 /**
@@ -72,7 +79,6 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	/* Chart objects */
 	ChartLoader chartLoader;
 	private SimpleLayoutPanel layoutPanel;
-	private PieChart pieChart;
 
 	/**
 	 * This is the entry point method.
@@ -81,7 +87,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	public void onModuleLoad() {
 		rootPanel = RootPanel.get();
 		rootPanel.setStyleName("rootPanel");
-		rootPanel.setSize("800px", "50%");
+		rootPanel.setSize("1000px", "50%");
 		// verticalPanel.addStyleName("verticalPanel");
 		rootPanel.add(verticalPanel);
 		headerFlexTable.setWidget(0, 1, formHeadingLabel);
@@ -115,7 +121,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		verticalPanel.add(loginFlexTable);
-		verticalPanel.setSize("800px", "");
+		verticalPanel.setSize("1000px", "");
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellHorizontalAlignment(loginFlexTable,
@@ -167,28 +173,77 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		for (TimeDimenstion dim : TimeDimenstion.values()) {
 			timeDimensionList.addItem(dim.toString());
 		}
+		// TODO: ONLY FOR TESTING
+		userTextBox.setText("owais");
+		passwordTextBox.setText("Jingle94$");
 	}
 
 	public void drawChart() {
-		// Get Selected Report
 		String report = MineTBClient.get(reportsList);
-		String location = MineTBClient.get(locationDimensionList);
-		String time = MineTBClient.get(timeDimensionList);
+		if (report.equals("Screening")) {
+			drawScreening();
+		}
+	}
+	
+	private void drawScreening() {
+		final String location = MineTBClient.get(locationDimensionList);
+		final String time = MineTBClient.get(timeDimensionList);
+		Parameter[] params = null;
 
-		ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
-		chartLoader.loadApi(new Runnable() {
-			@Override
-			public void run() {
-				if (layoutPanel == null) {
-					layoutPanel = new SimpleLayoutPanel();
+		StringBuilder query = new StringBuilder("select 'Test Strategy' as strategy, location_name as facility, month(date_entered) as month, sum(if(haemoptysis='Yes', 1, 0)) as suspects, sum(if(haemoptysis='No', 1, 0)) as non_suspects from sz_dw.om_enc_screening where year(date_entered) = 2015 group by location_name , month(date_entered) having suspects > 0");
+		try {
+			service.getTableData(query.toString(), new AsyncCallback<String[][]>() {
+				@Override
+				public void onSuccess(final String[][] result) {
+					ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
+					chartLoader.loadApi(new Runnable() {
+						@Override
+						public void run() {
+							if (layoutPanel == null) {
+								layoutPanel = new SimpleLayoutPanel();
+							}
+							LineChart chart = new LineChart();
+							String[] locationNames = new String[] { "01000 Ugu", "02000 eThekwini" };
+							int[] months = new int[] { 2012, 2013, 2014, 2015, 2016 };
+							double[][] values = new double[][] { { 1336, 1538, 1576, 1600, 19 }, { 979, 916, 997, 941, 9 } };
+
+							DataTable dataTable = DataTable.create();
+							dataTable.addColumn(ColumnType.STRING, time);
+							for (int i = 0; i < locationNames.length; i++) {
+								dataTable.addColumn(ColumnType.NUMBER, locationNames[i]);
+							}
+							dataTable.addRows(months.length);
+							for (int i = 0; i < months.length; i++) {
+								dataTable.setValue(i, 0, String.valueOf(months[i]));
+							}
+							for (int col = 0; col < values.length; col++) {
+								for (int row = 0; row < values[col].length; row++) {
+									dataTable.setValue(row, col + 1, values[col][row]);
+								}
+							}
+							// Set options
+							LineChartOptions options = LineChartOptions.create();
+							options.setBackgroundColor("#f0f0f0");
+							options.setTitle("Screening by " + location + " per " + time);
+							options.setHAxis(HAxis.create(time));
+							options.setVAxis(VAxis.create(location));
+							options.setPointShape(PointShapeType.DIAMOND);
+							options.setTitlePosition(TitlePosition.OUT);
+							verticalPanel.add(chart);
+							chart.draw(dataTable);
+							load(false);
+						}
+					});
 				}
-				if (pieChart == null) {
-					pieChart = new PieChart();
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert(CustomMessage.getErrorMessage(ErrorType.DATA_ACCESS_ERROR));
 				}
-				verticalPanel.add(pieChart);
-				drawPieChart(pieChart);
-			}
-		});
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -318,6 +373,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				public void onSuccess(Void result) {
 					verticalPanel.clear();
 					verticalPanel.add(optionsTable);
+					verticalPanel.add(showButton);
 					load(false);
 				}
 
@@ -352,24 +408,6 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		rootPanel
 				.add(new HTML(
 						"Application has been shut down. It is now safe to close the Browser window."));
-	}
-
-	public void drawPieChart(PieChart chart) {
-		// Prepare the data
-		DataTable dataTable = DataTable.create();
-		dataTable.addColumn(ColumnType.STRING, "Name");
-		dataTable.addColumn(ColumnType.NUMBER, "Donuts eaten");
-		dataTable.addRows(4);
-		dataTable.setValue(0, 0, "Michael");
-		dataTable.setValue(1, 0, "Elisa");
-		dataTable.setValue(2, 0, "Robert");
-		dataTable.setValue(3, 0, "John");
-		dataTable.setValue(0, 1, 5);
-		dataTable.setValue(1, 1, 7);
-		dataTable.setValue(2, 1, 3);
-		dataTable.setValue(3, 1, 2);
-		// Draw the chart
-		chart.draw(dataTable);
 	}
 
 	@Override

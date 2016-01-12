@@ -21,9 +21,9 @@ import com.ihsinformatics.minetbdashboard.shared.Report;
  */
 public interface ServerServiceAsync {
 	void authenticate(String userName, String password,
-			AsyncCallback<Boolean> asyncCallback);
+			AsyncCallback<Boolean> asyncCallback) throws Exception;
 
-	void setCurrentUser(String userName, AsyncCallback<Void> asyncCallback);
+	void setCurrentUser(String userName, AsyncCallback<Void> asyncCallback) throws Exception;
 
 	void generateCSVfromQuery(String query, AsyncCallback<String> asyncCallback)
 			throws Exception;
@@ -32,5 +32,7 @@ public interface ServerServiceAsync {
 			boolean export, AsyncCallback<String> asyncCallback)
 			throws Exception;
 
-	void getReportsList(AsyncCallback<Report[]> callback);
+	void getReportsList(AsyncCallback<Report[]> callback) throws Exception;
+
+	void getTableData(String sqlQuery, AsyncCallback<String[][]> callback) throws Exception;
 }
