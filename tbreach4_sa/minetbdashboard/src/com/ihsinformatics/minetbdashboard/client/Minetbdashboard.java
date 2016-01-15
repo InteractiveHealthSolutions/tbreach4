@@ -226,11 +226,9 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 							options.setBackgroundColor("#f0f0f0");
 							options.setTitle("Screening by " + location + " per " + time);
 							options.setHAxis(HAxis.create(time));
-							options.setVAxis(VAxis.create(location));
-							options.setPointShape(PointShapeType.DIAMOND);
-							options.setTitlePosition(TitlePosition.OUT);
+							options.setVAxis(VAxis.create("SUSPECTS"));
 							verticalPanel.add(chart);
-							chart.draw(dataTable);
+							chart.draw(dataTable, options);
 							load(false);
 						}
 					});

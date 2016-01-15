@@ -56,7 +56,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			" logic_rule_definition", " logic_rule_token",
 			" logic_rule_token_tag", " logic_token_registration",
 			" logic_token_registration_tag", " note", " notification_alert",
-			" notification_alert_recipient", " notification_template",
+			" notification_alert_recipient", " notification_template", "obs",
 			" order_type", " orders", " patient", " patient_identifier",
 			" patient_identifier_type", " patient_program", " patient_state",
 			" person", " person_address", " person_attribute",
@@ -240,10 +240,10 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			for (Object element : elements) {
 				if (element == null)
 					continue;
-				String str = element.toString().replace("'", "''");
+				String str = element.toString().replaceAll("[^A-Za-z0-9]", "_")
+						.toLowerCase();
 				groupConcat.append("group_concat(if(o.question = '" + str
-						+ "', o.answer, NULL)) AS '"
-						+ str.replace("(\\W|^_)*", "_").toLowerCase() + "', ");
+						+ "', o.answer, NULL)) AS '" + str + "', ");
 			}
 			String baseQuery = "select e.surrogate_id, e.system_id, e.encounter_id, e.provider, e.location_id, l.location_name, e.patient_id, e.date_entered, "
 					+ groupConcat.toString()
@@ -261,13 +261,13 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			log.info("Generating table for " + encounterType[1].toString());
 			// Insert new data
 			Object result = dwDb.runCommand(CommandType.CREATE,
-					"create table om_enc_" + encounterName + " " + baseQuery);
+					"create table enc_" + encounterName + " " + baseQuery);
 			if (result == null) {
 				log.warning("No data imported for Encounter "
 						+ encounterType[1].toString());
 			}
 			// Creating Primary key
-			dwDb.runCommand(CommandType.ALTER, "alter table om_enc_"
+			dwDb.runCommand(CommandType.ALTER, "alter table enc_"
 					+ encounterName
 					+ " add primary key surrogate_id (surrogate_id)");
 		}

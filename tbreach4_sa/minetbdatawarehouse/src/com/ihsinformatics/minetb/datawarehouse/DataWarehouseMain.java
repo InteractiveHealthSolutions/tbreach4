@@ -222,15 +222,14 @@ public final class DataWarehouseMain {
 	 */
 	public void resetDataWarehouse() {
 		log.info("Starting DW hard reset");
-		Object[] tables = dwDb.getColumnData("information_schema.tables",
-				"table_name", "table_schema='" + dwSchema + "'");
-		for (Object t : tables) {
-			log.info("Deleting table " + t);
-			dwDb.deleteTable(t.toString());
-		}
-		extractLoad(true);
+//		Object[] tables = dwDb.getColumnData("information_schema.tables",
+//				"table_name", "table_schema='" + dwSchema + "'");
+//		for (Object t : tables) {
+//			log.info("Deleting table " + t);
+//			dwDb.deleteTable(t.toString());
+//		}
+//		extractLoad(true);
 		createDimensions();
-
 		transform();
 		createFacts();
 		log.info("Finished DW hard reset");
@@ -277,20 +276,20 @@ public final class DataWarehouseMain {
 		end.set(Calendar.HOUR, 0);
 		int i = 1;
 		while (start.getTime().before(end.getTime())) {
-			String sqlDate = "'" + DateTimeUtil.getSqlDate(start.getTime())
+			String startDate = "'" + DateTimeUtil.getSqlDate(start.getTime())
 					+ "'";
+			start.add(Calendar.DATE, 6);
+			String weekEndDate = "'" + DateTimeUtil.getSqlDate(start.getTime()) + "'";
 			StringBuilder query = new StringBuilder();
-			query.append("insert into dim_time (time_id, date, year, month, day, day_of_year, week_of_year, quarter, day_name, month_name) values ");
+			query.append("insert into dim_time (time_id, date_start, date_end, year, month, week_of_year, quarter, month_name) values ");
 			query.append("(" + (i++) + ", ");
-			query.append(sqlDate + ", ");
-			query.append("year(" + sqlDate + "), ");
-			query.append("month(" + sqlDate + "), ");
-			query.append("day(" + sqlDate + "), ");
-			query.append("dayofyear(" + sqlDate + "), ");
-			query.append("week(" + sqlDate + ", 6), ");
-			query.append("ceil(month(" + sqlDate + ") / 3), ");
-			query.append("dayname(" + sqlDate + "), ");
-			query.append("monthname(" + sqlDate + "));");
+			query.append(startDate + ", ");
+			query.append(weekEndDate + ", ");
+			query.append("year(" + weekEndDate + "), ");
+			query.append("month(" + weekEndDate + "), ");
+			query.append("week(" + weekEndDate + ", 6), ");
+			query.append("ceil(month(" + weekEndDate + ") / 3), ");
+			query.append("monthname(" + weekEndDate + "));");
 			dwDb.runCommand(CommandType.INSERT, query.toString());
 			start.add(Calendar.DATE, 1);
 		}
@@ -307,8 +306,26 @@ public final class DataWarehouseMain {
 	}
 
 	public void createFacts() {
-		log.info("Starting fact tables");
-		log.info("Finished fact tables");
+		log.info("Creating fact tables");
+		FileUtil fileUtil = new FileUtil();
+		String[] queries = fileUtil.getLines("fact_modeling.sql");
+		// Recreate tables
+		for (String query : queries) {
+			if (query.toUpperCase().startsWith("DROP")) {
+				log.info(query);
+				dwDb.runCommand(CommandType.DROP, query);
+			} else if (query.toUpperCase().startsWith("CREATE")) {
+				log.info(query);
+				dwDb.runCommand(CommandType.CREATE, query);
+			} else if (query.toUpperCase().startsWith("UPDATE")) {
+				log.info(query);
+				dwDb.runCommand(CommandType.UPDATE, query);
+			} else if (query.toUpperCase().startsWith("INSERT")) {
+				log.info(query);
+				dwDb.runCommand(CommandType.INSERT, query);
+			}
+		}
+		log.info("Finished creating fact tables");
 	}
 
 	public void updateWarehosue(String dataPath, Date dateFrom, Date dateTo) {
