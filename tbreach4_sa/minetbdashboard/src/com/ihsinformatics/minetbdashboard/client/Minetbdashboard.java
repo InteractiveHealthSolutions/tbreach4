@@ -1,6 +1,8 @@
 package com.ihsinformatics.minetbdashboard.client;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -32,14 +34,12 @@ import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
-import com.googlecode.gwt.charts.client.corechart.CoreChartWidget;
 import com.googlecode.gwt.charts.client.corechart.LineChart;
 import com.googlecode.gwt.charts.client.corechart.LineChartOptions;
 import com.googlecode.gwt.charts.client.options.HAxis;
-import com.googlecode.gwt.charts.client.options.PointShapeType;
-import com.googlecode.gwt.charts.client.options.TitlePosition;
 import com.googlecode.gwt.charts.client.options.VAxis;
 import com.ihsinformatics.minetbdashboard.shared.CustomMessage;
+import com.ihsinformatics.minetbdashboard.shared.DataType;
 import com.ihsinformatics.minetbdashboard.shared.ErrorType;
 import com.ihsinformatics.minetbdashboard.shared.InfoType;
 import com.ihsinformatics.minetbdashboard.shared.LocationDimension;
@@ -87,7 +87,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	public void onModuleLoad() {
 		rootPanel = RootPanel.get();
 		rootPanel.setStyleName("rootPanel");
-		rootPanel.setSize("1000px", "50%");
+		rootPanel.setSize("1080px", "50%");
 		// verticalPanel.addStyleName("verticalPanel");
 		rootPanel.add(verticalPanel);
 		headerFlexTable.setWidget(0, 1, formHeadingLabel);
@@ -185,12 +185,51 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		}
 	}
 	
+	private String getFilter(Parameter[] params) {
+		StringBuilder where = new StringBuilder(" where 1 = 1 ");
+		if (params != null) {
+			for (Parameter param : params) {
+				DataType type = param.getType();
+				switch (type) {
+				case CHAR:
+				case STRING:
+					where.append(" and " + param.getName());
+					where.append(" = '" + param.getValue() + "'");
+					break;
+				default:
+					where.append(" and " + param.getName());
+					where.append(" = " + param.getValue());
+				}
+			}
+		}
+		return where.toString();
+	}
+	
+	/**
+	 * Return set of unique values from given data array
+	 * @param data
+	 * @param columnIndex
+	 * @return
+	 */
+	private String[] getUniqueValues(String[][] data, int columnIndex) {
+		HashSet<String> values = new HashSet<String>();
+		for (String[] record : data) {
+			values.add(record[columnIndex]);
+		}
+		return values.toArray(new String[] {});
+	}
+	
 	private void drawScreening() {
-		final String location = MineTBClient.get(locationDimensionList);
-		final String time = MineTBClient.get(timeDimensionList);
+		final String location = MineTBClient.get(locationDimensionList).toLowerCase();
+		final String time = MineTBClient.get(timeDimensionList).toLowerCase();
 		Parameter[] params = null;
-
-		StringBuilder query = new StringBuilder("select 'Test Strategy' as strategy, location_name as facility, month(date_entered) as month, sum(if(haemoptysis='Yes', 1, 0)) as suspects, sum(if(haemoptysis='No', 1, 0)) as non_suspects from sz_dw.om_enc_screening where year(date_entered) = 2015 group by location_name , month(date_entered) having suspects > 0");
+		StringBuilder query = new StringBuilder();
+		query.append("select strategy, ");
+		query.append(time + ", ");
+		query.append(location + ", ");
+		query.append("sum(screened) as screened, sum(suspects) as suspects, sum(non_suspects) as non_suspects from fact_screening ");
+		query.append(getFilter(params));
+		query.append("group by strategy, " + time + ", " + location);
 		try {
 			service.getTableData(query.toString(), new AsyncCallback<String[][]>() {
 				@Override
@@ -203,19 +242,29 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 								layoutPanel = new SimpleLayoutPanel();
 							}
 							LineChart chart = new LineChart();
-							String[] locationNames = new String[] { "01000 Ugu", "02000 eThekwini" };
-							int[] months = new int[] { 2012, 2013, 2014, 2015, 2016 };
-							double[][] values = new double[][] { { 1336, 1538, 1576, 1600, 19 }, { 979, 916, 997, 941, 9 } };
-
 							DataTable dataTable = DataTable.create();
+							String[] times = getUniqueValues(result, 1);
+							String[] locations = getUniqueValues(result, 2);
+							// Add locations in columns
+							for (String location : locations) {
+								dataTable.addColumn(ColumnType.NUMBER, location);
+							}
+							// Add a column for time
 							dataTable.addColumn(ColumnType.STRING, time);
-							for (int i = 0; i < locationNames.length; i++) {
-								dataTable.addColumn(ColumnType.NUMBER, locationNames[i]);
+							dataTable.addRows(times.length);
+							// Set all time values to first column
+							for (int i = 0; i < times.length; i++) {
+								dataTable.setValue(i, 0, times[i]);
 							}
-							dataTable.addRows(months.length);
-							for (int i = 0; i < months.length; i++) {
-								dataTable.setValue(i, 0, String.valueOf(months[i]));
+							
+							for (int i = 0; i < locations.length; i++) {
+								for (int j = 0; j < times.length; j++) {
+									dataTable.setValue(j, i + 2, result[j][i]);
+								}
 							}
+
+							double[][] values = new double[][] { { 1336, 1538, 1576, 1600, 19 }, { 979, 916, 997, 941, 9 } };								
+
 							for (int col = 0; col < values.length; col++) {
 								for (int row = 0; row < values[col].length; row++) {
 									dataTable.setValue(row, col + 1, values[col][row]);
@@ -242,6 +291,30 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void drawTreatmentInitiationQuery() {
+	}
+
+	public void drawSputumResultFaultQuery() {
+	}
+
+	public void drawNegativeResultQuery() {
+	}
+
+	public void drawRifResistantQuery() {
+	}
+
+	public void drawMtbPositiveQuery() {
+	}
+
+	public void drawSputumPendingQuery() {
+	}
+
+	public void drawSputumSubmissionQuery() {
+	}
+
+	public void drawSuspectQuery() {
 	}
 
 	/**
