@@ -64,7 +64,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements
 		try {
 			if (userName != null && password != null) {
 				Object[][] data = HibernateUtil.util
-						.selectData("select password, salt from sz_dw.om_users inner join om_user_role using (user_id) where username = '"
+						.selectData("select password, salt from users inner join user_role using (user_id) where username = '"
 								+ userName
 								+ "' and retired = 0 and role in ('System Developer', 'Reporting', 'Program Admin')");
 				if (data != null) {

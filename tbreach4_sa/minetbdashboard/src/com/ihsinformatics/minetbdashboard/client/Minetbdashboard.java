@@ -2,7 +2,6 @@ package com.ihsinformatics.minetbdashboard.client;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -13,14 +12,18 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -30,6 +33,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
@@ -61,6 +65,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private FlexTable headerFlexTable = new FlexTable();
 	private FlexTable loginFlexTable = new FlexTable();
 	private FlexTable optionsTable = new FlexTable();
+	private Grid dateFilterGrid = new Grid(1, 3);
 
 	private Label formHeadingLabel = new Label("USER AUTHENTICATION");
 	private Label userNameLabel = new Label("User ID:");
@@ -73,8 +78,14 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private ListBox locationDimensionList = new ListBox();
 	private ListBox timeDimensionList = new ListBox();
 
+	private DateBox fromDateBox = new DateBox();
+	private DateBox toDateBox = new DateBox();
+
 	private Button loginButton = new Button("Login");
 	private Button showButton = new Button("Show Report");
+	private Button clearButton = new Button("Clear");
+	
+	private String[][] data;
 
 	/* Chart objects */
 	ChartLoader chartLoader;
@@ -138,17 +149,30 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		loginFlexTable.getCellFormatter().setVerticalAlignment(0, 1,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setBorderWidth(1);
+		
+		fromDateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		fromDateBox.setWidth("100%");
+		fromDateBox.setValue(new Date(0));
+		toDateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
+		toDateBox.setWidth("100%");
+		toDateBox.setValue(new Date());
+		
+		dateFilterGrid.setWidget(0, 0, new Label("Select Date Range:"));
+		dateFilterGrid.setWidget(0, 1, fromDateBox);
+		dateFilterGrid.setWidget(0, 2, toDateBox);
 
-		fillLists();
 		optionsTable.setWidget(0, 0, new Label("Report:"));
 		optionsTable.setWidget(0, 1, reportsList);
 		optionsTable.setWidget(1, 0, new Label("Reporting Level:"));
 		optionsTable.setWidget(1, 1, locationDimensionList);
 		optionsTable.setWidget(2, 0, new Label("Grouping:"));
 		optionsTable.setWidget(2, 1, timeDimensionList);
+		optionsTable.setWidget(3, 0, dateFilterGrid);
 
+		fillLists();
 		loginButton.addClickHandler(this);
 		showButton.addClickHandler(this);
+		clearButton.addClickHandler(this);
 		passwordTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				boolean enterPressed = event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER;
@@ -185,8 +209,18 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private String getFilter(Parameter[] params) {
 		StringBuilder where = new StringBuilder(" where 1 = 1 ");
+		// Append Date filter
+		if (!MineTBClient.get(fromDateBox.getTextBox()).equals("") && MineTBClient.get(toDateBox.getTextBox()).equals("")) {
+			int fromYear = fromDateBox.getValue().getYear();
+			int toYear = toDateBox.getValue().getYear();
+			int fromMonth = fromDateBox.getValue().getMonth();
+			int toMonth = toDateBox.getValue().getMonth();
+			where.append(" and year between " + fromYear + " and " + toYear);
+			where.append(" and month between " + fromMonth + " and " + toMonth);
+		}
 		if (params != null) {
 			for (Parameter param : params) {
 				DataType type = param.getType();
@@ -219,21 +253,32 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		return values.toArray(new String[] {});
 	}
 	
+	private double findValueInData(String columnValue, String rowValue) {
+		double value = 0;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i][1].equals(columnValue) && data[i][0].equals(rowValue)) {
+				value = Double.parseDouble(data[i][2]);
+			}
+		}
+		return value;
+	}
+	
 	private void drawScreening() {
 		final String location = MineTBClient.get(locationDimensionList).toLowerCase();
 		final String time = MineTBClient.get(timeDimensionList).toLowerCase();
 		Parameter[] params = null;
 		StringBuilder query = new StringBuilder();
-		query.append("select strategy, ");
-		query.append(time + ", ");
+		query.append("select " + time + ", ");
 		query.append(location + ", ");
-		query.append("sum(screened) as screened, sum(suspects) as suspects, sum(non_suspects) as non_suspects from fact_screening ");
+		query.append("sum(screened) as screened from fact_screening ");
 		query.append(getFilter(params));
-		query.append("group by strategy, " + time + ", " + location);
+		query.append(" group by " + time + ", " + location);
+		query.append(" order by " + time + ", " + location);
 		try {
 			service.getTableData(query.toString(), new AsyncCallback<String[][]>() {
 				@Override
 				public void onSuccess(final String[][] result) {
+					data = result;
 					ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
 					chartLoader.loadApi(new Runnable() {
 						@Override
@@ -243,31 +288,23 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 							}
 							LineChart chart = new LineChart();
 							DataTable dataTable = DataTable.create();
-							String[] times = getUniqueValues(result, 1);
-							String[] locations = getUniqueValues(result, 2);
-							// Add locations in columns
+							String[] times = getUniqueValues(result, 0);
+							String[] locations = getUniqueValues(result, 1);
+							// Add grouping column for time dimension
+							dataTable.addColumn(ColumnType.STRING, time);
+							// Add number of rows equal to unique time dimensions
+							dataTable.addRows(times.length);
+							// Add locations as columns
 							for (String location : locations) {
 								dataTable.addColumn(ColumnType.NUMBER, location);
 							}
-							// Add a column for time
-							dataTable.addColumn(ColumnType.STRING, time);
-							dataTable.addRows(times.length);
-							// Set all time values to first column
 							for (int i = 0; i < times.length; i++) {
 								dataTable.setValue(i, 0, times[i]);
 							}
-							
-							for (int i = 0; i < locations.length; i++) {
-								for (int j = 0; j < times.length; j++) {
-									dataTable.setValue(j, i + 2, result[j][i]);
-								}
-							}
-
-							double[][] values = new double[][] { { 1336, 1538, 1576, 1600, 19 }, { 979, 916, 997, 941, 9 } };								
-
-							for (int col = 0; col < values.length; col++) {
-								for (int row = 0; row < values[col].length; row++) {
-									dataTable.setValue(row, col + 1, values[col][row]);
+							// Convert values into 2D; 1st dimension is locations, 2nd is time
+							for (int col = 0; col < locations.length; col++) {
+								for (int row = 0; row < times.length; row++) {
+									dataTable.setValue(row, col + 1, findValueInData(locations[col], times[row]));
 								}
 							}
 							// Set options
@@ -444,7 +481,10 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				public void onSuccess(Void result) {
 					verticalPanel.clear();
 					verticalPanel.add(optionsTable);
-					verticalPanel.add(showButton);
+					HorizontalPanel buttonsPanel = new HorizontalPanel();
+					buttonsPanel.add(showButton);
+					buttonsPanel.add(clearButton);
+					verticalPanel.add(buttonsPanel);
 					load(false);
 				}
 
@@ -489,6 +529,8 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 			doLogin();
 		} else if (sender == showButton) {
 			drawChart();
+		} else if (sender == clearButton) {
+			verticalPanel.clear();
 		}
 	}
 
