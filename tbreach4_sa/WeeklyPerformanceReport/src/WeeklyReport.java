@@ -70,9 +70,11 @@ public class WeeklyReport {
 		cal.add(Calendar.DATE, -6);
 		String dateFrom = dateFormat.format(cal.getTime());
 		
+		String year = String.valueOf(cal.get(Calendar.YEAR));
+		
 		//insert in db
-		String insertQuery = "insert into openmrs_rpt.working_weeks (week_no,date_start,date_end) " +
-		                             "values (WEEKOFYEAR('"+dateTo+"'),'"+dateFrom+"','"+dateTo+"')";
+		String insertQuery = "insert into openmrs_rpt.working_weeks (week_no,date_start,date_end,year) " +
+		                             "values (WEEKOFYEAR('"+dateTo+"'),'"+dateFrom+"','"+dateTo+"','"+year+"')";
 		DatabaseUtil.getDbCon().execute (insertQuery);
 		
 		// Clear the current table
@@ -84,7 +86,7 @@ public class WeeklyReport {
 		String[][] users  = DatabaseUtil.getDbCon().executeQuery (userList, null);
 		
 		// Get all weeks dates
-		String weekList = "Select week_no, date_start, date_end from openmrs_rpt.working_weeks";
+		String weekList = "Select week_no, date_start, date_end, year from openmrs_rpt.working_weeks";
 		String[][] weeks  = DatabaseUtil.getDbCon().executeQuery (weekList, null);
 		
 		// for all users
@@ -96,8 +98,8 @@ public class WeeklyReport {
 			for(int x = 0;x<weeks.length; x ++) {
 			
 				//  Get nos: total screened, total suspects and total sputum submitted & insert
-				insertQuery = "insert into openmrs_rpt.weekly_screener_summary (no_of_suspects, no_of_screening, no_of_sputum_submitted, no_of_sputum_result, no_of_mtb_pos, no_of_treatment_initiated, username, week_no) " +
-										"select IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 1 then 1 else 0 end),0) ,  IFNULL(SUM(case when e.encounter_type = 2 then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 3 then 1 else 0 end),0),0, 0 ,'"+username+"', WEEKOFYEAR('"+weeks[x][2]+"') " +
+				insertQuery = "insert into openmrs_rpt.weekly_screener_summary (no_of_suspects, no_of_screening, no_of_sputum_submitted, no_of_sputum_result, no_of_mtb_pos, no_of_treatment_initiated, username, week_no, year) " +
+										"select IFNULL(SUM(case when ( pa.value = 'Suspect' and e.encounter_type = 1 ) then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 1 then 1 else 0 end),0) ,  IFNULL(SUM(case when e.encounter_type = 2 then 1 else 0 end),0) , IFNULL(SUM(case when e.encounter_type = 3 then 1 else 0 end),0),0, 0 ,'"+username+"', WEEKOFYEAR('"+weeks[x][2]+"'), '"+weeks[x][3]+"'" +
 										"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_attribute pa " +
 										"where e.encounter_datetime >= '"+weeks[x][1]+" %' and e.encounter_datetime <= '"+weeks[x][2]+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
 				DatabaseUtil.getDbCon().execute (insertQuery);
@@ -112,13 +114,15 @@ public class WeeklyReport {
 				String updateQuery = "Update openmrs_rpt.weekly_screener_summary" +
 									 " set no_of_mtb_pos = " + data[0][0] +
 									 " , no_of_treatment_initiated = " + data[0][1] +
-									 " where username = '"+username+"' and week_no = WEEKOFYEAR('"+weeks[x][2]+"')" ;
+									 " where username = '"+username+"' and week_no = WEEKOFYEAR('"+weeks[x][2]+"') and year = '"+weeks[x][3]+"'" ;
 				DatabaseUtil.getDbCon().execute(updateQuery);
 			
 			}
 			
 			// Get all the weeks no
-			String getScreenerReportData = "select * from openmrs_rpt.weekly_screener_summary where username = '"+username+"' order by week_no asc;";
+			String getScreenerReportData = "Select * from "
+												+ "(select * from openmrs_rpt.weekly_screener_summary where username = '01001' order by year desc , week_no desc limit 6) as v1 "
+										 + "order by year asc , week_no asc;";
 			ResultSet resultSetData = DatabaseUtil.getDbCon().executeQueryResultSet(getScreenerReportData);
 			
 			try{
