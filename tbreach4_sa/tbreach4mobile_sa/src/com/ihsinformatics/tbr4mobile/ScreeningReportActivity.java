@@ -47,6 +47,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.INotificationSideChannel;
 import android.support.v4.view.ViewPager;
+import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -54,6 +55,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -65,6 +67,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -495,8 +498,33 @@ public class ScreeningReportActivity extends AbstractFragmentActivity
 										
 									}
 									
-									String text = "<font color=#f58220> " +  s  +". </font>"+ results.get(j).toString();
+									String resultArray[] = results.get(j).toString().split(";:;");
+									
+									String text = "";
+									
+									if(resultArray[2].equals("Non-Suspect"))
+										text = "<font color=#f58220> " +  s  +". </font>" + resultArray[0];
+									else
+										text = "<font color=#f58220> " +  s  +". </font> <font color=#656a23> <b>" + resultArray[0] + "</b> </font>";
 									tv1.setText(Html.fromHtml(text));
+									tv1.setTag(resultArray[1]);
+									
+									if(resultArray[2].equals("Suspect")){
+										
+										tv1.setOnClickListener (new OnClickListener ()
+										{
+											@Override
+											public void onClick (View view)
+											{
+										
+												
+												viewPatientDetail(tv1.getTag().toString());
+												
+											}
+										});
+										
+									}
+									
 									j++;
 									screeningInfoLinearLayout.addView(tv1);
 									
@@ -548,6 +576,17 @@ public class ScreeningReportActivity extends AbstractFragmentActivity
 	public boolean onLongClick(View arg0) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	
+	public void viewPatientDetail(String pid){
+		
+
+		//finish();
+		Intent intent = new Intent (mContext, PatientReportActivity.class);
+		intent.putExtra ("pid", pid);
+		this.startActivityForResult(intent, -1);
+		
 	}
 
 }

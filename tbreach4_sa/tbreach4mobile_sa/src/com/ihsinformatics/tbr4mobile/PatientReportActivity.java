@@ -107,6 +107,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	
 	MyTextView			phoneTextView;
 	MyEditText			phone;
+	MyTextView			phone2TextView;
+	MyEditText			phone2;
 	MyTextView			contactTbTextView;
 	MyEditText			contactTb;
 	MyTextView			lastHivResultTextView;
@@ -199,7 +201,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 	{
 		FORM_NAME = "Patient Report";
 		TAG = "PatientReportActivity";
-		PAGE_COUNT = 6;
+		PAGE_COUNT = 7;
 		pager = (ViewPager) findViewById (R.template_id.pager);
 		navigationSeekbar.setMax (PAGE_COUNT - 1);
 		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
@@ -271,9 +273,13 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		country  = new MyEditText (context, R.string.country_address, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 0, false);
 		country.setKeyListener(null);
 		
-		phoneTextView = new MyTextView (context, R.style.text, R.string.phone_number);
+		phoneTextView = new MyTextView (context, R.style.text, R.string.phone1);
 		phone = new MyEditText (context, R.string.phone_number, R.string.empty_string, InputType.TYPE_CLASS_PHONE, R.style.edit, 20, false);
 		phone.setKeyListener(null);
+		
+		phone2TextView = new MyTextView (context, R.style.text, R.string.phone2);
+		phone2 = new MyEditText (context, R.string.phone_number, R.string.empty_string, InputType.TYPE_CLASS_PHONE, R.style.edit, 20, false);
+		phone2.setKeyListener(null);
 		
 		contactTbTextView  = new MyTextView (context, R.style.text, R.string.contact_with_tb);
 		contactTb = new MyEditText (context, R.string.contact_with_tb, R.string.empty_string, InputType.TYPE_CLASS_TEXT, R.style.edit, 20, false);
@@ -315,7 +321,8 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		
 		View[][] viewGroups = { {searchPatientTextView, searchOption, scanBarcode, patientIdMyTextView, patientId, testIdMyTextView, testId, searchButton},
 								{pidTextView, pid, nhlsIdTextView, nhlsId, firstNameTextView,firstName,surnameTextView,surname,},
-								{genderTextView, gender,dobTextView,dob, ageTextView, age, phoneTextView, phone,},
+								{genderTextView, gender,dobTextView,dob, ageTextView, age},
+								{phoneTextView, phone, phone2TextView, phone2},
 								{physicalAddressTextView, physicalAddress, townAddressTextView, townAddress, landmarkAddressTextView, landmarkAddress, /*cityTextView, city,*/ countryTextView, country,  },
 								{contactTbTextView, contactTb, lastHivResultTextView, lastHivResult, diabetesTextView, diabetes, },
 								{sputumSubmissionDateTextView, sputumSubmissionDate,sputumResultDateTextView,sputumResultDate,genexpertResultTextView,genexpertResult,treatmentInitiationDateTextView,treatmentInitiationDate}};
@@ -346,7 +353,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		
 		navigationSeekbar.setOnSeekBarChangeListener (this);
 		views = new View[] {patientId, testId, pid, nhlsId, firstName, surname, dob, age, gender, physicalAddress, townAddress, landmarkAddress, /*city,*/ country,
-							phone, contactTb, diabetes,sputumSubmissionDate,sputumResultDate,genexpertResult,treatmentInitiationDate};
+							phone, phone2, contactTb, diabetes,sputumSubmissionDate,sputumResultDate,genexpertResult,treatmentInitiationDate};
 		
 		pager.setOnPageChangeListener (this);
 		patientId.setOnLongClickListener (this);
@@ -386,8 +393,55 @@ public class PatientReportActivity extends AbstractFragmentActivity
 		treatmentInitiationDate.setVisibility(View.GONE);
 		treatmentInitiationDateTextView.setVisibility(View.GONE);
 		
+		Intent thisIntent = this.getIntent();
+		
+		if(thisIntent.hasExtra("pid")){
+			
+			String pid = thisIntent.getStringExtra("pid");
+			patientId.setText(pid);
+			getPatientDetails(pid,PATIENT_ID);
+			
+		}
+		
 	}
 
+	@Override
+	public void onBackPressed (){
+		
+		Intent thisIntent = this.getIntent();
+		if(thisIntent.hasExtra("pid")){
+			
+			String pid = thisIntent.getStringExtra("pid");
+			pid = pid + "123";
+			finish();
+			
+		}
+		else{
+			AlertDialog confirmationDialog = new AlertDialog.Builder (this).create ();
+			confirmationDialog.setTitle (getResources ().getString (R.string.close_form));
+			confirmationDialog.setMessage (getResources ().getString (R.string.confirm_close));
+			confirmationDialog.setButton (AlertDialog.BUTTON_POSITIVE, getResources ().getString (R.string.yes), new AlertDialog.OnClickListener ()
+			{
+				@Override
+				public void onClick (DialogInterface dialog, int which)
+				{
+					finish ();
+					Intent mainMenuIntent = new Intent (getApplicationContext (), MainMenuActivity.class);
+					startActivity (mainMenuIntent);
+				}
+			});
+			confirmationDialog.setButton (AlertDialog.BUTTON_NEGATIVE, getResources ().getString (R.string.cancel), new AlertDialog.OnClickListener ()
+			{
+				@Override
+				public void onClick (DialogInterface dialog, int which)
+				{
+				}
+			});
+			confirmationDialog.show ();
+		}
+
+	}
+	
 	@Override
 	public void updateDisplay ()
 	{
@@ -633,6 +687,7 @@ public class PatientReportActivity extends AbstractFragmentActivity
 						/*city.setText(patientDetail[8][1]);*/
 						country.setText(patientDetail[9][1]);
 						phone.setText(patientDetail[10][1]);
+						phone2.setText(patientDetail[20][1]);
 						contactTb.setText(patientDetail[11][1]);
 						diabetes.setText(patientDetail[12][1]);
 						sputumSubmissionDate.setText(patientDetail[13][1]);

@@ -427,16 +427,16 @@ public class MobileService
 			    
 			    if(!data[0][0].equals("0")){
 			    	
-			    	String selectQuery1 = "select concat(pn.given_name, ' ', pn.family_name), pr.gender, DATEDIFF(curdate(), pr.birthdate) / 365.25 as age " +
-							"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_name pn, openmrs.person pr "+
-							"where e.encounter_datetime = '"+date+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 1 and e.patient_id = pn.person_id and e.patient_id = pr.person_id;";
+			    	String selectQuery1 = "select concat(pn.given_name, ' ', pn.family_name), pr.gender, DATEDIFF(curdate(), pr.birthdate) / 365.25 as age, pi.identifier , pa.value " +
+							"from openmrs.encounter e , openmrs.encounter_provider ep, openmrs.provider p, openmrs.person_name pn, openmrs.person pr, openmrs.patient_identifier pi , openmrs.person_attribute pa "+
+							"where e.encounter_datetime = '"+date+" %' and e.encounter_id = ep.encounter_id and ep.provider_id = p.provider_id and p.identifier = '"+username+"' and ep.voided = 0 and e.encounter_type = 1 and e.patient_id = pn.person_id and e.patient_id = pr.person_id and e.patient_id = pi.patient_id and pi.identifier_type = 1 and e.patient_id = pa.person_id and pa.person_attribute_type_id = 12;";
 			    	String[][] screeningNames = executeQuery (selectQuery1, null);
 			    	
 			    	for(int i = 0; i<screeningNames.length; i++){
 			    		
 			    		Float f = Float.parseFloat(screeningNames[i][2]);
 			    		int no = f.intValue();
-			    		locationObj.put("name_"+i, screeningNames[i][0]+" - "+screeningNames[i][1]+" - "+no);
+			    		locationObj.put("name_"+i, screeningNames[i][0]+" - "+screeningNames[i][1]+" - "+no+";:;"+screeningNames[i][3]+";:;"+screeningNames[i][4]);
 			    		
 			    	}
 			    	
@@ -2058,9 +2058,18 @@ public class MobileService
 				// Get all Encounters from encounter type 'Sputum Result' for patient id
 				List<Encounter> sputumResultEncounters = Context.getEncounterService ().getEncounters (patient, null, null, null, null, sputumResultEncounterType, null, null, null, false);
 				
+				// Get 'Culture Result' Encounter Type 
+				Collection<EncounterType> cultureResultEncounterType = Context.getEncounterService ().findEncounterTypes ("Culture Results");
+				// Get all Encounters from encounter type 'Sputum Result' for patient id
+				List<Encounter> cultureResultEncounters = Context.getEncounterService ().getEncounters (patient, null, null, null, null, cultureResultEncounterType, null, null, null, false);
+				
 				// if encounter is null
-				if(sputumResultEncounters == null || sputumResultEncounters.size() == 0){
+				if((sputumResultEncounters == null || sputumResultEncounters.size() == 0) && (cultureResultEncounters == null || cultureResultEncounters.size() == 0)){
 					return CustomMessage.getErrorMessage(ErrorType.GENEXPERT_RESULT_NOT_FOUND);   // Prerequisite fails
+				}
+				
+				if(sputumResultEncounters == null || sputumResultEncounters.size() == 0){
+					
 				}
 				else{
 					// Get 'GeneXpert Result' Concept
@@ -2077,6 +2086,28 @@ public class MobileService
 							return ""; // Prerequisite Pass
 						}
 					}
+					
+					// if encounter is null
+					if(cultureResultEncounters == null || cultureResultEncounters.size() == 0){
+						
+					}
+					else{
+						// Get 'Culture Result' Concept
+						concepts = Context.getConceptService ().getConceptsByName ("Culture Result");
+						// Get All observations for encounter type and concept
+						observations = Context.getObsService ().getObservations (null, cultureResultEncounters, concepts, null, null, null, null, null, null, null, null, false);
+						
+						for (Obs obs : observations)
+						{
+							Concept cultureResult = obs.getValueCoded();
+							String ss = cultureResult.getName().toString();
+							if (ss.equals ("Culture Positive")) // if value is MTB Positive
+							{
+								return ""; // Prerequisite Pass
+							}
+						}
+					}	
+					
 					return CustomMessage.getErrorMessage(ErrorType.POSITIVE_GENEXPERT_RESULT_NOT_FOUND); // Prerequisite fails
 				}
 			}

@@ -289,7 +289,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 			}
 		}
 		
-		if(hivTestingConsentSkipFlag){
+		if(hivTestingConsentSkipFlag && FORM_NAME.equals("HIV Test Form")){
 			if(pageNo == 2){
 				pageNo = 7;
 			}else if (pageNo == 6){
@@ -297,7 +297,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 			}
 		}
 		
-		if(hivTestingFirstScreeningSkipFlag){
+		if(hivTestingFirstScreeningSkipFlag && FORM_NAME.equals("HIV Test Form")){
 			
 			String pno = pageNumber.getText().toString();
 			
