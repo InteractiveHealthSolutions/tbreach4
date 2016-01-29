@@ -16,9 +16,6 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4mobile_pk;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -41,6 +38,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 /**
  * @author owais.hussain@irdresearch.org

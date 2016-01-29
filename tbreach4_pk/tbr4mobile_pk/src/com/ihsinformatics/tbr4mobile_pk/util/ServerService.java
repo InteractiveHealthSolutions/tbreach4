@@ -25,13 +25,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.ihsinformatics.tbr4mobile_pk.App;
-import com.ihsinformatics.tbr4mobile_pk.R;
-import com.ihsinformatics.tbr4mobile_pk.model.OpenMrsObject;
-import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
-import com.ihsinformatics.tbr4mobile_pk.shared.Metadata;
-
-import org.bouncycastle.asn1.ocsp.ResponderID;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +36,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
+
+import com.ihsinformatics.tbr4mobile_pk.App;
+import com.ihsinformatics.tbr4mobile_pk.R;
+import com.ihsinformatics.tbr4mobile_pk.model.OpenMrsObject;
+import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
+import com.ihsinformatics.tbr4mobile_pk.shared.Metadata;
 
 /**
  * @author owais.hussain@irdresearch.org

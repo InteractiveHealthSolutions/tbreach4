@@ -17,13 +17,15 @@ Contributors: Tahira Niazi */
 package com.ihsinformatics.tbr4mobile_pk.util;
 
 import java.util.ArrayList;
-import com.ihsinformatics.tbr4mobile_pk.R;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.ihsinformatics.tbr4mobile_pk.R;
 
 /**
  * 

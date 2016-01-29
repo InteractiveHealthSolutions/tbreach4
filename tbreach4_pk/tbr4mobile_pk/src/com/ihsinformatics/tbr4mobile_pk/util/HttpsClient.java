@@ -28,6 +28,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,11 +43,13 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import com.ihsinformatics.tbr4mobile_pk.App;
-import com.ihsinformatics.tbr4mobile_pk.R;
+
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+
+import com.ihsinformatics.tbr4mobile_pk.App;
+import com.ihsinformatics.tbr4mobile_pk.R;
 
 /**
  * @author owais.hussain@irdresearch.org

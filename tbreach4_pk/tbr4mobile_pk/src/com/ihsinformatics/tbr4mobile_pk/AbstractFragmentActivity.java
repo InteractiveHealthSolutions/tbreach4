@@ -19,12 +19,6 @@ package com.ihsinformatics.tbr4mobile_pk;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
-import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
-import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -59,6 +53,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
+import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 /**
  * @author owais.hussain@irdresearch.org

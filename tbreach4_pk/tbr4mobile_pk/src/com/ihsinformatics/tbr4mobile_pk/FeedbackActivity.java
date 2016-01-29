@@ -19,14 +19,6 @@ package com.ihsinformatics.tbr4mobile_pk;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
-import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
-import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,6 +43,12 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
+import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
+import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
 
 /**
  * @author owais.hussain@irdresearch.org

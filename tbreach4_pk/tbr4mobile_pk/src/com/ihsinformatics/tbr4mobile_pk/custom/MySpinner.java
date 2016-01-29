@@ -16,13 +16,11 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4mobile_pk.custom;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
 import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import com.ihsinformatics.tbr4mobile_pk.R;
 
 /**
  * @author owais.hussain@irdresearch.org

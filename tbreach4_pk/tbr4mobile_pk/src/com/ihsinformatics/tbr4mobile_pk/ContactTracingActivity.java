@@ -15,19 +15,13 @@ package com.ihsinformatics.tbr4mobile_pk;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,14 +36,12 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -58,10 +50,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.ihsinformatics.tbr4mobile_pk.custom.MyButton;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyRadioButton;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyRadioGroup;
 import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
 import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
@@ -249,7 +238,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 		totalNumberPaediatricMembers = new MyEditText(context, R.string.total_paediatric_household_members, R.string.total_paediatric_household_members_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
 		
 		totalNumberPaediatricMembersWithSymptomsTextView = new MyTextView(context, R.style.text, R.string.paediatric_members_with_symptoms);
-		totalNumberPaediatricMembersWithSymptoms = new MyEditText(context, R.string.adult_members_with_symptoms, R.string.adult_members_with_symptoms_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
+		totalNumberPaediatricMembersWithSymptoms = new MyEditText(context, R.string.paediatric_members_with_symptoms, R.string.paediatric_members_with_symptoms_hint, InputType.TYPE_CLASS_NUMBER, R.style.edit, 2, false);
 
 		totalNumberMembersTextView = new MyTextView(context, R.style.text,
 				R.string.total_household_members);
@@ -720,7 +709,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 						R.color.Red));
 			}
 
-			if (!RegexUtil.isNumeric(App.get(totalNumberPaediatricMembersWithSymptoms), false))
+			if (totalNumberPaediatricMembersWithSymptoms.isEnabled() && !RegexUtil.isNumeric(App.get(totalNumberPaediatricMembersWithSymptoms), false))
 			{
 				valid = false;
 				message.append(totalNumberPaediatricMembersWithSymptoms.getTag().toString() + ": "
@@ -771,7 +760,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 				observations.add(new String[] {"Total Adult Symptomatic Members", App.get(totalNumberAdultMembersWithSymptoms)});
 			}
 			
-			if(Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms)) > 0)
+			if(Integer.parseInt(App.get(totalNumberAdultMembersWithSymptoms).equals("") ? "0" : App.get(totalNumberAdultMembersWithSymptoms)) > 0)
 			{
 				observations.add(new String[] {"Symptomatic Adult Members Names", App.get(namesAdultSymptomaticMembers)});
 			}
@@ -785,7 +774,7 @@ public class ContactTracingActivity extends AbstractFragmentActivity
 				observations.add(new String[] {"Total Paediatric Symptomatic Members", App.get(totalNumberPaediatricMembersWithSymptoms)});
 			}
 			
-			if(Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms)) > 0)
+			if(Integer.parseInt(App.get(totalNumberPaediatricMembersWithSymptoms).equals("") ? "0" : App.get(totalNumberPaediatricMembersWithSymptoms)) > 0)
 			{
 				observations.add(new String[] {"Symptomatic Paediatric Members Names", App.get(namesPaediatricSymptomaticMembers)});
 			}

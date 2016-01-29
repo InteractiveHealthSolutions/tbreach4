@@ -13,13 +13,10 @@ Contributors: Tahira Niazi */
 package com.ihsinformatics.tbr4mobile_pk;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -27,16 +24,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.text.method.KeyListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,7 +47,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -67,7 +65,7 @@ import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
 import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
 import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 
-public class AdultReverseContactTracingActivity extends AbstractFragmentActivity implements OnEditorActionListener
+public class AdultReverseContactTracingActivity extends AbstractFragmentActivity implements KeyListener, OnEditorActionListener
 {
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 		MyTextView		formDateTextView;
@@ -102,7 +100,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		MyEditText		indexCaseId;
 		
 		MyTextView		indexDistrictTbNumberTextView;
-		MyTextView		indexDistrictTbNumber;
+		MyEditText		indexDistrictTbNumber;
 		
 		MyTextView		diagnosisTextView;
 		MySpinner		diagnosis;
@@ -129,6 +127,9 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 
 		MyTextView		jointSpineSwellingTextView;
 		MySpinner		jointSpineSwelling;
+		
+		MyTextView		historyContactTbTextView;
+		MySpinner		historyContactTb;
 
 		MyTextView		tbBeforeTextView;
 		MySpinner		tbBefore;
@@ -263,8 +264,8 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		indexCaseId = new MyEditText(context, R.string.index_case_id, R.string.index_case_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
 		
 		indexDistrictTbNumberTextView = new MyTextView(context, R.style.text, R.string.index_district_number);
-		indexDistrictTbNumber = new MyTextView(context, R.style.text, R.string.empty_string);
-		//indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
+		indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 10, false);
+//		indexDistrictTbNumber = new MyTextView(context, R.style.text, R.string.empty_string);
 
 		diagnosisTextView = new MyTextView(context, R.style.text, R.string.diagnosis);
 		diagnosis = new MySpinner(context, getResources().getStringArray(R.array.diagnosis_options), R.string.diagnosis, R.string.option_hint);
@@ -291,6 +292,9 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
 		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
 		
+		historyContactTbTextView = new MyTextView(context, R.style.text, R.string.contact_history_adult);
+		historyContactTb = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.contact_history_adult, R.string.option_hint);
+		
 		tbBeforeTextView = new MyTextView(context, R.style.text, R.string.tb_before);
 		tbBefore = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.tb_before, R.string.option_hint);
 
@@ -311,7 +315,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId,  indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis},
 								{coughTextView, cough, coughDurationTextView, coughDuration, productiveCoughTextView, productiveCough, feverTextView, fever},
 								{nightSweatsTextView, nightSweats, weightLossTextView, weightLoss, lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling},
-								{tbBeforeTextView, tbBefore, tbMedicationTextView, tbMedication, tbSuspect,  patientIdTextView, patientId, scanBarcode}};
+								{historyContactTbTextView, historyContactTb, tbBeforeTextView, tbBefore, tbMedicationTextView, tbMedication, tbSuspect,  patientIdTextView, patientId, scanBarcode}};
 
 		
 		// Create layouts and store in ArrayList
@@ -341,8 +345,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 				validatePatientId.setOnClickListener(this);
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
-				indexDistrictTbNumber.setKeyListener(null);
-				views = new View[] {age, indexPatientType, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, lymphNodeSwelling, jointSpineSwelling, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
+				views = new View[] {age, indexPatientType, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, cough, coughDuration, productiveCough, fever, nightSweats, weightLoss, lymphNodeSwelling, jointSpineSwelling, historyContactTb, tbBefore, tbMedication, firstName, lastName, tbSuspect, patientId};
 
 		for (View v : views)
 		{
@@ -505,7 +508,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 								}
 								else
 								{
-									indexDistrictTbNumber.setTextColor(getResources().getColor(R.color.Chocolate));
+//									indexDistrictTbNumber.setTextColor(getResources().getColor(R.color.Chocolate));
 									indexDistrictTbNumber.setText(result[i][1]);
 								}
 							}
@@ -549,7 +552,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			if (screenedBefore.getSelectedItem().toString()
 					.equals(getResources().getString(R.string.yes)))
 			{
-				String message = "The client is screened already. The form is being closed.";
+				String message = "The client is screened already. Form will now close.";
 				AlertDialog dialog;
 				AlertDialog.Builder builder = new Builder(this);
 				builder.setMessage(message);
@@ -571,6 +574,41 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 				};
 				dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", listener);
 				dialog.show();
+			}
+		}
+		else if(parent == indexPatientType)
+		{
+			boolean isPrivatePatient = false;
+			boolean isTbr4Patient;
+			isTbr4Patient = indexPatientType.getSelectedItem().toString().equals(getResources().getString(R.string.tbr4pk_patient));
+			isPrivatePatient = !isTbr4Patient;
+			
+			if(isPrivatePatient)
+			{
+				// disabling Index Patient Id and Validate Button
+				indexCaseIdTextView.setEnabled(!isPrivatePatient);
+				indexCaseId.setEnabled(!isPrivatePatient);
+				scanBarcodeIndexId.setEnabled(!isPrivatePatient);
+				scanBarcode.setEnabled(!isPrivatePatient);
+				validatePatientId.setEnabled(!isPrivatePatient);
+				saveButton.setEnabled(isPrivatePatient);
+				
+				// indexDisrictTbNumber should be editable for private patient
+				indexDistrictTbNumber.setKeyListener(this);
+				indexDistrictTbNumber.setInputType(InputType.TYPE_CLASS_TEXT);
+				indexDistrictTbNumber.setText("");
+				diagnosis.setClickable(isPrivatePatient);
+			}
+			else
+			{
+				indexCaseIdTextView.setEnabled(!isPrivatePatient);
+				indexCaseId.setEnabled(!isPrivatePatient);
+				scanBarcodeIndexId.setEnabled(!isPrivatePatient);
+				scanBarcode.setEnabled(!isPrivatePatient);
+				validatePatientId.setEnabled(!isPrivatePatient);
+				saveButton.setEnabled(isPrivatePatient);
+				indexDistrictTbNumber.setText("");
+				indexDistrictTbNumber.setKeyListener(null);
 			}
 		}
 		updateDisplay();
@@ -792,6 +830,7 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			observations.add(new String[] { "Weight Loss", App.get(weightLoss) });
 			observations.add(new String[] {"Lymph Node Swelling", App.get(lymphNodeSwelling)});
 			observations.add(new String[] {"Joint Spine Swelling", App.get(jointSpineSwelling)});
+			observations.add(new String[] {"Contact History", App.get(historyContactTb)});
 			
 			observations.add(new String[] { "TB Past", App.get(tbBefore) });
 
@@ -803,6 +842,16 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			}
 
 			observations.add(new String[] { "Age Modifier", "Year(s)" });
+			
+			observations.add(new String[] { "Index Patient Type", App.get(indexPatientType) });
+			if(!indexPatientType.getSelectedItem().toString().equals(getResources().getString(R.string.tbr4pk_patient)))
+			{
+				if(!"".equals(App.get(indexDistrictTbNumber)))
+				{
+					observations.add(new String[] {"Index Case District TB Number", App.get(indexDistrictTbNumber)});
+				}
+				observations.add(new String[] {"Index Case Diagnosis", App.get(diagnosis)});
+			}
 			
 			if(!tbSuspect.isChecked())
 			{
@@ -940,6 +989,52 @@ public class AdultReverseContactTracingActivity extends AbstractFragmentActivity
 			updateDisplay ();
 		}
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#clearMetaKeyState(android.view.View, android.text.Editable, int)
+	 */
+	@Override
+	public void clearMetaKeyState(View view, Editable content, int states) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#getInputType()
+	 */
+	@Override
+	public int getInputType() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyDown(android.view.View, android.text.Editable, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyDown(View view, Editable text, int keyCode,
+			KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyOther(android.view.View, android.text.Editable, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyOther(View view, Editable text, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyUp(android.view.View, android.text.Editable, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

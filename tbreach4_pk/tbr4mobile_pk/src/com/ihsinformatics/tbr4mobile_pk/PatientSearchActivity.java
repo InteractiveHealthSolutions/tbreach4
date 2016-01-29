@@ -22,11 +22,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -50,6 +45,11 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 /**
  * @author owais.hussain@irdresearch.org

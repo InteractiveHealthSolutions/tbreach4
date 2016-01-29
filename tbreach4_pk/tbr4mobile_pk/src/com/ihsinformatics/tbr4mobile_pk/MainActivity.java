@@ -14,10 +14,7 @@ Contributors: Tahira Niazi */
 package com.ihsinformatics.tbr4mobile_pk;
 
 import java.util.Locale;
-import com.ihsinformatics.tbr4mobile_pk.R;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.util.DatabaseUtil;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,6 +27,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
+
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.util.DatabaseUtil;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 public class MainActivity extends Activity
 {

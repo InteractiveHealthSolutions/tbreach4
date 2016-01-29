@@ -21,12 +21,15 @@ Contributors: Tahira Niazi -->
     <string name="child_cough_duration">What is the duration of cough?</string>
     <string name="child_fever">Does your child have fever for more than 2 weeks?</string>
     <string name="client_suspect">TB Suspect</string>
-    <string name="contact_history">Does the child have history of contact with TB patient in past 2 years?</string>
+    <string name="contact_history">Does the child has history of contact with TB patient over past 2 years?</string>
+    <string name="contact_history_adult">Do you have history of contact with TB patient over past 2 years?</string>
     
 <!--     the two concepts (lymph and joint) are used in all four Screening Forms (Regular + Contact) -->
 		 <string name="positive_report">In possession of a previous positive report?</string>
 	 	 <string name="lymph_node_swelling">Lymph node swelling of greater than 2 weeks?</string>
 		 <string name="joint_spine_swelling">Joint/Spine swelling of greater than 2 weeks?</string>
+		 
+		 
     
     <string name="more_than_three_weeks">More than 3 Weeks</string>
     <string name="two_to_three_weeks">2 to 3 Weeks</string>

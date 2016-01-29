@@ -15,9 +15,10 @@ Contributors: Tahira Niazi */
  */
 package com.ihsinformatics.tbr4mobile_pk.util;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
 import android.content.Context;
 import android.graphics.Color;
+
+import com.ihsinformatics.tbr4mobile_pk.R;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.LineGraphView;

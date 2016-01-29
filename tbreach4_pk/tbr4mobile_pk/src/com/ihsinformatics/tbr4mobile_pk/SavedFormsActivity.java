@@ -20,13 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.util.DateTimeUtil;
-import com.ihsinformatics.tbr4mobile_pk.util.JsonUtil;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
-import com.ihsinformatics.tbr4mobile_pk.SavedFormsActivity;
+
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -42,9 +38,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ScrollView;
+import android.widget.Toast;
+
+import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.util.DateTimeUtil;
+import com.ihsinformatics.tbr4mobile_pk.util.JsonUtil;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 /**
  * @author owais.hussain@irdresearch.org

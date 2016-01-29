@@ -18,13 +18,6 @@ package com.ihsinformatics.tbr4mobile_pk;
 
 import java.util.ArrayList;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
-import com.ihsinformatics.tbr4mobile_pk.model.OpenMrsObject;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.util.DatabaseUtil;
-import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -51,6 +44,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ihsinformatics.tbr4mobile_pk.model.OpenMrsObject;
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.util.DatabaseUtil;
+import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
 
 /**
  * @author owais.hussain@irdresearch.org

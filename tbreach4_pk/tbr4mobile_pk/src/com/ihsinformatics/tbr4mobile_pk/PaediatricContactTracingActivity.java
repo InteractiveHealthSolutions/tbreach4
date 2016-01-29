@@ -18,9 +18,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.http.impl.entity.StrictContentLengthStrategy;
-
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -28,17 +25,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.text.method.KeyListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -58,7 +56,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.ihsinformatics.tbr4mobile_pk.R.color;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyButton;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
 import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
@@ -70,7 +67,7 @@ import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
 import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
 import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 
-public class PaediatricContactTracingActivity extends AbstractFragmentActivity implements OnEditorActionListener
+public class PaediatricContactTracingActivity extends AbstractFragmentActivity implements KeyListener, OnEditorActionListener
 {
 	// Views displayed in pages, sorted w.r.t. appearance on pager
 		MyTextView		formDateTextView;
@@ -110,7 +107,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		MyEditText		indexCaseId;
 		
 		MyTextView		indexDistrictTbNumberTextView;
-		MyTextView		indexDistrictTbNumber;
+		MyEditText		indexDistrictTbNumber;
 		
 		MyTextView		diagnosisTextView;
 		MySpinner		diagnosis;
@@ -143,6 +140,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 
 		MyTextView		jointSpineSwellingTextView;
 		MySpinner		jointSpineSwelling;
+		
+		MyTextView		historyContactTbTextView;
+		MySpinner		historyContactTb;
 		
 		MyTextView		chestExaminationTextView;
 		MySpinner		chestExamination;
@@ -364,8 +364,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		indexCaseId = new MyEditText(context, R.string.index_case_id, R.string.index_case_id_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
 		
 		indexDistrictTbNumberTextView = new MyTextView(context, R.style.text, R.string.index_district_number);
-		indexDistrictTbNumber = new MyTextView(context, R.style.text, R.string.empty_string);
-//		indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 12, false);
+		indexDistrictTbNumber = new MyEditText(context, R.string.index_district_number, R.string.index_district_number_hint, InputType.TYPE_CLASS_TEXT, R.style.edit, 10, false);
+//		indexDistrictTbNumber = new MyTextView(context, R.style.text, R.string.empty_string);
 
 		diagnosisTextView = new MyTextView(context, R.style.text, R.string.diagnosis);
 		diagnosis = new MySpinner(context, getResources().getStringArray(R.array.diagnosis_options), R.string.diagnosis, R.string.option_hint);
@@ -398,6 +398,9 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 		
 		jointSpineSwellingTextView = new MyTextView(context, R.style.text, R.string.joint_spine_swelling);
 		jointSpineSwelling = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.joint_spine_swelling, R.string.option_hint);
+		
+		historyContactTbTextView = new MyTextView(context, R.style.text, R.string.contact_history);
+		historyContactTb = new MySpinner(context, getResources().getStringArray(R.array.four_options), R.string.contact_history, R.string.option_hint);
 		
 		chestExaminationTextView = new MyTextView(context, R.style.text, R.string.chest_examination);
 		chestExamination = new MySpinner(context, getResources().getStringArray(R.array.chest_exam_options), R.string.chest_examination, R.string.option_hint);
@@ -499,7 +502,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 								{dobTextView, dobPicker},
 								{indexCaseIdTextView, indexCaseId, scanBarcodeIndexId, validatePatientId, indexDistrictTbNumberTextView, indexDistrictTbNumber, diagnosisTextView, diagnosis, weightTextView, weight, weightPercentileTextView, weightPercentile},
 								{coughTextView, cough, coughDurationTextView, coughDuration, feverTextView, fever, nightSweatsTextView, nightSweats, weightLossTextView, weightLoss, contactAppetiteTextView, contactAppetite},
-								{lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling, chestExaminationTextView, chestExamination},
+								{lymphNodeSwellingTextView, lymphNodeSwelling, jointSpineSwellingTextView, jointSpineSwelling, historyContactTbTextView, historyContactTb, chestExaminationTextView, chestExamination},
 								{lymphNodeExaminationTextView, lymphNodeExamination, abdominalExaminationTextView, abdominalExamination, otherExaminationTextView, otherExamination},
 								{childBcgScarTextView, childBcgScar, adultFamilyMemberTBTextView, adultFamilyMemberTB, memberFamilyTBTextView, memberFamilyTB, memberTBFormTextView, memberTBForm},
 								{memberTBTypeTextView, memberTBType, confirmSputumSmearPositiveTBTextView, confirmSputumSmearPositiveTB},
@@ -536,9 +539,8 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 				validatePatientId.setOnClickListener(this);
 				navigationSeekbar.setOnSeekBarChangeListener (this);
 				age.setOnEditorActionListener (this);
-				indexDistrictTbNumber.setKeyListener(null);
 				views = new View[] {age, ageModifier, indexPatientType, contactTracingStrategy, visitType, screenedBefore, indexCaseId, indexDistrictTbNumber, diagnosis, weight, weightPercentile, cough, coughDuration, fever,  nightSweats, weightLoss, 
-						contactAppetite, lymphNodeSwelling, jointSpineSwelling, chestExamination, lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, 
+						contactAppetite, lymphNodeSwelling, jointSpineSwelling, historyContactTb, chestExamination, lymphNodeExamination, abdominalExamination, otherExamination, childBcgScar, adultFamilyMemberTB, memberFamilyTB, memberTBForm, memberTBType, 
 						confirmSputumSmearPositiveTB, exposureScore, sourceCaseMother, sourceCasePrimaryCareGiver, sourceCaseSleepSameBed, sourceCaseSleepSameRoom, sourceCaseLiveSameHousehold, sourceCaseSeeChildEveryday, sourceCaseCoughing, 
 						sourceCaseHasPulmonaryTB, sourceCasePositiveSputumSmear, moreThanOneSourceCase, firstName, lastName, tbSuspect, patientId, ppaScore};
 
@@ -784,6 +786,41 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			confirmSputumSmearPositiveTBTextView.setEnabled(visible);
 			confirmSputumSmearPositiveTB.setEnabled(visible);
 		}
+		else if(parent == indexPatientType)
+		{
+			boolean isPrivatePatient = false;
+			boolean isTbr4Patient;
+			isTbr4Patient = indexPatientType.getSelectedItem().toString().equals(getResources().getString(R.string.tbr4pk_patient));
+			isPrivatePatient = !isTbr4Patient;
+			
+			if(isPrivatePatient)
+			{
+				// disabling Index Patient Id and Validate Button
+				indexCaseIdTextView.setEnabled(!isPrivatePatient);
+				indexCaseId.setEnabled(!isPrivatePatient);
+				scanBarcodeIndexId.setEnabled(!isPrivatePatient);
+				scanBarcode.setEnabled(!isPrivatePatient);
+				validatePatientId.setEnabled(!isPrivatePatient);
+				saveButton.setEnabled(isPrivatePatient);
+				
+				// indexDisrictTbNumber should be editable for private patient
+				indexDistrictTbNumber.setKeyListener(this);
+				indexDistrictTbNumber.setInputType(InputType.TYPE_CLASS_TEXT);
+				indexDistrictTbNumber.setText("");
+				diagnosis.setClickable(isPrivatePatient);
+			}
+			else
+			{
+				indexCaseIdTextView.setEnabled(!isPrivatePatient);
+				indexCaseId.setEnabled(!isPrivatePatient);
+				scanBarcodeIndexId.setEnabled(!isPrivatePatient);
+				scanBarcode.setEnabled(!isPrivatePatient);
+				validatePatientId.setEnabled(!isPrivatePatient);
+				saveButton.setEnabled(isPrivatePatient);
+				indexDistrictTbNumber.setText("");
+				indexDistrictTbNumber.setKeyListener(null);
+			}
+		}
 		updateDisplay ();
 	}
 
@@ -1006,6 +1043,7 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			observations.add(new String[] {"Child Appetite", App.get(contactAppetite)});
 			observations.add(new String[] {"Lymph Node Swelling", App.get(lymphNodeSwelling)});
 			observations.add(new String[] {"Joint Spine Swelling", App.get(jointSpineSwelling)});
+			observations.add(new String[] {"Contact History", App.get(historyContactTb)});
 			observations.add(new String[] {"Chest Examination", App.get(chestExamination)});
 			observations.add(new String[] {"Lymph Node Examination", App.get(lymphNodeExamination)});
 			observations.add(new String[] {"Abdominal Examination", App.get(abdominalExamination) });
@@ -1032,9 +1070,17 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			observations.add(new String[] {"Source Case Positive Sputum Smear", App.get(sourceCasePositiveSputumSmear)});
 			observations.add(new String[] {"More Source Cases", App.get(moreThanOneSourceCase)});
 			observations.add(new String[] {"PPA Score", App.get(ppaScore)});
+			observations.add(new String[] { "Index Patient Type", App.get(indexPatientType) });
+			if(!indexPatientType.getSelectedItem().toString().equals(getResources().getString(R.string.tbr4pk_patient)))
+			{
+				if(!"".equals(App.get(indexDistrictTbNumber)))
+				{
+					observations.add(new String[] {"Index Case District TB Number", App.get(indexDistrictTbNumber)});
+				}
+				observations.add(new String[] {"Index Case Diagnosis", App.get(diagnosis)});
+			}
 			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No"});
 			
-//			observations.add(new String[] {"TB Suspect", tbSuspect.isChecked() ? "Yes" : "No" });
 			
 			AsyncTask<String, String, String> updateTask = new AsyncTask<String, String, String> ()
 			{
@@ -1159,6 +1205,52 @@ public class PaediatricContactTracingActivity extends AbstractFragmentActivity i
 			updateDisplay ();
 		}
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#clearMetaKeyState(android.view.View, android.text.Editable, int)
+	 */
+	@Override
+	public void clearMetaKeyState(View view, Editable content, int states) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#getInputType()
+	 */
+	@Override
+	public int getInputType() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyDown(android.view.View, android.text.Editable, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyDown(View view, Editable text, int keyCode,
+			KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyOther(android.view.View, android.text.Editable, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyOther(View view, Editable text, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.text.method.KeyListener#onKeyUp(android.view.View, android.text.Editable, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -22,17 +22,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
-import com.ihsinformatics.tbr4mobile_pk.custom.MyButton;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
-import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
-import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
-import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
-import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
-import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -58,6 +47,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+
+import com.ihsinformatics.tbr4mobile_pk.custom.MyButton;
+import com.ihsinformatics.tbr4mobile_pk.custom.MyCheckBox;
+import com.ihsinformatics.tbr4mobile_pk.custom.MyEditText;
+import com.ihsinformatics.tbr4mobile_pk.custom.MySpinner;
+import com.ihsinformatics.tbr4mobile_pk.custom.MyTextView;
+import com.ihsinformatics.tbr4mobile_pk.shared.AlertType;
+import com.ihsinformatics.tbr4mobile_pk.shared.FormType;
+import com.ihsinformatics.tbr4mobile_pk.util.RegexUtil;
 
 /**
  * @author owais.hussain@irdresearch.org

@@ -16,15 +16,12 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4mobile_pk;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
-import com.ihsinformatics.tbr4mobile_pk.util.GraphUtil;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import com.ihsinformatics.tbr4mobile_pk.util.GraphUtil;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;

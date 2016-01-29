@@ -16,11 +16,11 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4mobile_pk.custom;
 
-import com.ihsinformatics.tbr4mobile_pk.R;
-
 import android.content.Context;
 import android.text.InputFilter;
 import android.widget.EditText;
+
+import com.ihsinformatics.tbr4mobile_pk.R;
 
 /**
  * @author owais.hussain@irdresearch.org
