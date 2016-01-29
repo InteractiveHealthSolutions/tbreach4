@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -12,14 +14,11 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -28,12 +27,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.DateBox;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
@@ -42,6 +39,7 @@ import com.googlecode.gwt.charts.client.corechart.LineChart;
 import com.googlecode.gwt.charts.client.corechart.LineChartOptions;
 import com.googlecode.gwt.charts.client.options.HAxis;
 import com.googlecode.gwt.charts.client.options.VAxis;
+import com.ihsinformatics.minetbdashboard.shared.CollectionsUtil;
 import com.ihsinformatics.minetbdashboard.shared.CustomMessage;
 import com.ihsinformatics.minetbdashboard.shared.DataType;
 import com.ihsinformatics.minetbdashboard.shared.ErrorType;
@@ -55,7 +53,7 @@ import com.ihsinformatics.minetbdashboard.shared.TimeDimenstion;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Minetbdashboard implements EntryPoint, ClickHandler,
-		KeyDownHandler {
+		KeyDownHandler, ChangeHandler {
 	private static ServerServiceAsync service = GWT.create(ServerService.class);
 
 	private static LoadingWidget loading = new LoadingWidget();
@@ -65,7 +63,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private FlexTable headerFlexTable = new FlexTable();
 	private FlexTable loginFlexTable = new FlexTable();
 	private FlexTable optionsTable = new FlexTable();
-	private Grid dateFilterGrid = new Grid(1, 3);
+	private FlexTable dateFilterTable = new FlexTable();
 
 	private Label formHeadingLabel = new Label("USER AUTHENTICATION");
 	private Label userNameLabel = new Label("User ID:");
@@ -77,9 +75,18 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private ListBox reportsList = new ListBox();
 	private ListBox locationDimensionList = new ListBox();
 	private ListBox timeDimensionList = new ListBox();
+	
+	private ListBox yearFrom = new ListBox();
+	private ListBox yearTo = new ListBox();
+	private ListBox quarterFrom = new ListBox();
+	private ListBox quarterTo = new ListBox();
+	private ListBox monthFrom = new ListBox();
+	private ListBox monthTo = new ListBox();
+	private ListBox weekFrom = new ListBox();
+	private ListBox weekTo = new ListBox();
 
-	private DateBox fromDateBox = new DateBox();
-	private DateBox toDateBox = new DateBox();
+//	private DateBox fromDateBox = new DateBox();
+//	private DateBox toDateBox = new DateBox();
 
 	private Button loginButton = new Button("Login");
 	private Button showButton = new Button("Show Report");
@@ -89,7 +96,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 
 	/* Chart objects */
 	ChartLoader chartLoader;
-	private SimpleLayoutPanel layoutPanel;
+	private VerticalPanel chartPanel = new VerticalPanel();
 
 	/**
 	 * This is the entry point method.
@@ -137,6 +144,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.setCellHorizontalAlignment(loginFlexTable,
 				HasHorizontalAlignment.ALIGN_CENTER);
+		chartPanel.setSize("1024px", "");
 		loginFlexTable.setSize("100%", "");
 		loginFlexTable.getCellFormatter().setHorizontalAlignment(1, 0,
 				HasHorizontalAlignment.ALIGN_RIGHT);
@@ -150,24 +158,14 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.setBorderWidth(1);
 		
-		fromDateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		fromDateBox.setWidth("100%");
-		fromDateBox.setValue(new Date(0));
-		toDateBox.setFormat(new DefaultFormat(DateTimeFormat.getFormat("dd-MM-yyyy")));
-		toDateBox.setWidth("100%");
-		toDateBox.setValue(new Date());
-		
-		dateFilterGrid.setWidget(0, 0, new Label("Select Date Range:"));
-		dateFilterGrid.setWidget(0, 1, fromDateBox);
-		dateFilterGrid.setWidget(0, 2, toDateBox);
-
 		optionsTable.setWidget(0, 0, new Label("Report:"));
 		optionsTable.setWidget(0, 1, reportsList);
 		optionsTable.setWidget(1, 0, new Label("Reporting Level:"));
 		optionsTable.setWidget(1, 1, locationDimensionList);
 		optionsTable.setWidget(2, 0, new Label("Grouping:"));
 		optionsTable.setWidget(2, 1, timeDimensionList);
-		optionsTable.setWidget(3, 0, dateFilterGrid);
+		optionsTable.setWidget(3, 0, new Label("Select Date Range:"));
+		optionsTable.setWidget(3, 1, dateFilterTable);
 
 		fillLists();
 		loginButton.addClickHandler(this);
@@ -181,8 +179,37 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 				}
 			}
 		});
+		timeDimensionList.addChangeHandler(this);
+		createDateFilterWidgets(TimeDimenstion.YEAR);
+	}
+	
+	public void createDateFilterWidgets(TimeDimenstion time) {
+		dateFilterTable.clear();
+		switch (time) {
+			case YEAR:
+				dateFilterTable.setWidget(0, 0, yearFrom);
+				dateFilterTable.setWidget(0, 1, yearTo);
+				break;
+			case MONTH:
+				dateFilterTable.setWidget(0, 0, yearFrom);
+				dateFilterTable.setWidget(1, 0, monthFrom);
+				dateFilterTable.setWidget(1, 1, monthTo);
+				break;
+			case QUARTER:
+				dateFilterTable.setWidget(0, 0, yearFrom);
+				dateFilterTable.setWidget(1, 0, quarterFrom);
+				dateFilterTable.setWidget(1, 1, quarterTo);
+				break;
+			case WEEK:
+				dateFilterTable.setWidget(0, 0, yearFrom);
+				dateFilterTable.setWidget(1, 0, weekFrom);
+				dateFilterTable.setWidget(1, 1, weekTo);
+				break;
+			default:
+		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void fillLists() {
 		String[] reports = { "Screening", "Presumptive & High Risk",
 				"Submission", "Pending", "MTB Positive", "RIF Resistant",
@@ -197,6 +224,22 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		for (TimeDimenstion dim : TimeDimenstion.values()) {
 			timeDimensionList.addItem(dim.toString());
 		}
+		for (int year = 2013; year <= new Date().getYear() + 1900; year++) {
+			yearFrom.addItem(String.valueOf(year));
+			yearTo.addItem(String.valueOf(year));
+		}
+		for (int quarter = 1; quarter <= 4; quarter++) {
+			quarterFrom.addItem(String.valueOf(quarter));
+			quarterTo.addItem(String.valueOf(quarter));
+		}
+		for (int month = 1; month <= 12; month++) {
+			monthFrom.addItem(String.valueOf(month));
+			monthTo.addItem(String.valueOf(month));
+		}
+		for (int week = 1; week <= 52; week++) {
+			weekFrom.addItem(String.valueOf(week));
+			weekTo.addItem(String.valueOf(week));
+		}
 		// TODO: ONLY FOR TESTING
 		userTextBox.setText("owais");
 		passwordTextBox.setText("Jingle94$");
@@ -209,17 +252,41 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+	/**
+	 * Applies filter picked from date fields w.r.t. selected time dimension
+	 * @param params
+	 * @return
+	 */
 	private String getFilter(Parameter[] params) {
 		StringBuilder where = new StringBuilder(" where 1 = 1 ");
 		// Append Date filter
-		if (!MineTBClient.get(fromDateBox.getTextBox()).equals("") && MineTBClient.get(toDateBox.getTextBox()).equals("")) {
-			int fromYear = fromDateBox.getValue().getYear();
-			int toYear = toDateBox.getValue().getYear();
-			int fromMonth = fromDateBox.getValue().getMonth();
-			int toMonth = toDateBox.getValue().getMonth();
-			where.append(" and year between " + fromYear + " and " + toYear);
-			where.append(" and month between " + fromMonth + " and " + toMonth);
+		String yFrom = MineTBClient.get(yearFrom);
+		String yTo = MineTBClient.get(yearTo);
+		String qFrom = MineTBClient.get(quarterFrom);
+		String qTo = MineTBClient.get(quarterTo);
+		String mFrom = MineTBClient.get(monthFrom);
+		String mTo = MineTBClient.get(monthTo);
+		String wFrom = MineTBClient.get(weekFrom);
+		String wTo = MineTBClient.get(weekTo);
+		TimeDimenstion time = TimeDimenstion.valueOf(MineTBClient.get(timeDimensionList));
+		switch(time) {
+		case YEAR:
+			where.append(" and year between " + yFrom + " and " + yTo);
+			break;
+		case QUARTER:
+			where.append(" and year = " + yFrom);
+			where.append(" and quarter between " + qFrom + " and " + qTo);
+			break;
+		case MONTH:
+			where.append(" and year = " + yFrom);
+			where.append(" and month between " + mFrom + " and " + mTo);
+			break;
+		case WEEK:
+			where.append(" and year = " + yFrom);
+			where.append(" and week between " + wFrom + " and " + wTo);
+			break;
+		default:
+			break;
 		}
 		if (params != null) {
 			for (Parameter param : params) {
@@ -250,7 +317,8 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		for (String[] record : data) {
 			values.add(record[columnIndex]);
 		}
-		return values.toArray(new String[] {});
+		String[] array = values.toArray(new String[] {});
+		return array;
 	}
 	
 	private double findValueInData(String columnValue, String rowValue) {
@@ -270,7 +338,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		StringBuilder query = new StringBuilder();
 		query.append("select " + time + ", ");
 		query.append(location + ", ");
-		query.append("sum(screened) as screened from fact_screening ");
+		query.append("sum(screened) as screened, sum(suspects) as suspects, sum(non_suspects) as non_suspects from fact_screening ");
 		query.append(getFilter(params));
 		query.append(" group by " + time + ", " + location);
 		query.append(" order by " + time + ", " + location);
@@ -283,15 +351,14 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 					chartLoader.loadApi(new Runnable() {
 						@Override
 						public void run() {
-							if (layoutPanel == null) {
-								layoutPanel = new SimpleLayoutPanel();
-							}
 							LineChart chart = new LineChart();
 							DataTable dataTable = DataTable.create();
-							String[] times = getUniqueValues(result, 0);
+							String[] timesStr = getUniqueValues(result, 0);
+							Double[] times = CollectionsUtil.convertToNumeric(timesStr);
+							times = CollectionsUtil.sortArray(times);
 							String[] locations = getUniqueValues(result, 1);
 							// Add grouping column for time dimension
-							dataTable.addColumn(ColumnType.STRING, time);
+							dataTable.addColumn(ColumnType.NUMBER, time);
 							// Add number of rows equal to unique time dimensions
 							dataTable.addRows(times.length);
 							// Add locations as columns
@@ -299,12 +366,12 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 								dataTable.addColumn(ColumnType.NUMBER, location);
 							}
 							for (int i = 0; i < times.length; i++) {
-								dataTable.setValue(i, 0, times[i]);
+								dataTable.setValue(i, 0, times[i].intValue());
 							}
 							// Convert values into 2D; 1st dimension is locations, 2nd is time
 							for (int col = 0; col < locations.length; col++) {
 								for (int row = 0; row < times.length; row++) {
-									dataTable.setValue(row, col + 1, findValueInData(locations[col], times[row]));
+									dataTable.setValue(row, col + 1, findValueInData(locations[col], String.valueOf(times[row].intValue())));
 								}
 							}
 							// Set options
@@ -313,7 +380,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 							options.setTitle("Screening by " + location + " per " + time);
 							options.setHAxis(HAxis.create(time));
 							options.setVAxis(VAxis.create("SUSPECTS"));
-							verticalPanel.add(chart);
+							chartPanel.add(chart);
 							chart.draw(dataTable, options);
 							load(false);
 						}
@@ -485,6 +552,7 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 					buttonsPanel.add(showButton);
 					buttonsPanel.add(clearButton);
 					verticalPanel.add(buttonsPanel);
+					verticalPanel.add(chartPanel);
 					load(false);
 				}
 
@@ -530,7 +598,8 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		} else if (sender == showButton) {
 			drawChart();
 		} else if (sender == clearButton) {
-			verticalPanel.clear();
+			load(false);
+			chartPanel.clear();
 		}
 	}
 
@@ -539,6 +608,15 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		Object source = event.getSource();
 		if (source == passwordTextBox || source == userTextBox) {
 			doLogin();
+		}
+	}
+
+	@Override
+	public void onChange(ChangeEvent event) {
+		Object source = event.getSource();
+		if (source == timeDimensionList) {
+			TimeDimenstion time = TimeDimenstion.valueOf(MineTBClient.get(timeDimensionList));
+			createDateFilterWidgets(time);
 		}
 	}
 }
