@@ -256,7 +256,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 			String encounterName = encounterType[1].toString().toLowerCase()
 					.replace(" ", "_").replace("-", "_");
 			// Drop previous table
-			dwDb.runCommand(CommandType.DROP, "drop table if exists om_enc_"
+			dwDb.runCommand(CommandType.DROP, "drop table if exists enc_"
 					+ encounterName);
 			log.info("Generating table for " + encounterType[1].toString());
 			// Insert new data

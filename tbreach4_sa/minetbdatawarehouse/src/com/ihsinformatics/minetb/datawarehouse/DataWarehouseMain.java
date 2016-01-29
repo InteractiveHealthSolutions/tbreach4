@@ -222,13 +222,13 @@ public final class DataWarehouseMain {
 	 */
 	public void resetDataWarehouse() {
 		log.info("Starting DW hard reset");
-//		Object[] tables = dwDb.getColumnData("information_schema.tables",
-//				"table_name", "table_schema='" + dwSchema + "'");
-//		for (Object t : tables) {
-//			log.info("Deleting table " + t);
-//			dwDb.deleteTable(t.toString());
-//		}
-//		extractLoad(true);
+		Object[] tables = dwDb.getColumnData("information_schema.tables",
+				"table_name", "table_schema='" + dwSchema + "'");
+		for (Object t : tables) {
+			log.info("Deleting table " + t);
+			dwDb.deleteTable(t.toString());
+		}
+		extractLoad(true);
 		createDimensions();
 		transform();
 		createFacts();
