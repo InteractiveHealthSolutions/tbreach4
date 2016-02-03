@@ -242,7 +242,7 @@ public class OpenMrsProcessor extends AbstractProcessor {
 					continue;
 				String str = element.toString().replaceAll("[^A-Za-z0-9]", "_")
 						.toLowerCase();
-				groupConcat.append("group_concat(if(o.question = '" + str
+				groupConcat.append("group_concat(if(o.question = '" + element
 						+ "', o.answer, NULL)) AS '" + str + "', ");
 			}
 			String baseQuery = "select e.surrogate_id, e.system_id, e.encounter_id, e.provider, e.location_id, l.location_name, e.patient_id, e.date_entered, "
