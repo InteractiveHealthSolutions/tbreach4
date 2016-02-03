@@ -91,8 +91,6 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 	private Button loginButton = new Button("Login");
 	private Button showButton = new Button("Show Report");
 	private Button clearButton = new Button("Clear");
-	
-	private String[][] data;
 
 	/* Chart objects */
 	ChartLoader chartLoader;
@@ -321,14 +319,55 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 		return array;
 	}
 	
-	private double findValueInData(String columnValue, String rowValue) {
+	private double findValueInData(String[][] data, String columnValue, String rowValue, int valueIndex) {
 		double value = 0;
 		for (int i = 0; i < data.length; i++) {
 			if (data[i][1].equals(columnValue) && data[i][0].equals(rowValue)) {
-				value = Double.parseDouble(data[i][2]);
+				value = Double.parseDouble(data[i][valueIndex]);
 			}
 		}
 		return value;
+	}
+	
+	private void drawLineChart(String[][] data, int valueIndex, String title, String xLabel, String yLabel) {
+		DataTable dataTable = DataTable.create();
+		String[] timesStr = getUniqueValues(data, 0);
+		Double[] times = CollectionsUtil.convertToNumeric(timesStr);
+		times = CollectionsUtil.sortArray(times);
+		String[] locations = getUniqueValues(data, 1);
+		// Add grouping column for time dimension
+		dataTable.addColumn(ColumnType.NUMBER, MineTBClient.get(timeDimensionList).toLowerCase());
+		// Add number of rows equal to unique time dimensions
+		dataTable.addRows(times.length);
+		// Add locations as columns
+		for (String location : locations) {
+			dataTable.addColumn(ColumnType.NUMBER, location);
+		}
+		for (int i = 0; i < times.length; i++) {
+			dataTable.setValue(i, 0, times[i].intValue());
+		}
+		// Convert values into 2D; 1st dimension is locations, 2nd is time
+		for (int col = 0; col < locations.length; col++) {
+			for (int row = 0; row < times.length; row++) {
+				double value = findValueInData(data, locations[col], String.valueOf(times[row].intValue()), valueIndex);
+				dataTable.setValue(row, col + 1, value);
+			}
+		}
+		// Set options
+		LineChartOptions options = LineChartOptions.create();
+		options.setBackgroundColor("#f0f0f0");
+		options.setTitle(title);
+		options.setHAxis(HAxis.create(xLabel));
+		options.setVAxis(VAxis.create(yLabel));
+		// Screenings
+		LineChart lineChart = new LineChart();
+		HTML line = new HTML("<hr  style=\"width:100%;\" />");
+		// Draw a line break
+		chartPanel.add(line);
+		lineChart.draw(dataTable, options);
+		chartPanel.add(lineChart);
+		// Draw another line break
+		chartPanel.add(line);
 	}
 	
 	private void drawScreening() {
@@ -346,42 +385,15 @@ public class Minetbdashboard implements EntryPoint, ClickHandler,
 			service.getTableData(query.toString(), new AsyncCallback<String[][]>() {
 				@Override
 				public void onSuccess(final String[][] result) {
-					data = result;
 					ChartLoader chartLoader = new ChartLoader(ChartPackage.CORECHART);
 					chartLoader.loadApi(new Runnable() {
 						@Override
 						public void run() {
-							LineChart chart = new LineChart();
-							DataTable dataTable = DataTable.create();
-							String[] timesStr = getUniqueValues(result, 0);
-							Double[] times = CollectionsUtil.convertToNumeric(timesStr);
-							times = CollectionsUtil.sortArray(times);
-							String[] locations = getUniqueValues(result, 1);
-							// Add grouping column for time dimension
-							dataTable.addColumn(ColumnType.NUMBER, time);
-							// Add number of rows equal to unique time dimensions
-							dataTable.addRows(times.length);
-							// Add locations as columns
-							for (String location : locations) {
-								dataTable.addColumn(ColumnType.NUMBER, location);
-							}
-							for (int i = 0; i < times.length; i++) {
-								dataTable.setValue(i, 0, times[i].intValue());
-							}
-							// Convert values into 2D; 1st dimension is locations, 2nd is time
-							for (int col = 0; col < locations.length; col++) {
-								for (int row = 0; row < times.length; row++) {
-									dataTable.setValue(row, col + 1, findValueInData(locations[col], String.valueOf(times[row].intValue())));
-								}
-							}
-							// Set options
-							LineChartOptions options = LineChartOptions.create();
-							options.setBackgroundColor("#f0f0f0");
-							options.setTitle("Screening by " + location + " per " + time);
-							options.setHAxis(HAxis.create(time));
-							options.setVAxis(VAxis.create("SUSPECTS"));
-							chartPanel.add(chart);
-							chart.draw(dataTable, options);
+							String title = "Screening by " + location + " per " + time;
+							chartPanel.clear();
+							drawLineChart(result, 2, title, time, "SCREENED");
+							drawLineChart(result, 3, title, time, "PRESUMPTIVE");
+							drawLineChart(result, 4, title, time, "NON-SUSPECTS");
 							load(false);
 						}
 					});
