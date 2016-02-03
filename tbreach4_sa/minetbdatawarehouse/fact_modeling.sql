@@ -10,7 +10,7 @@ create table fact_treatment		(fact_id int(11) not null auto_increment, year int(
 
 -- Insert Screening facts
 insert into fact_screening
-select 0 as fact_id, c.full_name as strategy, d.year, d.month, d.week, d.quarter, d.province, d.district, d.facility, d.username as screener, count(patient_id) as screened, sum(if(d.suspect_status = 'Suspect', 1, 0)) as suspects, sum(if(d.suspect_status = 'Non-Suspect', 1, 0)) as non_suspects, now() as last_updated from screening_data as d
+select 0 as fact_id, d.year, d.month, d.week, d.quarter, c.full_name as strategy, d.province, d.district, d.facility, d.username as screener, count(patient_id) as screened, sum(if(d.suspect_status = 'Suspect', 1, 0)) as suspects, sum(if(d.suspect_status = 'Non-Suspect', 1, 0)) as non_suspects, now() as last_updated from screening_data as d
 inner join dim_user as u on u.username = d.username 
 inner join person_attribute_merged as pa on pa.person_id = u.person_id 
 inner join dim_concept as c on c.concept_id = pa.screening_type 
