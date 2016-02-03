@@ -121,7 +121,7 @@ public class WeeklyReport {
 			
 			// Get all the weeks no
 			String getScreenerReportData = "Select * from "
-												+ "(select * from openmrs_rpt.weekly_screener_summary where username = '01001' order by year desc , week_no desc limit 6) as v1 "
+												+ "(select * from openmrs_rpt.weekly_screener_summary where username = '"+username+"' order by year desc , week_no desc limit 6) as v1 "
 										 + "order by year asc , week_no asc;";
 			ResultSet resultSetData = DatabaseUtil.getDbCon().executeQueryResultSet(getScreenerReportData);
 			
