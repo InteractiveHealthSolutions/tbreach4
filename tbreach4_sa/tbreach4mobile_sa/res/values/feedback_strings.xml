@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="feedback_type">Feedback Type</string>
-    <string name="feedback_hint">Enter details.\nPlease be short \nand precise</string>
-    <string name="feedback_send">Send</string>
-    <string name="feedback_send_success">Feedback have been send successfully.</string>
-</resources>
