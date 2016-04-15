@@ -22,26 +22,25 @@ import android.view.View;
  * @author owais.hussain@irdresearch.org
  * 
  */
-public interface IActivity
-{
+public interface IActivity {
 	/**
 	 * Resets the data in Views to initialize
 	 * 
 	 * @param view
 	 */
-	public void initView (View[] views);
+	public void initView(View[] views);
 
 	/**
 	 * Updates the values in the Views to latest
 	 */
-	public void updateDisplay ();
+	public void updateDisplay();
 
 	/**
 	 * Validates the data in Views according to the rules defined
 	 * 
 	 * @return true/false
 	 */
-	public boolean validate ();
+	public boolean validate();
 
 	/**
 	 * Save form
@@ -49,5 +48,5 @@ public interface IActivity
 	 * @param view
 	 * @return true/false
 	 */
-	public boolean submit ();
+	public boolean submit();
 }

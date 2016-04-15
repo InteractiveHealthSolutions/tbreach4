@@ -36,22 +36,20 @@ package com.ihsinformatics.tbr4mobile_pk.util;
  * 
  * @author Sean Owen
  */
-public final class BarcodeIntentResult
-{
+public final class BarcodeIntentResult {
 
-	private final String	contents;
-	private final String	formatName;
-	private final byte[]	rawBytes;
-	private final Integer	orientation;
-	private final String	errorCorrectionLevel;
+	private final String contents;
+	private final String formatName;
+	private final byte[] rawBytes;
+	private final Integer orientation;
+	private final String errorCorrectionLevel;
 
-	BarcodeIntentResult ()
-	{
-		this (null, null, null, null, null);
+	BarcodeIntentResult() {
+		this(null, null, null, null, null);
 	}
 
-	BarcodeIntentResult (String contents, String formatName, byte[] rawBytes, Integer orientation, String errorCorrectionLevel)
-	{
+	BarcodeIntentResult(String contents, String formatName, byte[] rawBytes,
+			Integer orientation, String errorCorrectionLevel) {
 		this.contents = contents;
 		this.formatName = formatName;
 		this.rawBytes = rawBytes;
@@ -62,8 +60,7 @@ public final class BarcodeIntentResult
 	/**
 	 * @return raw content of barcode
 	 */
-	public String getContents ()
-	{
+	public String getContents() {
 		return contents;
 	}
 
@@ -71,8 +68,7 @@ public final class BarcodeIntentResult
 	 * @return name of format, like "QR_CODE", "UPC_A". See
 	 *         {@code BarcodeFormat} for more format names.
 	 */
-	public String getFormatName ()
-	{
+	public String getFormatName() {
 		return formatName;
 	}
 
@@ -80,8 +76,7 @@ public final class BarcodeIntentResult
 	 * @return raw bytes of the barcode content, if applicable, or null
 	 *         otherwise
 	 */
-	public byte[] getRawBytes ()
-	{
+	public byte[] getRawBytes() {
 		return rawBytes;
 	}
 
@@ -89,8 +84,7 @@ public final class BarcodeIntentResult
 	 * @return rotation of the image, in degrees, which resulted in a successful
 	 *         scan. May be null.
 	 */
-	public Integer getOrientation ()
-	{
+	public Integer getOrientation() {
 		return orientation;
 	}
 
@@ -98,22 +92,22 @@ public final class BarcodeIntentResult
 	 * @return name of the error correction level used in the barcode, if
 	 *         applicable
 	 */
-	public String getErrorCorrectionLevel ()
-	{
+	public String getErrorCorrectionLevel() {
 		return errorCorrectionLevel;
 	}
 
 	@Override
-	public String toString ()
-	{
-		StringBuilder dialogText = new StringBuilder (100);
-		dialogText.append ("Format: ").append (formatName).append ('\n');
-		dialogText.append ("Contents: ").append (contents).append ('\n');
+	public String toString() {
+		StringBuilder dialogText = new StringBuilder(100);
+		dialogText.append("Format: ").append(formatName).append('\n');
+		dialogText.append("Contents: ").append(contents).append('\n');
 		int rawBytesLength = rawBytes == null ? 0 : rawBytes.length;
-		dialogText.append ("Raw bytes: (").append (rawBytesLength).append (" bytes)\n");
-		dialogText.append ("Orientation: ").append (orientation).append ('\n');
-		dialogText.append ("EC level: ").append (errorCorrectionLevel).append ('\n');
-		return dialogText.toString ();
+		dialogText.append("Raw bytes: (").append(rawBytesLength)
+				.append(" bytes)\n");
+		dialogText.append("Orientation: ").append(orientation).append('\n');
+		dialogText.append("EC level: ").append(errorCorrectionLevel)
+				.append('\n');
+		return dialogText.toString();
 	}
 
 }

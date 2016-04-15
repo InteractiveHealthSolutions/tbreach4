@@ -29,40 +29,32 @@ import android.util.Log;
  * @author owais.hussain@irdresearch.org
  * 
  */
-public class JsonUtil
-{
-	private static final String	TAG	= "JSONParser";
+public class JsonUtil {
+	private static final String TAG = "JSONParser";
 
-	public static JSONObject getJSONObject (String jsonText)
-	{
+	public static JSONObject getJSONObject(String jsonText) {
 		// try parse the string to a JSON object
-		try
-		{
-			JSONObject jsonObj = new JSONObject (jsonText);
+		try {
+			JSONObject jsonObj = new JSONObject(jsonText);
 			return jsonObj;
-		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, "Error parsing data. " + e.getMessage ());
+		} catch (JSONException e) {
+			Log.e(TAG, "Error parsing data. " + e.getMessage());
 			return null;
 		}
 	}
 
-	public static JSONObject[] getJSONArrayFromObject (JSONObject jsonObj, String arrayElement)
-	{
-		try
-		{
-			JSONArray jsonArray = jsonObj.getJSONArray (arrayElement);
-			JSONObject[] jsonObjects = new JSONObject[jsonArray.length ()];
-			for (int i = 0; i < jsonArray.length (); i++)
-			{
-				jsonObjects[i] = JsonUtil.getJSONObject (jsonArray.getString (i));
+	public static JSONObject[] getJSONArrayFromObject(JSONObject jsonObj,
+			String arrayElement) {
+		try {
+			JSONArray jsonArray = jsonObj.getJSONArray(arrayElement);
+			JSONObject[] jsonObjects = new JSONObject[jsonArray.length()];
+			for (int i = 0; i < jsonArray.length(); i++) {
+				jsonObjects[i] = JsonUtil.getJSONObject(jsonArray.getString(i));
 			}
 			return jsonObjects;
-		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, "Error parsing array from JSON Object using element \'" + arrayElement + "\'. " + e.getMessage ());
+		} catch (JSONException e) {
+			Log.e(TAG, "Error parsing array from JSON Object using element \'"
+					+ arrayElement + "\'. " + e.getMessage());
 			return null;
 		}
 	}
@@ -75,8 +67,8 @@ public class JsonUtil
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public static String getEncodedJson (JSONObject json) throws UnsupportedEncodingException
-	{
-		return URLEncoder.encode (json.toString (), "UTF-8");
+	public static String getEncodedJson(JSONObject json)
+			throws UnsupportedEncodingException {
+		return URLEncoder.encode(json.toString(), "UTF-8");
 	}
 }

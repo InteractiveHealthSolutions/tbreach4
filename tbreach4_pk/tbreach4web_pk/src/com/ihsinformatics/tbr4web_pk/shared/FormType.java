@@ -45,4 +45,5 @@ public class FormType
 	public static final String  ADULT_REVERSE_CONTACT_TRACING 	= "Adult Reverse Contact Tracing";
 	public static final String 	PAEDIATRIC_CONTACT_TRACING 		= "Paediatric Contact Tracing";
 	public static final String  CLINICAL_VISIT_BARRIERS			= "Clinical Visit Barriers";
+	public static final String 	PRIVATE_PATIENT 				= "Private Patient";
 }
