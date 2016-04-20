@@ -18,7 +18,6 @@ Contributors: Tahira Niazi */
 package com.ihsinformatics.tbr4web_pk.server;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,7 +61,6 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.User;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.ModuleMustStartException;
@@ -75,7 +73,6 @@ import com.ihsinformatics.tbr4web_pk.server.util.JsonUtil;
 import com.ihsinformatics.tbr4web_pk.shared.CustomMessage;
 import com.ihsinformatics.tbr4web_pk.shared.ErrorType;
 import com.ihsinformatics.tbr4web_pk.shared.FormType;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 /**
  * @author owais.hussain@irdresearch.org
@@ -97,9 +94,10 @@ public class MobileService {
 	// static final String propFilePath =
 	// "C:\\workspace\\tbreach3web\\openmrs-runtime.properties";
 	static final String propFilePath = "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
-	
-//	static final String propFilePath = "C:\\Users\\Asif\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
-	
+
+	// static final String propFilePath =
+	// "C:\\Users\\Asif\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+
 	private static File propsFile;
 	private static Properties props;
 	private static Properties tbreachProps;
