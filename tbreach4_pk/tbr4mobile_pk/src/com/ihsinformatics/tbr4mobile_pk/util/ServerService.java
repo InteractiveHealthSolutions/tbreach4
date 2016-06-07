@@ -1108,9 +1108,9 @@ public class ServerService {
 		String formDate = values.getAsString("formDate");
 
 		try {
-			String id = getPatientId(patientId);
-			if (id != null)
-				return context.getResources().getString(R.string.duplication);
+//			String id = getPatientId(patientId);
+//			if (id != null)
+//				return context.getResources().getString(R.string.duplication);
 
 			// Save Patient
 			JSONObject json = new JSONObject();

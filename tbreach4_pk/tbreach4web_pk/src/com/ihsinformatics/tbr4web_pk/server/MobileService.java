@@ -86,17 +86,13 @@ public class MobileService {
 
 	// OpenMRS-related
 
-	// static final String propFilePath =
-	// "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
+	 static final String propFilePath = "/usr/share/tomcat6/.OpenMRS/openmrs-runtime.properties";
 	// static final String propFilePath =
 	// "c:\\Application Data\\OpenMRS\\openmrs-runtime.properties";
 
 	// static final String propFilePath =
 	// "C:\\workspace\\tbreach3web\\openmrs-runtime.properties";
-	static final String propFilePath = "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
-
-	// static final String propFilePath =
-	// "C:\\Users\\Asif\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
+//	static final String propFilePath = "C:\\Users\\Tahira\\AppData\\Roaming\\OpenMRS\\openmrs-runtime.properties";
 
 	private static File propsFile;
 	private static Properties props;
@@ -1135,8 +1131,18 @@ public class MobileService {
 			// Get Encounter type
 			EncounterType encounterTypeObj = Context.getEncounterService()
 					.getEncounterType(encounterType);
-			// Create Patient
-			{
+
+			List<Patient> patients = Context.getPatientService().getPatients(
+					patientId);
+			Patient patient;
+			if (patients != null && patients.size() > 0) {
+				patient = patients.get(0);
+				// do everything here
+			} else {
+
+				// first create person & patient then do what is needed
+
+				// Create person & patient object
 				// Create Person object
 				Person person = new Person();
 				Date dob = new Date();
@@ -1156,8 +1162,7 @@ public class MobileService {
 				// Create names set
 				{
 					SortedSet<PersonName> names = new TreeSet<PersonName>();
-					PersonName name = new PersonName(givenName, null,
-							familyName);
+					PersonName name = new PersonName(givenName, null, familyName);
 					name.setCreator(creatorObj);
 					name.setDateCreated(new Date());
 					name.setPreferred(true);
@@ -1165,7 +1170,7 @@ public class MobileService {
 					person.setNames(names);
 				}
 				// Create Patient object
-				Patient patient = new Patient(person);
+				patient = new Patient(person);
 				// Create Patient identifier
 				{
 					SortedSet<PatientIdentifier> identifiers = new TreeSet<PatientIdentifier>();
@@ -1183,63 +1188,64 @@ public class MobileService {
 				patient.setDateCreated(new Date());
 				patient = Context.getPatientService().savePatient(patient);
 				error = "Patient was created with Error. ";
-				Encounter encounter = new Encounter();
-				encounter.setEncounterType(encounterTypeObj);
-				encounter.setPatient(patient);
-				// In case of Encounter location different than login location
-				if (!encounterLocation.equalsIgnoreCase(location)) {
-					locationObj = Context.getLocationService().getLocation(
-							encounterLocation);
-				}
-				encounter.setLocation(locationObj);
-				encounter.setEncounterDatetime(encounterDatetime);
-				encounter.setCreator(creatorObj);
-				encounter.setDateCreated(new Date());
-				// Create Observations set
-				{
-					for (int i = 0; i < obs.length(); i++) {
-						Obs ob = new Obs();
-						// Create Person object
-						{
-							Person personObj = Context.getPersonService()
-									.getPerson(patient.getPatientId());
-							ob.setPerson(personObj);
-						}
-						// Create question/answer Concept object
-						{
-							JSONObject pair = obs.getJSONObject(i);
-							Concept concept = Context.getConceptService()
-									.getConcept(pair.getString("concept"));
-							ob.setConcept(concept);
-							String hl7Abbreviation = concept.getDatatype()
-									.getHl7Abbreviation();
-							if (hl7Abbreviation.equals("NM")) {
-								ob.setValueNumeric(Double.parseDouble(pair
-										.getString("value")));
-							} else if (hl7Abbreviation.equals("CWE")) {
-								Concept valueObj = Context.getConceptService()
-										.getConcept(pair.getString("value"));
-								ob.setValueCoded(valueObj);
-							} else if (hl7Abbreviation.equals("ST")) {
-								ob.setValueText(pair.getString("value"));
-							} else if (hl7Abbreviation.equals("DT")) {
-								ob.setValueDate(DateTimeUtil.getDateFromString(
-										pair.getString("value"),
-										DateTimeUtil.SQL_DATE));
-							}
-						}
-						ob.setObsDatetime(encounterDatetime);
-						ob.setLocation(locationObj);
-						ob.setCreator(creatorObj);
-						ob.setDateCreated(new Date());
-						encounter.addObs(ob);
-					}
-					if (creatorObj.getUsername().equals(provider))
-						encounter.setProvider(creatorObj);
-				}
-				Context.getEncounterService().saveEncounter(encounter);
-				json.put("result", "SUCCESS");
 			}
+
+			Encounter encounter = new Encounter();
+			encounter.setEncounterType(encounterTypeObj);
+			encounter.setPatient(patient);
+			// In case of Encounter location different than login location
+			if (!encounterLocation.equalsIgnoreCase(location)) {
+				locationObj = Context.getLocationService().getLocation(
+						encounterLocation);
+			}
+			encounter.setLocation(locationObj);
+			encounter.setEncounterDatetime(encounterDatetime);
+			encounter.setCreator(creatorObj);
+			encounter.setDateCreated(new Date());
+			// Create Observations set
+			{
+				for (int i = 0; i < obs.length(); i++) {
+					Obs ob = new Obs();
+					// Create Person object
+					{
+						Person personObj = Context.getPersonService()
+								.getPerson(patient.getPatientId());
+						ob.setPerson(personObj);
+					}
+					// Create question/answer Concept object
+					{
+						JSONObject pair = obs.getJSONObject(i);
+						Concept concept = Context.getConceptService()
+								.getConcept(pair.getString("concept"));
+						ob.setConcept(concept);
+						String hl7Abbreviation = concept.getDatatype()
+								.getHl7Abbreviation();
+						if (hl7Abbreviation.equals("NM")) {
+							ob.setValueNumeric(Double.parseDouble(pair
+									.getString("value")));
+						} else if (hl7Abbreviation.equals("CWE")) {
+							Concept valueObj = Context.getConceptService()
+									.getConcept(pair.getString("value"));
+							ob.setValueCoded(valueObj);
+						} else if (hl7Abbreviation.equals("ST")) {
+							ob.setValueText(pair.getString("value"));
+						} else if (hl7Abbreviation.equals("DT")) {
+							ob.setValueDate(DateTimeUtil.getDateFromString(
+									pair.getString("value"),
+									DateTimeUtil.SQL_DATE));
+						}
+					}
+					ob.setObsDatetime(encounterDatetime);
+					ob.setLocation(locationObj);
+					ob.setCreator(creatorObj);
+					ob.setDateCreated(new Date());
+					encounter.addObs(ob);
+				}
+				if (creatorObj.getUsername().equals(provider))
+					encounter.setProvider(creatorObj);
+			}
+			Context.getEncounterService().saveEncounter(encounter);
+			json.put("result", "SUCCESS");
 		} catch (NonUniqueObjectException e) {
 			e.printStackTrace();
 			error = CustomMessage.getErrorMessage(ErrorType.DUPLICATION_ERROR);
