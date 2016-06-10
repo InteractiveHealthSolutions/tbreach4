@@ -16,7 +16,7 @@ Contributors: Tahira Niazi */
 
 package com.ihsinformatics.tbr4web_pk.shared;
 
-import org.irdresearch.tbr3web.shared.DataType;
+import com.ihsinformatics.tbr4web_pk.shared.DataType;
 
 /**
  * @author owais.hussain@irdresearch.org
