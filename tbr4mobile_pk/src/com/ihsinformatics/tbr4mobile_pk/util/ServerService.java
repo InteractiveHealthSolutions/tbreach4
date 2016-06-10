@@ -47,8 +47,7 @@ import com.ihsinformatics.tbr4mobile_pk.shared.Metadata;
  * @author owais.hussain@irdresearch.org
  * 
  */
-public class ServerService
-{
+public class ServerService {
 	private static final String TAG = "ServerService";
 	private static String tbr3Uri;
 	private static DatabaseUtil dbUtil;
@@ -58,8 +57,7 @@ public class ServerService
 	private HttpsClient httpsClient;
 	private Context context;
 
-	public ServerService(Context context)
-	{
+	public ServerService(Context context) {
 		this.context = context;
 		String prefix = "http" + (App.isUseSsl() ? "s" : "") + "://";
 		tbr3Uri = prefix + App.getServer() + "/tbreach4web_pk";
@@ -76,70 +74,54 @@ public class ServerService
 	 * 
 	 * @return status
 	 */
-	public boolean checkInternetConnection()
-	{
+	public boolean checkInternetConnection() {
 		boolean status = false;
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting())
-		{
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 			status = true;
 		}
 		return status;
 	}
 
-	public String post(String json)
-	{
+	public String post(String json) {
 		String response = null;
-		try
-		{
-			if (App.isOfflineMode ())
-			{
-				JSONObject responseJson = new JSONObject ();
-				responseJson.put ("result", "FAIL: Application Offline");
-				return responseJson.toString ();
+		try {
+			if (App.isOfflineMode()) {
+				JSONObject responseJson = new JSONObject();
+				responseJson.put("result", "FAIL: Application Offline");
+				return responseJson.toString();
 			}
-			
+
 			if (App.isUseSsl())
 				response = httpsClient.clientPost(tbr3Uri + json, null);
 			else
 				response = httpClient.clientPost(tbr3Uri + json, null);
-		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (Exception e)
-		{
-			Log.e (TAG, e.getMessage ());
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
 		}
 		return response;
 	}
 
-	public String get(String uri)
-	{
+	public String get(String uri) {
 		String response = null;
-		try
-		{
-			if (App.isOfflineMode ())
-			{
-				JSONObject responseJson = new JSONObject ();
-				responseJson.put ("result", "FAIL: Application Offline");
-				return responseJson.toString ();
+		try {
+			if (App.isOfflineMode()) {
+				JSONObject responseJson = new JSONObject();
+				responseJson.put("result", "FAIL: Application Offline");
+				return responseJson.toString();
 			}
 			if (App.isUseSsl())
 				response = httpsClient.clientGet(tbr3Uri + uri);
 			else
 				response = httpClient.clientGet(tbr3Uri + uri);
-		}
-		catch (JSONException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (Exception e)
-		{
-			Log.e (TAG, e.getMessage ());
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
 		}
 		return response;
 	}
@@ -149,27 +131,20 @@ public class ServerService
 	 * 
 	 * @return
 	 */
-	public String matchVersions()
-	{
-		try
-		{
+	public String matchVersions() {
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response != null)
-			{
+			if (response != null) {
 				JSONObject error = JsonUtil.getJSONObject(response);
 				if (!error.getString("ERROR")
 						.contains("Version does not match"))
 					return "SUCCESS";
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return "";
@@ -181,8 +156,7 @@ public class ServerService
 	 * 
 	 * @return status
 	 */
-	public boolean authenticate()
-	{
+	public boolean authenticate() {
 		return (getUser(App.getUsername()) != null);
 	}
 
@@ -193,8 +167,7 @@ public class ServerService
 	 * @param name
 	 * @return
 	 */
-	public String getId(String type, String name)
-	{
+	public String getId(String type, String name) {
 		return dbUtil.getObject(Metadata.METADATA_TABLE, "id", "type='" + type
 				+ "' AND name='" + name + "'");
 	}
@@ -207,13 +180,11 @@ public class ServerService
 	 * @param name
 	 * @return
 	 */
-	private OpenMrsObject getOpenMrsObjectFromDb(String type, String name)
-	{
+	private OpenMrsObject getOpenMrsObjectFromDb(String type, String name) {
 		String[] record = dbUtil.getRecord("select id, type, name from "
 				+ Metadata.METADATA_TABLE + " where type='" + type
 				+ "' and name like '%" + name + "%'");
-		if (record.length == 0)
-		{
+		if (record.length == 0) {
 			return null;
 		}
 		OpenMrsObject openMrsObject = new OpenMrsObject(record[0], record[1],
@@ -221,25 +192,21 @@ public class ServerService
 		return openMrsObject;
 	}
 
-	public OpenMrsObject getUser(String name)
-	{
+	public OpenMrsObject getUser(String name) {
 		OpenMrsObject user = null;
 		// Always fetch from server and save this user
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_USER);
 			json.put("username", name);
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response != null)
-			{
+			if (response != null) {
 				JSONObject userObj = JsonUtil.getJSONObject(response);
 				ContentValues values = new ContentValues();
 				String userName = userObj.getString("name");
 				// If user is found, then save it into local DB
-				if (userName.equalsIgnoreCase(App.getUsername()))
-				{
+				if (userName.equalsIgnoreCase(App.getUsername())) {
 					values = new ContentValues();
 					values.put("id", userObj.getInt("id"));
 					values.put("type", Metadata.USER);
@@ -248,47 +215,36 @@ public class ServerService
 					String id = dbUtil.getObject(Metadata.METADATA_TABLE, "id",
 							"type='" + Metadata.USER + "' AND name='" + name
 									+ "'");
-					if (id == null)
-					{
+					if (id == null) {
 						dbUtil.insert(Metadata.METADATA_TABLE, values);
 					}
 					user = getOpenMrsObjectFromDb(Metadata.USER, name);
 				}
-			}
-			else
-			{
+			} else {
 				return null;
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return user;
 	}
 
-	public OpenMrsObject getLocation(String name)
-	{
+	public OpenMrsObject getLocation(String name) {
 		String id = dbUtil.getObject(Metadata.METADATA_TABLE, "id", "type='"
 				+ Metadata.LOCATION + "' and name like '%" + name + "%'");
 		OpenMrsObject location = null;
 		// If not found, fetch from server and save this user
-		if (id == null)
-		{
-			try
-			{
+		if (id == null) {
+			try {
 				JSONObject json = new JSONObject();
 				json.put("app_ver", App.getVersion());
 				json.put("form_name", FormType.GET_LOCATION);
 				json.put("location_name", name);
 				String response = get("?content="
 						+ JsonUtil.getEncodedJson(json));
-				if (response != null)
-				{
+				if (response != null) {
 					JSONObject locationObj = JsonUtil.getJSONObject(response);
 					ContentValues values = new ContentValues();
 					name = locationObj.getString("name");
@@ -299,13 +255,9 @@ public class ServerService
 					values.put("name", name);
 					dbUtil.insert(Metadata.METADATA_TABLE, values);
 				}
-			}
-			catch (JSONException e)
-			{
+			} catch (JSONException e) {
 				Log.e(TAG, e.getMessage());
-			}
-			catch (UnsupportedEncodingException e)
-			{
+			} catch (UnsupportedEncodingException e) {
 				Log.e(TAG, e.getMessage());
 			}
 		}
@@ -313,14 +265,12 @@ public class ServerService
 		return location;
 	}
 
-	public OpenMrsObject[] getLocations()
-	{
+	public OpenMrsObject[] getLocations() {
 		ArrayList<OpenMrsObject> locations = new ArrayList<OpenMrsObject>();
 		String[][] tableData = dbUtil.getTableData("select id, name from "
 				+ Metadata.METADATA_TABLE + " where type='" + Metadata.LOCATION
 				+ "'");
-		for (int i = 0; i < tableData.length; i++)
-		{
+		for (int i = 0; i < tableData.length; i++) {
 			OpenMrsObject location = new OpenMrsObject(tableData[i][0],
 					Metadata.LOCATION, tableData[i][1]);
 			locations.add(location);
@@ -328,16 +278,14 @@ public class ServerService
 		return locations.toArray(new OpenMrsObject[] {});
 	}
 
-	public void setCurrentUser(String userName)
-	{
+	public void setCurrentUser(String userName) {
 		String id = dbUtil.getObject(Metadata.METADATA_TABLE, "id", "type='"
 				+ Metadata.USER + "' AND name='" + userName + "'");
 		if (id != null)
 			App.setCurrentUser(getOpenMrsObjectFromDb(Metadata.USER, userName));
 	}
 
-	public void setCurrentLocation(String locationName)
-	{
+	public void setCurrentLocation(String locationName) {
 		String id = dbUtil.getObject(Metadata.METADATA_TABLE, "id", "type='"
 				+ Metadata.LOCATION + "' AND name='" + locationName + "'");
 		if (id != null)
@@ -345,104 +293,81 @@ public class ServerService
 					locationName));
 	}
 
-	public String[][] getScreeningReport()
-	{
+	public String[][] getScreeningReport() {
 		ArrayList<String[]> data = new ArrayList<String[]>();
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_SCREENING_REPORT);
 			json.put("username", App.getUsername());
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (response != null)
-			{
-				if (jsonResponse == null)
-				{
+			if (response != null) {
+				if (jsonResponse == null) {
 					return null;
 				}
-				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();)
-				{
+				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();) {
 					String key = itr.next().toString();
 					data.add(new String[] { key, jsonResponse.getString(key) });
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return data.toArray(new String[][] {});
 	}
 
-	public String[][] getDailySummary()
-	{
+	public String[][] getDailySummary() {
 		ArrayList<String[]> data = new ArrayList<String[]>();
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_DAILY_SUMMARY);
 			json.put("username", App.getUsername());
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (response != null)
-			{
-				if (jsonResponse == null)
-				{
+			if (response != null) {
+				if (jsonResponse == null) {
 					return null;
 				}
-				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();)
-				{
+				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();) {
 					String key = itr.next().toString();
 					data.add(new String[] { key, jsonResponse.getString(key) });
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return data.toArray(new String[][] {});
 	}
 
-	public String[][] getPerfornamceData()
-	{
+	public String[][] getPerfornamceData() {
 		ArrayList<String[]> data = new ArrayList<String[]>();
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PERFORMANCE_DATA);
 			json.put("username", App.getUsername());
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (response != null)
-			{
-				if (jsonResponse == null)
-				{
+			if (response != null) {
+				if (jsonResponse == null) {
 					return null;
 				}
-				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();)
-				{
+				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();) {
 					String key = itr.next().toString();
 					data.add(new String[] { key, jsonResponse.getString(key) });
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return data.toArray(new String[][] {});
 	}
 
-	public String[][] getFormsByDate(Date date)
-	{
+	public String[][] getFormsByDate(Date date) {
 		ArrayList<String[]> data = new ArrayList<String[]>();
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_FORMS_BY_DATE);
@@ -450,21 +375,16 @@ public class ServerService
 			json.put("date", DateTimeUtil.getSQLDate(date));
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (response != null)
-			{
-				if (jsonResponse == null)
-				{
+			if (response != null) {
+				if (jsonResponse == null) {
 					return null;
 				}
-				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();)
-				{
+				for (Iterator<?> itr = jsonResponse.keys(); itr.hasNext();) {
 					String key = itr.next().toString();
 					data.add(new String[] { key, jsonResponse.getString(key) });
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return data.toArray(new String[][] {});
@@ -475,8 +395,7 @@ public class ServerService
 	 * 
 	 * @return
 	 */
-	public String getIdentifierTypeId()
-	{
+	public String getIdentifierTypeId() {
 		String id = dbUtil.getObject(Metadata.METADATA_TABLE, "id",
 				"name='OpenMRS Identification Number'");
 		return id;
@@ -488,55 +407,44 @@ public class ServerService
 	 * @param patientId
 	 * @return
 	 */
-	public String getPatientId(String patientId)
-	{
-		try
-		{
+	public String getPatientId(String patientId) {
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PATIENT);
 			json.put("patient_id", patientId);
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (response != null)
-			{
-				if (jsonResponse == null)
-				{
+			if (response != null) {
+				if (jsonResponse == null) {
 					return null;
 				}
-				if (jsonResponse.has("id"))
-				{
+				if (jsonResponse.has("id")) {
 					return jsonResponse.getString("id");
 				}
 				return null;
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return null;
 	}
 
-	public String[][] getPatientDetail(String patientId)
-	{
+	public String[][] getPatientDetail(String patientId) {
 		String response = "";
 		String[][] details = null;
 		JSONObject json = new JSONObject();
-		try
-		{
+		try {
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PATIENT_DETAIL);
 			json.put("patient_id", patientId);
 			response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response == null)
-			{
+			if (response == null) {
 				return details;
 			}
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
 			{
-				try
-				{
+				try {
 					String name = jsonResponse.get("name").toString();
 					int age = jsonResponse.getInt("age");
 					String gen = jsonResponse.get("gender").toString();
@@ -546,82 +454,68 @@ public class ServerService
 					details[0] = new String[] { "Name", name };
 					details[1] = new String[] { "Age", String.valueOf(age) };
 					details[2] = new String[] { "Gender", gen };
-					for (int i = 0; i < encounters.length(); i++)
-					{
+					for (int i = 0; i < encounters.length(); i++) {
 						JSONObject obj = new JSONObject(encounters.get(i)
 								.toString());
 						details[i + 2] = new String[] {
 								obj.get("encounter").toString(),
 								obj.get("date").toString() };
 					}
-				}
-				catch (JSONException e)
-				{
+				} catch (JSONException e) {
 					Log.e(TAG, e.getMessage());
 				}
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return details;
 	}
-	
+
 	// person detail for HCT Record Card auto-populate fields
-	public String[][] getPersonDetail(String patientId)
-	{
+	public String[][] getPersonDetail(String patientId) {
 		String response = "";
 		String[][] details = null;
 		JSONObject json = new JSONObject();
-		try
-		{
+		try {
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PERSON_DETAIL);
 			json.put("patient_id", patientId);
-			response = get("?content="+ JsonUtil.getEncodedJson(json));
-			if(response == null)
-			{
+			response = get("?content=" + JsonUtil.getEncodedJson(json));
+			if (response == null) {
 				return details;
 			}
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if(jsonResponse != null)
-			{
-				try
-				{
-					String firstName = jsonResponse.get("first name").toString();
+			if (jsonResponse != null) {
+				try {
+					String firstName = jsonResponse.get("first name")
+							.toString();
 					String lastName = jsonResponse.get("last name").toString();
 					int age = jsonResponse.getInt("age");
 					String gender = jsonResponse.get("gender").toString();
-					String clientPhone = jsonResponse.get("client phone").toString();
-					String alternatePhone = jsonResponse.get("alternate phone").toString();
+					String clientPhone = jsonResponse.get("client phone")
+							.toString();
+					String alternatePhone = jsonResponse.get("alternate phone")
+							.toString();
 					details = new String[6][];
-					details[0] = new String[] {"First Name", firstName};
-					details[1] = new String[] {"Last Name", lastName};
-					details[2] = new String[] {"Age", String.valueOf(age)};
-					details[3] = new String[] {"Gender", gender};
-					details[4] = new String[] {"Client Phone", clientPhone };
-					details[5] = new String[] {"Alternate Phone", alternatePhone};
-				}
-				catch (JSONException e)
-				{
+					details[0] = new String[] { "First Name", firstName };
+					details[1] = new String[] { "Last Name", lastName };
+					details[2] = new String[] { "Age", String.valueOf(age) };
+					details[3] = new String[] { "Gender", gender };
+					details[4] = new String[] { "Client Phone", clientPhone };
+					details[5] = new String[] { "Alternate Phone",
+							alternatePhone };
+				} catch (JSONException e) {
 					Log.e(TAG, e.getMessage());
 				}
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 		}
-		catch (UnsupportedEncodingException e)
-		{
-			Log.e(TAG, e.getMessage());
-		}
-		
+
 		return details;
 	}
 
@@ -633,38 +527,29 @@ public class ServerService
 	 * @param conceptName
 	 * @return
 	 */
-	public String[] getPatientObs(String patientId, String conceptName)
-	{
-		try
-		{
+	public String[] getPatientObs(String patientId, String conceptName) {
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PATIENT_OBS);
 			json.put("patient_id", patientId);
 			json.put("concept", conceptName);
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response != null)
-			{
+			if (response != null) {
 				JSONArray jsonResponse = new JSONArray(response);
 				ArrayList<String> obs = new ArrayList<String>();
-				for (int i = 0; i < jsonResponse.length(); i++)
-				{
-					try
-					{
+				for (int i = 0; i < jsonResponse.length(); i++) {
+					try {
 						JSONObject obj = jsonResponse.getJSONObject(i);
 						String value = obj.get("value").toString();
 						obs.add(value);
-					}
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						Log.e(TAG, e.getMessage());
 					}
 				}
 				return obs.toArray(new String[] {});
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return null;
@@ -679,10 +564,8 @@ public class ServerService
 	 * @return
 	 */
 	public String[] getPatientObs(String patientId, String conceptName,
-			String encounterName)
-	{
-		try
-		{
+			String encounterName) {
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_PATIENT_OBS);
@@ -690,96 +573,78 @@ public class ServerService
 			json.put("concept", conceptName);
 			json.put("encounter", encounterName);
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response != null)
-			{
+			if (response != null) {
 				JSONArray jsonResponse = new JSONArray(response);
 				ArrayList<String> obs = new ArrayList<String>();
-				for (int i = 0; i < jsonResponse.length(); i++)
-				{
-					try
-					{
+				for (int i = 0; i < jsonResponse.length(); i++) {
+					try {
 						JSONObject obj = jsonResponse.getJSONObject(i);
 						String value = obj.get("value").toString();
 						obs.add(value);
-					}
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						Log.e(TAG, e.getMessage());
 					}
 				}
 				return obs.toArray(new String[] {});
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return null;
 	}
-	
-	public String[][] getSpecificPatientObs(String patientId, String[] conceptNames,
-			String encounterName)
-	{
-		try
-		{
+
+	public String[][] getSpecificPatientObs(String patientId,
+			String[] conceptNames, String encounterName) {
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.GET_SPECIFIC_PATIENT_OBS);
 			json.put("patient_id", patientId);
-			
+
 			JSONArray concepts = new JSONArray();
-			//JSONObject allConceptsJson = new JSONObject();
-			//allConceptsJson.put("conceptNames", conceptNames);
-			for(int countConcepts = 0; countConcepts < conceptNames.length; countConcepts++)
-			{
+			// JSONObject allConceptsJson = new JSONObject();
+			// allConceptsJson.put("conceptNames", conceptNames);
+			for (int countConcepts = 0; countConcepts < conceptNames.length; countConcepts++) {
 				concepts.put(conceptNames[countConcepts]);
 			}
-			
+
 			json.put("concepts", concepts.toString());
 			json.put("encounter", encounterName);
 			String response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response != null)
-			{
-				if(response.contains("Error"))
-				{
+			if (response != null) {
+				if (response.contains("Error")) {
 					return null;
 				}
 				JSONArray jsonResponse = new JSONArray(response);
 				ArrayList<String> obs = new ArrayList<String>();
 				String[][] observations = new String[jsonResponse.length()][2];
-				for (int valueCounter = 0; valueCounter < jsonResponse.length(); valueCounter++)
-				{
-					try
-					{
-						JSONObject obj = jsonResponse.getJSONObject(valueCounter);
-						String value = obj.get(conceptNames[valueCounter]).toString();
+				for (int valueCounter = 0; valueCounter < jsonResponse.length(); valueCounter++) {
+					try {
+						JSONObject obj = jsonResponse
+								.getJSONObject(valueCounter);
+						String value = obj.get(conceptNames[valueCounter])
+								.toString();
 						observations[valueCounter][0] = conceptNames[valueCounter];
 						observations[valueCounter][1] = value;
-						//obs.add(value);
-					}
-					catch (JSONException e)
-					{
+						// obs.add(value);
+					} catch (JSONException e) {
 						Log.e(TAG, e.getMessage());
 					}
 				}
 				return observations;
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return null;
 	}
-	
 
 	/**
 	 * Returns list of file names containing saved forms
 	 * 
 	 * @return
 	 */
-	public String[] getSavedFormFiles()
-	{
+	public String[] getSavedFormFiles() {
 		return FileUtil.getFiles(directory);
 	}
 
@@ -788,87 +653,73 @@ public class ServerService
 	 * 
 	 * @return
 	 */
-	public String[] getLines(String filePath, boolean decrypt)
-	{
-		if (decrypt)
-		{
+	public String[] getLines(String filePath, boolean decrypt) {
+		if (decrypt) {
 			return decryptFile(directory + "/" + filePath).split("\n");
 		}
 		return fileUtil.getLines(directory + "/" + filePath);
 	}
 
-	public int countSavedForms(String username)
-	{
+	public int countSavedForms(String username) {
 		return Integer
 				.parseInt(dbUtil
 						.getObject("select count(*) from offline_forms where username='"
 								+ username + "'"));
 	}
-	
-	public String[] getSavedForm (String username, String timestamp)
-	{
-		String[] forms = dbUtil.getRecord ("select timestamp, form, json from offline_forms where username='" + username + "' and timestamp=" + timestamp);
+
+	public String[] getSavedForm(String username, String timestamp) {
+		String[] forms = dbUtil
+				.getRecord("select timestamp, form, json from offline_forms where username='"
+						+ username + "' and timestamp=" + timestamp);
 		return forms;
 	}
 
-	public String[][] getSavedForms(String username)
-	{
+	public String[][] getSavedForms(String username) {
 		String[][] forms = dbUtil
 				.getTableData("select timestamp, form, json from offline_forms where username='"
 						+ username + "'");
 		return forms;
 	}
 
-	public boolean deleteSavedForm(Long timestamp)
-	{
+	public boolean deleteSavedForm(Long timestamp) {
 		return dbUtil.delete("offline_forms", "timestamp=?",
 				new String[] { timestamp.toString() });
 	}
 
-	public String decryptFile(String filePath)
-	{
+	public String decryptFile(String filePath) {
 		byte[] bytes = fileUtil.readByteStream(filePath);
 		String text = SecurityUtil.decrypt(bytes);
 		return text;
 	}
 
 	public boolean saveFormToDb(String encounterType, ContentValues values,
-			String[][] observations)
-	{
+			String[][] observations) {
 		ContentValues data = new ContentValues();
 		Date date = new Date();
-		try
-		{
+		try {
 			String formDate = values.getAsString("formDate");
 			data.put("form_date", formDate);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		data.put("timestamp", date.getTime());
-		if (encounterType != null)
-		{
+		if (encounterType != null) {
 			data.put("form", encounterType);
 		}
-		if (values != null)
-		{
+		if (values != null) {
 			StringBuilder sb = new StringBuilder();
 			Set<Entry<String, Object>> valueSet = values.valueSet();
 			Iterator<Entry<String, Object>> iterator = valueSet.iterator();
-			while (iterator.hasNext())
-			{
+			while (iterator.hasNext()) {
 				Entry<String, Object> entry = iterator.next();
 				sb.append(entry.getKey() + ":" + entry.getValue());
 				sb.append(";");
 			}
 			data.put("content", sb.toString());
 		}
-		if (observations != null)
-		{
+		if (observations != null) {
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				sb.append(observations[i][0] + ":" + observations[i][1]);
 				sb.append(";");
 			}
@@ -885,8 +736,7 @@ public class ServerService
 	 *            form content in json text (not encoded)
 	 * @return
 	 */
-	public boolean saveOfflineForm(String encounterType, String json)
-	{
+	public boolean saveOfflineForm(String encounterType, String json) {
 		ContentValues data = new ContentValues();
 		Date date = new Date();
 		data.put("username", App.getUsername());
@@ -905,48 +755,39 @@ public class ServerService
 	 * @param observations
 	 */
 	public void writeFormToFile(String encounterType, ContentValues values,
-			String[][] observations)
-	{
+			String[][] observations) {
 		StringBuilder sb = new StringBuilder();
 		Date date = new Date();
 		sb.append("Timestamp:" + date.getTime() + ";");
-		if (encounterType != null)
-		{
+		if (encounterType != null) {
 			sb.append("Form:" + encounterType + ";");
 		}
-		if (values != null)
-		{
+		if (values != null) {
 			Set<Entry<String, Object>> valueSet = values.valueSet();
 			Iterator<Entry<String, Object>> iterator = valueSet.iterator();
 			sb.append("Content:[");
-			while (iterator.hasNext())
-			{
+			while (iterator.hasNext()) {
 				Entry<String, Object> entry = iterator.next();
 				sb.append(entry.getKey() + "=" + entry.getValue());
 				sb.append(";");
 			}
 			sb.append("];");
 		}
-		if (observations != null)
-		{
+		if (observations != null) {
 			sb.append("Observations:[");
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				sb.append(observations[i][0] + "=" + observations[i][1]);
 				sb.append(";");
 			}
 			sb.append("];\n");
 		}
 		Calendar cal = Calendar.getInstance();
-		try
-		{
+		try {
 			String formDateStr = values.getAsString("formDate");
 			Date formDate = DateTimeUtil.getDateFromString(formDateStr,
 					DateTimeUtil.SQL_DATE);
 			cal.set(Calendar.MONTH, formDate.getMonth());
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
 		String dataFilePath = directory + "/forms_" + cal.get(Calendar.YEAR)
@@ -969,13 +810,11 @@ public class ServerService
 	 */
 	public HashMap<String, String[]> searchPatients(String patientId,
 			String firstName, String lastName, String gender, int ageStart,
-			int ageEnd) throws UnsupportedEncodingException
-	{
+			int ageEnd) throws UnsupportedEncodingException {
 		String response = "";
 		HashMap<String, String[]> patients = new HashMap<String, String[]>();
 		JSONObject json = new JSONObject();
-		try
-		{
+		try {
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", FormType.SEARCH_PATIENTS);
 			json.put("patient_id", patientId);
@@ -985,67 +824,58 @@ public class ServerService
 			json.put("age_start", ageStart);
 			json.put("age_end", ageEnd);
 			response = get("?content=" + JsonUtil.getEncodedJson(json));
-			if (response == null)
-			{
+			if (response == null) {
 				return patients;
 			}
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse.has("patients"))
-			{
+			if (jsonResponse.has("patients")) {
 				JSONArray patientList = new JSONArray(
 						jsonResponse.getString("patients"));
-				for (int i = 0; i < patientList.length(); i++)
-				{
-					try
-					{
+				for (int i = 0; i < patientList.length(); i++) {
+					try {
 						JSONObject obj = patientList.getJSONObject(i);
 						String id = obj.get("patient_id").toString();
 						String name = obj.get("name").toString();
 						int age = Integer.parseInt(obj.get("age").toString());
 						String gen = obj.get("gender").toString();
 						if (gen.equals(gender) && age >= ageStart
-								&& age <= ageEnd)
-						{
+								&& age <= ageEnd) {
 							patients.put(id,
 									new String[] { name, String.valueOf(age),
 											gen });
 						}
-					}
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						Log.e(TAG, e.getMessage());
 					}
 				}
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 		}
 		return patients;
 	}
-	
-	public String savePatientRegistration(String encounterType, ContentValues values)
-	{
+
+	public String savePatientRegistration(String encounterType,
+			ContentValues values) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		String suspectFatherHusbandName = values.getAsString("suspectFatherHusbandName");
-		String suspectFatherInLawName= values.getAsString("suspectGrandfatherName");
+		String suspectFatherHusbandName = values
+				.getAsString("suspectFatherHusbandName");
+		String suspectFatherInLawName = values
+				.getAsString("suspectGrandfatherName");
 		String ethnicity = values.getAsString("ethnicity");
 		String maritalStatus = values.getAsString("maritalStatus");
 		String primaryPhone = values.getAsString("primaryPhone");
 		String secondaryPhone = values.getAsString("secondaryPhone");
 		String address = values.getAsString("address");
 		String city = values.getAsString("city");
-		String landmark= values.getAsString("landmark");
-		
-		try
-		{
+		String landmark = values.getAsString("landmark");
+
+		try {
 			String id = getPatientId(patientId);
-			if (id != null)
-			{
+			if (id != null) {
 				// Save Patient
 				JSONObject json = new JSONObject();
 				json.put("app_ver", App.getVersion());
@@ -1057,108 +887,97 @@ public class ServerService
 				json.put("location", location);
 				json.put("provider", App.getUsername());
 				json.put("encounter_location", location);
-				
-				//address
+
+				// address
 				json.put("address", address);
 				json.put("city", city);
 				json.put("landmark", landmark);
-				
+
 				// Add contacts as array of person attributes
 				JSONArray attributes = new JSONArray();
 				JSONObject attributeJson = new JSONObject();
-				
-				if(suspectFatherHusbandName != null || "".equals(suspectFatherHusbandName))
-				{
+
+				if (suspectFatherHusbandName != null
+						|| "".equals(suspectFatherHusbandName)) {
 					attributeJson = new JSONObject();
-					attributeJson.put("attribute", "Suspect Father Husband Name");
+					attributeJson.put("attribute",
+							"Suspect Father Husband Name");
 					attributeJson.put("value", suspectFatherHusbandName);
 					attributes.put(attributeJson);
 				}
-				if(suspectFatherInLawName != null || "".equals(suspectFatherInLawName))
-				{
+				if (suspectFatherInLawName != null
+						|| "".equals(suspectFatherInLawName)) {
 					attributeJson = new JSONObject();
-					attributeJson.put("attribute", "Suspect Grandfather Father In Law Name");
+					attributeJson.put("attribute",
+							"Suspect Grandfather Father In Law Name");
 					attributeJson.put("value", suspectFatherInLawName);
 					attributes.put(attributeJson);
 				}
-				
-				if(ethnicity != null || "".equals(ethnicity))
-				{
+
+				if (ethnicity != null || "".equals(ethnicity)) {
 					attributeJson = new JSONObject();
 					attributeJson.put("attribute", "Ethnicity");
 					attributeJson.put("value", ethnicity);
 					attributes.put(attributeJson);
 				}
-				
-				if(maritalStatus != null || "".equals(maritalStatus))
-				{
+
+				if (maritalStatus != null || "".equals(maritalStatus)) {
 					attributeJson = new JSONObject();
 					attributeJson.put("attribute", "Marital Status");
 					attributeJson.put("value", maritalStatus);
 					attributes.put(attributeJson);
 				}
-				
-				if (primaryPhone != null || "".equals(primaryPhone))
-				{
+
+				if (primaryPhone != null || "".equals(primaryPhone)) {
 					attributeJson = new JSONObject();
 					attributeJson.put("attribute", "Primary Phone");
 					attributeJson.put("value", primaryPhone.replace("-", ""));
 					attributes.put(attributeJson);
 				}
-				if (secondaryPhone != null || "".equals(secondaryPhone))
-				{
+				if (secondaryPhone != null || "".equals(secondaryPhone)) {
 					attributeJson = new JSONObject();
 					attributeJson.put("attribute", "Secondary Phone");
 					attributeJson.put("value", secondaryPhone.replace("-", ""));
 					attributes.put(attributeJson);
 				}
-				
+
 				json.put("attributes", attributes.toString());
-				
+
 				// Save form locally if in offline mode
-				if (App.isOfflineMode())
-				{
+				if (App.isOfflineMode()) {
 					saveOfflineForm(encounterType, json.toString());
 					return "SUCCESS";
 				}
 				response = post("?content=" + JsonUtil.getEncodedJson(json));
 				JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-				if (jsonResponse == null)
-				{
+				if (jsonResponse == null) {
 					return response;
 				}
-				if (jsonResponse.has("result"))
-				{
+				if (jsonResponse.has("result")) {
 					String result = jsonResponse.getString("result");
 					return result;
 				}
 				return response;
-			}
-			else
-			{
+			} else {
 				JSONObject json = new JSONObject();
-				response = "PatientID not found. " + context.getResources().getString(R.string.item_not_found);
+				response = "PatientID not found. "
+						+ context.getResources().getString(
+								R.string.item_not_found);
 				return response;
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
-			
+
 		return response;
 	}
-	
 
 	public String saveTBScreening(String encounterType, ContentValues values,
-			String[][] observations)
-	{
+			String[][] observations) {
 		String response = "";
 		// Demographics
 		String givenName = TextUtil.capitalizeFirstLetter(values
@@ -1189,8 +1008,7 @@ public class ServerService
 		String alternatePhoneNumber = values
 				.getAsString("alternatePhoneNumber");
 
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id != null)
 				return context.getResources().getString(R.string.duplication);
@@ -1206,8 +1024,7 @@ public class ServerService
 			json.put("age", age);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1237,14 +1054,12 @@ public class ServerService
 			// Add contacts as array of person attributes
 			JSONArray attributes = new JSONArray();
 			JSONObject attributeJson = new JSONObject();
-			if (clientPhoneNumber != null || "".equals(clientPhoneNumber))
-			{
+			if (clientPhoneNumber != null || "".equals(clientPhoneNumber)) {
 				attributeJson.put("attribute", "Primary Phone");
 				attributeJson.put("value", clientPhoneNumber);
 				attributes.put(attributeJson);
 			}
-			if (alternatePhoneNumber != null || "".equals(alternatePhoneNumber))
-			{
+			if (alternatePhoneNumber != null || "".equals(alternatePhoneNumber)) {
 				attributeJson = new JSONObject();
 				attributeJson.put("attribute", "Secondary Phone");
 				attributeJson.put("value", alternatePhoneNumber);
@@ -1254,31 +1069,24 @@ public class ServerService
 
 			json.put("obs", obs.toString());
 			// Save form locally if in offline mode
-			if (App.isOfflineMode())
-			{
+			if (App.isOfflineMode()) {
 				saveOfflineForm(encounterType, json.toString());
 				return "SUCCESS";
 			}
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -1286,40 +1094,35 @@ public class ServerService
 	}
 
 	public String saveScreening(String encounterType, ContentValues values,
-			String[][] observations)
-	{
+			String[][] observations) {
 		String response = "";
 		// Demographics
 		String givenName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("firstName"));
 		String familyName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("lastName"));
-		
+
 		String gender = values.getAsString("gender");
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		
-		try
-		{
-			String id = getPatientId(patientId);
-			if (id != null)
-				return context.getResources().getString(R.string.duplication);
-			
+
+		try {
+//			String id = getPatientId(patientId);
+//			if (id != null)
+//				return context.getResources().getString(R.string.duplication);
+
 			// Save Patient
 			JSONObject json = new JSONObject();
-			
-			if(encounterType.equals(FormType.PAEDIATRIC_SCREENING))
-			{
+
+			if (encounterType.equals(FormType.PAEDIATRIC_SCREENING)) {
 				String dob = values.getAsString("dob");
 				json.put("dob", dob);
-			}
-			else if(encounterType.equals(FormType.ADULT_SCREENING))
-			{
+			} else if (encounterType.equals(FormType.ADULT_SCREENING)) {
 				int age = values.getAsInteger("age");
 				json.put("age", age);
 			}
-			
+
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
 			json.put("username", App.getUsername());
@@ -1328,10 +1131,9 @@ public class ServerService
 			json.put("family_name", familyName);
 			json.put("gender", gender);
 			json.put("location", location);
-			
+
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1346,66 +1148,57 @@ public class ServerService
 			json.put("provider", App.getUsername());
 			json.put("obs", obs.toString());
 			// Save form locally if in offline mode
-			if (App.isOfflineMode())
-			{
+			if (App.isOfflineMode()) {
 				saveOfflineForm(encounterType, json.toString());
 				return "SUCCESS";
 			}
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
-	
-	public String saveAdultReverseContactTracing(String encounterType, ContentValues values, String[][] observations)
-	{
+
+	public String saveAdultReverseContactTracing(String encounterType,
+			ContentValues values, String[][] observations) {
 		String response = "";
-		
+
 		// Demographics
 		String givenName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("firstName"));
 		String familyName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("lastName"));
-		
+
 		String gender = values.getAsString("gender");
-		String patientId = values.getAsString("patientId"); 
+		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		
-		try
-		{
+
+		try {
 			String id = getPatientId(patientId);
 			if (id != null)
 				return context.getResources().getString(R.string.duplication);
-			
+
 			JSONObject json = new JSONObject();
-			
-			if(encounterType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
-			{
+
+			if (encounterType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING)) {
 				int age = values.getAsInteger("age");
 				json.put("age", age);
 			}
-				
+
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
 			json.put("username", App.getUsername());
@@ -1414,10 +1207,9 @@ public class ServerService
 			json.put("family_name", familyName);
 			json.put("gender", gender);
 			json.put("location", location);
-			
+
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1426,72 +1218,64 @@ public class ServerService
 				obsJson.put("value", observations[i][1]);
 				obs.put(obsJson);
 			}
-			
+
 			json.put("encounter_type", encounterType);
 			json.put("form_date", formDate);
 			json.put("encounter_location", location);
 			json.put("provider", App.getUsername());
 			json.put("obs", obs.toString());
-				
-				// Save form locally if in offline mode
-//				if (App.isOfflineMode())
-//				{
-//					saveOfflineForm(encounterType, json.toString());
-//					return "SUCCESS";
-//				}
-				
+
+			// Save form locally if in offline mode
+			// if (App.isOfflineMode())
+			// {
+			// saveOfflineForm(encounterType, json.toString());
+			// return "SUCCESS";
+			// }
+
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			
-			if(jsonResponse == null)
-			{
+
+			if (jsonResponse == null) {
 				return response;
-			}
-			else if (jsonResponse.has("result"))
-			{
+			} else if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
-			
+
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
-	
-	public String savePaediatricContactTracing(String encounterType, ContentValues values, String[][] observations)
-	{
+
+	public String savePaediatricContactTracing(String encounterType,
+			ContentValues values, String[][] observations) {
 		String response = "";
-		
+
 		// Demographics
 		String givenName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("firstName"));
 		String familyName = TextUtil.capitalizeFirstLetter(values
 				.getAsString("lastName"));
-		
+
 		String gender = values.getAsString("gender");
-		String patientId = values.getAsString("patientId"); 
+		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
 		String dob = values.getAsString("dob");
-		
-		try
-		{
+
+		try {
 			String id = getPatientId(patientId);
 			if (id != null)
 				return context.getResources().getString(R.string.duplication);
-			
+
 			JSONObject json = new JSONObject();
-				
+
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
 			json.put("username", App.getUsername());
@@ -1501,10 +1285,9 @@ public class ServerService
 			json.put("gender", gender);
 			json.put("location", location);
 			json.put("dob", dob);
-			
+
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1513,155 +1296,138 @@ public class ServerService
 				obsJson.put("value", observations[i][1]);
 				obs.put(obsJson);
 			}
-			
+
 			json.put("encounter_type", encounterType);
 			json.put("form_date", formDate);
 			json.put("encounter_location", location);
 			json.put("provider", App.getUsername());
 			json.put("obs", obs.toString());
-				
-				// Save form locally if in offline mode
-//				if (App.isOfflineMode())
-//				{
-//					saveOfflineForm(encounterType, json.toString());
-//					return "SUCCESS";
-//				}
-				
+
+			// Save form locally if in offline mode
+			// if (App.isOfflineMode())
+			// {
+			// saveOfflineForm(encounterType, json.toString());
+			// return "SUCCESS";
+			// }
+
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			
-			if(jsonResponse == null)
-			{
+
+			if (jsonResponse == null) {
 				return response;
-			}
-			else if (jsonResponse.has("result"))
-			{
+			} else if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
-			
+
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
-	
-	public String saveReverseContact(String encounterType, ContentValues values, String[][] observations)
-	{
+
+	public String saveReverseContact(String encounterType,
+			ContentValues values, String[][] observations) {
 		String response = "";
-		String patientId = values.getAsString("patientId"); 
+		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		
-		try
-		{
+
+		try {
 			String id = getPatientId(patientId);
-			if(id != null)
-			{
+			if (id != null) {
 				JSONObject json = new JSONObject();
 				json.put("app_ver", App.getVersion());
 				json.put("form_name", encounterType);
 				json.put("username", App.getUsername());
 				json.put("patient_id", patientId);
 				json.put("location", location);
-				
+
 				JSONArray obs = new JSONArray();
-				for(int i=0; i<observations.length; i++)
-				{
-					if("".equals(observations[i][0]) || "".equals(observations[i][1]))
-							continue;
+				for (int i = 0; i < observations.length; i++) {
+					if ("".equals(observations[i][0])
+							|| "".equals(observations[i][1]))
+						continue;
 					JSONObject obsJson = new JSONObject();
 					obsJson.put("concept", observations[i][0]);
 					obsJson.put("value", observations[i][1]);
 					obs.put(obsJson);
 				}
-				
+
 				json.put("encounter_type", encounterType);
 				json.put("form_date", formDate);
 				json.put("encounter_location", location);
 				json.put("provider", App.getUsername());
 				json.put("obs", obs.toString());
-				
+
 				response = post("?content=" + JsonUtil.getEncodedJson(json));
 				JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-				
-				if(jsonResponse == null)
-				{
+
+				if (jsonResponse == null) {
 					return response;
-				}
-				else if (jsonResponse.has("result"))
-				{
+				} else if (jsonResponse.has("result")) {
 					String result = jsonResponse.getString("result");
 					return result;
 				}
-			}
-			else
-			{
-				response = "Patient not found. " + context.getResources().getString(R.string.item_not_found);
+			} else {
+				response = "Patient not found. "
+						+ context.getResources().getString(
+								R.string.item_not_found);
 				return response;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
-		
+
 	}
-	
-	
-	public String saveClinicalVisitBarriers(String encounterType, ContentValues values, String[][] observations)
-	{
+
+	public String saveClinicalVisitBarriers(String encounterType,
+			ContentValues values, String[][] observations) {
 		String response = "";
-		
+
 		// Demographics
-//		String givenName = TextUtil.capitalizeFirstLetter(values.getAsString("firstName"));
-//		String familyName = TextUtil.capitalizeFirstLetter(values.getAsString("lastName"));
-		
-//		String gender = values.getAsString("gender");
-		String patientId = values.getAsString("patientId"); 
+		// String givenName =
+		// TextUtil.capitalizeFirstLetter(values.getAsString("firstName"));
+		// String familyName =
+		// TextUtil.capitalizeFirstLetter(values.getAsString("lastName"));
+
+		// String gender = values.getAsString("gender");
+		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		
-		try
-		{
+
+		try {
 			String id = getPatientId(patientId);
 			if (id != null)
 				return context.getResources().getString(R.string.duplication);
-			
+
 			JSONObject json = new JSONObject();
-			
-//			if(encounterType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
-//			{
-//				int age = values.getAsInteger("age");
-//				json.put("age", age);
-//			}
-				
+
+			// if(encounterType.equals(FormType.ADULT_REVERSE_CONTACT_TRACING))
+			// {
+			// int age = values.getAsInteger("age");
+			// json.put("age", age);
+			// }
+
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
 			json.put("username", App.getUsername());
 			json.put("patient_id", patientId);
 			json.put("location", location);
-			
+
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1670,50 +1436,119 @@ public class ServerService
 				obsJson.put("value", observations[i][1]);
 				obs.put(obsJson);
 			}
-			
+
 			json.put("encounter_type", encounterType);
 			json.put("form_date", formDate);
 			json.put("encounter_location", location);
 			json.put("provider", App.getUsername());
 			json.put("obs", obs.toString());
-				
-				// Save form locally if in offline mode
-//				if (App.isOfflineMode())
-//				{
-//					saveOfflineForm(encounterType, json.toString());
-//					return "SUCCESS";
-//				}
-				
+
+			// Save form locally if in offline mode
+			// if (App.isOfflineMode())
+			// {
+			// saveOfflineForm(encounterType, json.toString());
+			// return "SUCCESS";
+			// }
+
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			
-			if(jsonResponse == null)
-			{
+
+			if (jsonResponse == null) {
 				return response;
-			}
-			else if (jsonResponse.has("result"))
-			{
+			} else if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
-			
+
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
-	
-	public String saveHctInfo(String encounterType, ContentValues values, String[][] observations)
-	{
+
+	public String savePrivatePatient(String encounterType,
+			ContentValues values, String[][] observations) {
+		String response = "";
+		// Demographics
+		String givenName = TextUtil.capitalizeFirstLetter(values
+				.getAsString("firstName"));
+		String familyName = TextUtil.capitalizeFirstLetter(values
+				.getAsString("lastName"));
+
+		String gender = values.getAsString("gender");
+		String patientId = values.getAsString("patientId");
+		String location = values.getAsString("location");
+		String formDate = values.getAsString("formDate");
+		String districtTbNumber = values.getAsString("districtTbNumber");
+
+		try {
+			// String id = getPatientId(patientId);
+			// if (id != null)
+			// return context.getResources().getString(R.string.duplication);
+
+			// Save Patient
+			JSONObject json = new JSONObject();
+
+			int age = values.getAsInteger("age");
+			json.put("age", age);
+
+			json.put("app_ver", App.getVersion());
+			json.put("form_name", encounterType);
+			json.put("username", App.getUsername());
+			json.put("patient_id", patientId);
+			json.put("given_name", givenName);
+			json.put("family_name", familyName);
+			json.put("gender", gender);
+			json.put("location", location);
+			json.put("district_tb_number", districtTbNumber);
+
+			JSONArray obs = new JSONArray();
+			for (int i = 0; i < observations.length; i++) {
+				if ("".equals(observations[i][0])
+						|| "".equals(observations[i][1]))
+					continue;
+				JSONObject obsJson = new JSONObject();
+				obsJson.put("concept", observations[i][0]);
+				obsJson.put("value", observations[i][1]);
+				obs.put(obsJson);
+			}
+			json.put("encounter_type", encounterType);
+			json.put("form_date", formDate);
+			json.put("encounter_location", location);
+			json.put("provider", App.getUsername());
+			json.put("obs", obs.toString());
+			// Save form locally if in offline mode
+			// if (App.isOfflineMode()) {
+			// saveOfflineForm(encounterType, json.toString());
+			// return "SUCCESS";
+			// }
+			response = post("?content=" + JsonUtil.getEncodedJson(json));
+			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
+			if (jsonResponse == null) {
+				return response;
+			}
+			if (jsonResponse.has("result")) {
+				String result = jsonResponse.getString("result");
+				return result;
+			}
+			return response;
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage());
+			response = context.getResources().getString(R.string.invalid_data);
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, e.getMessage());
+			response = context.getResources().getString(R.string.unknown_error);
+		}
+		return response;
+	}
+
+	public String saveHctInfo(String encounterType, ContentValues values,
+			String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
@@ -1722,8 +1557,7 @@ public class ServerService
 		String clientPhoneNumber = values.getAsString("clientPhoneNumber");
 		String alternatePhoneNumber = values
 				.getAsString("alternatePhoneNumber");
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
@@ -1734,10 +1568,9 @@ public class ServerService
 			json.put("form_date", formDate);
 			json.put("encounter_location", location);
 			json.put("provider", App.getUsername());
-			
+
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1747,18 +1580,16 @@ public class ServerService
 				obs.put(obsJson);
 			}
 			json.put("obs", obs.toString());
-			
+
 			// Add contacts as array of person attributes
 			JSONArray attributes = new JSONArray();
 			JSONObject attributeJson = new JSONObject();
-			if (clientPhoneNumber != null || "".equals(clientPhoneNumber))
-			{
+			if (clientPhoneNumber != null || "".equals(clientPhoneNumber)) {
 				attributeJson.put("attribute", "Primary Phone");
 				attributeJson.put("value", clientPhoneNumber);
 				attributes.put(attributeJson);
 			}
-			if (alternatePhoneNumber != null || "".equals(alternatePhoneNumber))
-			{
+			if (alternatePhoneNumber != null || "".equals(alternatePhoneNumber)) {
 				attributeJson = new JSONObject();
 				attributeJson.put("attribute", "Secondary Phone");
 				attributeJson.put("value", alternatePhoneNumber);
@@ -1766,34 +1597,27 @@ public class ServerService
 			}
 			json.put("attributes", attributes.toString());
 			// Save form locally if in offline mode
-			if(App.isOfflineMode())
-			{
+			if (App.isOfflineMode()) {
 				saveOfflineForm(encounterType, json.toString());
 				return "SUCCESS";
 			}
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			
-			if(jsonResponse == null)
-			{
+
+			if (jsonResponse == null) {
 				return response;
 			}
-			
-			if(jsonResponse.has("result"))
-			{
+
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-			
-		}
-		catch (JSONException e)
-		{
+
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -1801,8 +1625,7 @@ public class ServerService
 
 	}
 
-	public String saveCustomerInfo(String encounterType, ContentValues values)
-	{
+	public String saveCustomerInfo(String encounterType, ContentValues values) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
@@ -1815,8 +1638,7 @@ public class ServerService
 		String phone2 = values.getAsString("phone2");
 		String phone1Owner = values.getAsString("phone1Owner");
 		String phone2Owner = values.getAsString("phone2Owner");
-		try
-		{
+		try {
 			// Check if the patient Id exists
 			String id = getPatientId(patientId);
 			if (id == null)
@@ -1841,28 +1663,24 @@ public class ServerService
 			// Add contacts as array of person attributes
 			JSONArray attributes = new JSONArray();
 			JSONObject attributeJson = new JSONObject();
-			if (phone1 != null || "".equals(phone1))
-			{
+			if (phone1 != null || "".equals(phone1)) {
 				attributeJson.put("attribute", "Primary Mobile");
 				attributeJson.put("value", phone1);
 				attributes.put(attributeJson);
 			}
-			if (phone2 != null || "".equals(phone2))
-			{
+			if (phone2 != null || "".equals(phone2)) {
 				attributeJson = new JSONObject();
 				attributeJson.put("attribute", "Secondary Mobile");
 				attributeJson.put("value", phone2);
 				attributes.put(attributeJson);
 			}
-			if (phone1Owner != null || "".equals(phone1Owner))
-			{
+			if (phone1Owner != null || "".equals(phone1Owner)) {
 				attributeJson = new JSONObject();
 				attributeJson.put("attribute", "Primary Mobile Owner");
 				attributeJson.put("value", phone1Owner);
 				attributes.put(attributeJson);
 			}
-			if (phone2Owner != null || "".equals(phone2Owner))
-			{
+			if (phone2Owner != null || "".equals(phone2Owner)) {
 				attributeJson = new JSONObject();
 				attributeJson.put("attribute", "Secondary Mobile Owner");
 				attributeJson.put("value", phone2Owner);
@@ -1871,24 +1689,18 @@ public class ServerService
 			json.put("attributes", attributes.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -1896,14 +1708,12 @@ public class ServerService
 	}
 
 	public String saveTestIndication(String encounterType,
-			ContentValues values, String[][] observations)
-	{
+			ContentValues values, String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id == null)
 				return context.getResources().getString(
@@ -1916,8 +1726,7 @@ public class ServerService
 			json.put("patient_id", patientId);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1933,24 +1742,18 @@ public class ServerService
 			json.put("obs", obs.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -1958,14 +1761,12 @@ public class ServerService
 	}
 
 	public String saveBloodSugarTest(String encounterType,
-			ContentValues values, String[][] observations)
-	{
+			ContentValues values, String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id == null)
 				return context.getResources().getString(
@@ -1978,8 +1779,7 @@ public class ServerService
 			json.put("patient_id", patientId);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -1997,24 +1797,18 @@ public class ServerService
 			json.put("obs", obs.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -2022,14 +1816,12 @@ public class ServerService
 	}
 
 	public String saveBloodSugarResults(String encounterType,
-			ContentValues values, String[][] observations)
-	{
+			ContentValues values, String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id == null)
 				return context.getResources().getString(
@@ -2042,8 +1834,7 @@ public class ServerService
 			json.put("patient_id", patientId);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -2061,24 +1852,18 @@ public class ServerService
 			json.put("obs", obs.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -2086,14 +1871,12 @@ public class ServerService
 	}
 
 	public String saveClinicalEvaluation(String encounterType,
-			ContentValues values, String[][] observations)
-	{
+			ContentValues values, String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id == null)
 				return context.getResources().getString(
@@ -2106,8 +1889,7 @@ public class ServerService
 			json.put("patient_id", patientId);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -2123,24 +1905,18 @@ public class ServerService
 			json.put("obs", obs.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
@@ -2148,14 +1924,12 @@ public class ServerService
 	}
 
 	public String saveDrugDispersal(String encounterType, ContentValues values,
-			String[][] observations)
-	{
+			String[][] observations) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
 		String formDate = values.getAsString("formDate");
-		try
-		{
+		try {
 			String id = getPatientId(patientId);
 			if (id == null)
 				return context.getResources().getString(
@@ -2168,8 +1942,7 @@ public class ServerService
 			json.put("patient_id", patientId);
 			json.put("location", location);
 			JSONArray obs = new JSONArray();
-			for (int i = 0; i < observations.length; i++)
-			{
+			for (int i = 0; i < observations.length; i++) {
 				if ("".equals(observations[i][0])
 						|| "".equals(observations[i][1]))
 					continue;
@@ -2185,32 +1958,25 @@ public class ServerService
 			json.put("obs", obs.toString());
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
 
-	public String savePatientGps(String encounterType, ContentValues values)
-	{
+	public String savePatientGps(String encounterType, ContentValues values) {
 		String response = "";
 		String patientId = values.getAsString("patientId");
 		String location = values.getAsString("location");
@@ -2222,8 +1988,7 @@ public class ServerService
 		String longitude = values.getAsString("longitude");
 		String cityVillage = values.getAsString("city");
 		String country = values.getAsString("country");
-		try
-		{
+		try {
 			// Check if the patient Id exists
 			String id = getPatientId(patientId);
 			if (id == null)
@@ -2250,35 +2015,27 @@ public class ServerService
 			json.put("country", country);
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse == null)
-			{
+			if (jsonResponse == null) {
 				return response;
 			}
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
 			}
 			return response;
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
 		}
 		return response;
 	}
 
-	public String saveFeedback(String encounterType, ContentValues values)
-	{
+	public String saveFeedback(String encounterType, ContentValues values) {
 		String response = "";
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
@@ -2288,23 +2045,16 @@ public class ServerService
 			json.put("feedback", values.getAsString("feedback"));
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
-			}
-			else
-			{
+			} else {
 				return response;
 			}
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.insert_error);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.insert_error);
 		}
@@ -2318,11 +2068,9 @@ public class ServerService
 	 * @param values
 	 * @return
 	 */
-	public String saveNonSuspect(String encounterType, ContentValues values)
-	{
+	public String saveNonSuspect(String encounterType, ContentValues values) {
 		String response = "";
-		try
-		{
+		try {
 			JSONObject json = new JSONObject();
 			json.put("app_ver", App.getVersion());
 			json.put("form_name", encounterType);
@@ -2334,46 +2082,34 @@ public class ServerService
 			json.put("username", App.getUsername());
 			json.put("formdate", values.getAsString("formDate"));
 			json.put("dob", values.getAsString("dob"));
-			
-			if(values.getAsString("reverseNonSuspect") != null)
-			{
+
+			if (values.getAsString("reverseNonSuspect") != null) {
 				// coming from Adult Reverse Contact Tracing Form
 				json.put("indexCaseId", values.getAsString("indexCaseId"));
-				json.put("reverseNonSuspect", values.getAsString("reverseNonSuspect"));
-			}
-			else
-			{
+				json.put("reverseNonSuspect",
+						values.getAsString("reverseNonSuspect"));
+			} else {
 				// Save form locally if in offline mode
-				if (App.isOfflineMode())
-				{
+				if (App.isOfflineMode()) {
 					saveOfflineForm(encounterType, json.toString());
 					return "SUCCESS";
 				}
 			}
 			response = post("?content=" + JsonUtil.getEncodedJson(json));
 			JSONObject jsonResponse = JsonUtil.getJSONObject(response);
-			if (jsonResponse.has("result"))
-			{
+			if (jsonResponse.has("result")) {
 				String result = jsonResponse.getString("result");
 				return result;
-			}
-			else
-			{
+			} else {
 				return response;
 			}
-		}
-		catch (NotFoundException e)
-		{
+		} catch (NotFoundException e) {
 			Log.d(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.empty_data);
-		}
-		catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			Log.d(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.unknown_error);
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			Log.d(TAG, e.getMessage());
 			response = context.getResources().getString(R.string.invalid_data);
 		}

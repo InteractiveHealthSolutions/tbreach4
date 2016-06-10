@@ -40,14 +40,12 @@ import com.ihsinformatics.tbr4mobile_pk.App;
  * @author owais.hussain@irdinformatics.org
  * 
  */
-public class HttpRequest
-{
-	private static final String	TAG			= "HttpRequest";
-	private final Context		context;
-	HttpClient					httpClient	= new DefaultHttpClient ();
+public class HttpRequest {
+	private static final String TAG = "HttpRequest";
+	private final Context context;
+	HttpClient httpClient = new DefaultHttpClient();
 
-	public HttpRequest (Context context)
-	{
+	public HttpRequest(Context context) {
 		this.context = context;
 	}
 
@@ -61,26 +59,21 @@ public class HttpRequest
 	 *            https://myserver:port/ws/rest/v1/concept
 	 * @return
 	 */
-	public String clientGet (String requestUri)
-	{
-		HttpsClient client = new HttpsClient (context);
+	public String clientGet(String requestUri) {
+		HttpsClient client = new HttpsClient(context);
 		HttpUriRequest request = null;
 		String response = "";
 		String auth = "";
-		try
-		{
-			request = new HttpGet (requestUri);
-			auth = Base64.encodeToString ((App.getUsername () + ":" + App.getPassword ()).getBytes ("UTF-8"), Base64.NO_WRAP);
-			request.addHeader ("Authorization", auth);
-			response = client.request (request);
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (IllegalArgumentException e)
-		{
-			Log.e (TAG, e.getMessage ());
+		try {
+			request = new HttpGet(requestUri);
+			auth = Base64.encodeToString((App.getUsername() + ":" + App
+					.getPassword()).getBytes("UTF-8"), Base64.NO_WRAP);
+			request.addHeader("Authorization", auth);
+			response = client.request(request);
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (IllegalArgumentException e) {
+			Log.e(TAG, e.getMessage());
 		}
 		return response;
 	}
@@ -93,16 +86,14 @@ public class HttpRequest
 	 * @param content
 	 * @return
 	 */
-	public String clientPost (String postUri, String content)
-	{
-		HttpsClient client = new HttpsClient (context);
+	public String clientPost(String postUri, String content) {
+		HttpsClient client = new HttpsClient(context);
 		HttpUriRequest request = null;
 		HttpResponse response = null;
 		HttpEntity entity;
-		StringBuilder builder = new StringBuilder ();
+		StringBuilder builder = new StringBuilder();
 		String auth = "";
-		try
-		{
+		try {
 			/*
 			 * Uncomment if you do not want to send data in Parameters HttpPost
 			 * httpPost = new HttpPost (postUri); httpPost.setHeader ("Accept",
@@ -110,33 +101,29 @@ public class HttpRequest
 			 * "application/json"); StringEntity stringEntity = new StringEntity
 			 * (content); httpPost.setEntity (stringEntity); request = httpPost;
 			 */
-			auth = Base64.encodeToString ((App.getUsername () + ":" + App.getPassword ()).getBytes ("UTF-8"), Base64.NO_WRAP);
-			request = new HttpGet (postUri);
-			request.addHeader ("Authorization", auth);
-			response = client.execute (request);
-			entity = response.getEntity ();
-			InputStream is = entity.getContent ();
-			BufferedReader bufferedReader = new BufferedReader (new InputStreamReader (is));
-			builder = new StringBuilder ();
+			auth = Base64.encodeToString((App.getUsername() + ":" + App
+					.getPassword()).getBytes("UTF-8"), Base64.NO_WRAP);
+			request = new HttpGet(postUri);
+			request.addHeader("Authorization", auth);
+			response = client.execute(request);
+			entity = response.getEntity();
+			InputStream is = entity.getContent();
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(is));
+			builder = new StringBuilder();
 			String line = null;
-			while ((line = bufferedReader.readLine ()) != null)
-				builder.append (line);
-			entity.consumeContent ();
+			while ((line = bufferedReader.readLine()) != null)
+				builder.append(line);
+			entity.consumeContent();
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, e.getMessage());
+			builder.append("UNSUPPORTED_ENCODING");
+		} catch (ClientProtocolException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+			builder.append("SERVER_NOT_RESPONDING");
 		}
-		catch (UnsupportedEncodingException e)
-		{
-			Log.e (TAG, e.getMessage ());
-			builder.append ("UNSUPPORTED_ENCODING");
-		}
-		catch (ClientProtocolException e)
-		{
-			Log.e (TAG, e.getMessage ());
-		}
-		catch (IOException e)
-		{
-			Log.e (TAG, e.getMessage ());
-			builder.append ("SERVER_NOT_RESPONDING");
-		}
-		return builder.toString ();
+		return builder.toString();
 	}
 }

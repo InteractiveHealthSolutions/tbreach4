@@ -63,63 +63,58 @@ import com.ihsinformatics.tbr4mobile_pk.util.ServerService;
  * 
  */
 public abstract class AbstractFragmentActivity extends FragmentActivity
-		implements
-			OnClickListener,
-			OnPageChangeListener,
-			OnSeekBarChangeListener,
-			OnItemSelectedListener,
-			OnCheckedChangeListener,
-			OnLongClickListener
-{
-	public static final int			TIME_DIALOG_ID	= 0;
-	public static final int			DATE_DIALOG_ID	= 1;
-	protected static String			TAG;
-	protected static String			FORM_NAME;
-	protected static int			PAGE_COUNT		= 0;
-	protected static ProgressDialog	loading;
-	protected ServerService			serverService;
-	protected Calendar				formDate;
+		implements OnClickListener, OnPageChangeListener,
+		OnSeekBarChangeListener, OnItemSelectedListener,
+		OnCheckedChangeListener, OnLongClickListener {
+	public static final int TIME_DIALOG_ID = 0;
+	public static final int DATE_DIALOG_ID = 1;
+	protected static String TAG;
+	protected static String FORM_NAME;
+	protected static int PAGE_COUNT = 0;
+	protected static ProgressDialog loading;
+	protected ServerService serverService;
+	protected Calendar formDate;
 	// Layout view containing navigation bar and buttons
-	protected LinearLayout			navigatorLayout;
-	protected Button				firstButton;
-	protected Button				lastButton;
-	protected Button				saveButton;
-	protected Button				clearButton;
-	protected TextView				pageNumber;
-	protected SeekBar				navigationSeekbar;
+	protected LinearLayout navigatorLayout;
+	protected Button firstButton;
+	protected Button lastButton;
+	protected Button saveButton;
+	protected Button clearButton;
+	protected TextView pageNumber;
+	protected SeekBar navigationSeekbar;
 	// View pager to holds all the pages generated dynamically
-	protected ViewPager				pager;
+	protected ViewPager pager;
 	// ArrayList to hold all the linear layouts-1 for each page
-	protected ArrayList<ViewGroup>	groups;
-	protected View[]				views;
-	protected Animation				alphaAnimation;
+	protected ArrayList<ViewGroup> groups;
+	protected View[] views;
+	protected Animation alphaAnimation;
 
 	/**
 	 * Set theme, create and initialize members on Activity Create
 	 */
 	@Override
-	protected void onCreate (Bundle savedInstanceState)
-	{
-		setTheme (App.getTheme ());
-		super.onCreate (savedInstanceState);
-		setContentView (R.layout.template);
+	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(App.getTheme());
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.template);
 		// Initialize server service for server calls
-		serverService = new ServerService (getApplicationContext ());
-		loading = new ProgressDialog (this);
-		formDate = Calendar.getInstance ();
+		serverService = new ServerService(getApplicationContext());
+		loading = new ProgressDialog(this);
+		formDate = Calendar.getInstance();
 		// Navivation bar layout
-		navigatorLayout = (LinearLayout) findViewById (R.template_id.navigatorLayout);
-		firstButton = (Button) findViewById (R.template_id.firstButton);
-		lastButton = (Button) findViewById (R.template_id.lastButton);
-		clearButton = (Button) findViewById (R.template_id.clearButton);
-		saveButton = (Button) findViewById (R.template_id.saveButton);
-		pageNumber = (TextView) findViewById (R.template_id.pageNoTextView);
-		navigationSeekbar = (SeekBar) findViewById (R.template_id.navigationSeekbar);
-		alphaAnimation = AnimationUtils.loadAnimation (this, R.anim.alpha_animation);
+		navigatorLayout = (LinearLayout) findViewById(R.template_id.navigatorLayout);
+		firstButton = (Button) findViewById(R.template_id.firstButton);
+		lastButton = (Button) findViewById(R.template_id.lastButton);
+		clearButton = (Button) findViewById(R.template_id.clearButton);
+		saveButton = (Button) findViewById(R.template_id.saveButton);
+		pageNumber = (TextView) findViewById(R.template_id.pageNoTextView);
+		navigationSeekbar = (SeekBar) findViewById(R.template_id.navigationSeekbar);
+		alphaAnimation = AnimationUtils.loadAnimation(this,
+				R.anim.alpha_animation);
 
-		createViews (this);
-		initView (views);
-		updateDisplay ();
+		createViews(this);
+		initView(views);
+		updateDisplay();
 	}
 
 	/**
@@ -127,64 +122,65 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	 * accidentally during form activity
 	 */
 	@Override
-	public void onBackPressed ()
-	{
-		AlertDialog confirmationDialog = new AlertDialog.Builder (this).create ();
-		confirmationDialog.setTitle (getResources ().getString (R.string.close_form));
-		confirmationDialog.setMessage (getResources ().getString (R.string.confirm_close));
-		confirmationDialog.setButton (AlertDialog.BUTTON_POSITIVE, getResources ().getString (R.string.yes), new AlertDialog.OnClickListener ()
-		{
-			@Override
-			public void onClick (DialogInterface dialog, int which)
-			{
-				finish ();
-				Intent mainMenuIntent = new Intent (getApplicationContext (), MainMenuActivity.class);
-				startActivity (mainMenuIntent);
-			}
-		});
-		confirmationDialog.setButton (AlertDialog.BUTTON_NEGATIVE, getResources ().getString (R.string.cancel), new AlertDialog.OnClickListener ()
-		{
-			@Override
-			public void onClick (DialogInterface dialog, int which)
-			{
-			}
-		});
-		confirmationDialog.show ();
+	public void onBackPressed() {
+		AlertDialog confirmationDialog = new AlertDialog.Builder(this).create();
+		confirmationDialog.setTitle(getResources().getString(
+				R.string.close_form));
+		confirmationDialog.setMessage(getResources().getString(
+				R.string.confirm_close));
+		confirmationDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+				getResources().getString(R.string.yes),
+				new AlertDialog.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+						Intent mainMenuIntent = new Intent(
+								getApplicationContext(), MainMenuActivity.class);
+						startActivity(mainMenuIntent);
+					}
+				});
+		confirmationDialog.setButton(AlertDialog.BUTTON_NEGATIVE,
+				getResources().getString(R.string.cancel),
+				new AlertDialog.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				});
+		confirmationDialog.show();
 	}
 
 	/**
 	 * Displays Date or Time dialog and sets the selected value to formDate
 	 */
 	@Override
-	protected Dialog onCreateDialog (int id)
-	{
-		switch (id)
-		{
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
 		// Show date dialog
-			case DATE_DIALOG_ID :
-				OnDateSetListener dateSetListener = new OnDateSetListener ()
-				{
-					@Override
-					public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth)
-					{
-						formDate.set (year, monthOfYear, dayOfMonth);
-						updateDisplay ();
-					}
-				};
-				return new DatePickerDialog (this, dateSetListener, formDate.get (Calendar.YEAR), formDate.get (Calendar.MONTH), formDate.get (Calendar.DAY_OF_MONTH));
-				// Show time dialog
-			case TIME_DIALOG_ID :
-				OnTimeSetListener timeSetListener = new OnTimeSetListener ()
-				{
-					@Override
-					public void onTimeSet (TimePicker view, int hour, int minute)
-					{
-						formDate.set (Calendar.HOUR_OF_DAY, hour);
-						formDate.set (Calendar.MINUTE, minute);
-						updateDisplay ();
-					}
-				};
-				return new TimePickerDialog (this, timeSetListener, formDate.get (Calendar.HOUR_OF_DAY), formDate.get (Calendar.MINUTE), true);
+		case DATE_DIALOG_ID:
+			OnDateSetListener dateSetListener = new OnDateSetListener() {
+				@Override
+				public void onDateSet(DatePicker view, int year,
+						int monthOfYear, int dayOfMonth) {
+					formDate.set(year, monthOfYear, dayOfMonth);
+					updateDisplay();
+				}
+			};
+			return new DatePickerDialog(this, dateSetListener,
+					formDate.get(Calendar.YEAR), formDate.get(Calendar.MONTH),
+					formDate.get(Calendar.DAY_OF_MONTH));
+			// Show time dialog
+		case TIME_DIALOG_ID:
+			OnTimeSetListener timeSetListener = new OnTimeSetListener() {
+				@Override
+				public void onTimeSet(TimePicker view, int hour, int minute) {
+					formDate.set(Calendar.HOUR_OF_DAY, hour);
+					formDate.set(Calendar.MINUTE, minute);
+					updateDisplay();
+				}
+			};
+			return new TimePickerDialog(this, timeSetListener,
+					formDate.get(Calendar.HOUR_OF_DAY),
+					formDate.get(Calendar.MINUTE), true);
 		}
 		return null;
 	}
@@ -194,7 +190,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	 * 
 	 * @param context
 	 */
-	public abstract void createViews (Context context);
+	public abstract void createViews(Context context);
 
 	/**
 	 * Resets all the views passed in parameter
@@ -202,77 +198,59 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	 * @param views
 	 *            array of Views
 	 */
-	public void initView (View[] views)
-	{
-		for (View v : views)
-		{
-			if (v instanceof Spinner || v instanceof MySpinner)
-			{
-				((Spinner) v).setSelection (0);
-			}
-			else if (v instanceof EditText || v instanceof MyEditText)
-			{
-				((EditText) v).setText ("");
-				((EditText) v).setHintTextColor (getResources ().getColor (R.color.Grey));
-			}
-			else if (v instanceof CheckBox)
-			{
-				((CheckBox) v).setChecked (false);
+	public void initView(View[] views) {
+		for (View v : views) {
+			if (v instanceof Spinner || v instanceof MySpinner) {
+				((Spinner) v).setSelection(0);
+			} else if (v instanceof EditText || v instanceof MyEditText) {
+				((EditText) v).setText("");
+				((EditText) v).setHintTextColor(getResources().getColor(
+						R.color.Grey));
+			} else if (v instanceof CheckBox) {
+				((CheckBox) v).setChecked(false);
 			}
 		}
-		gotoFirstPage ();
+		gotoFirstPage();
 	}
 
 	/**
 	 * Updates data in form views
 	 */
-	public abstract void updateDisplay ();
+	public abstract void updateDisplay();
 
 	/**
 	 * Goto first view in the pager
 	 */
-	public void gotoFirstPage ()
-	{
-		if (App.isLanguageRTL ())
-		{
-			gotoPage (PAGE_COUNT - 1);
-		}
-		else
-		{
-			gotoPage (0);
+	public void gotoFirstPage() {
+		if (App.isLanguageRTL()) {
+			gotoPage(PAGE_COUNT - 1);
+		} else {
+			gotoPage(0);
 		}
 	}
 
 	/**
 	 * Goto last view in the pager
 	 */
-	public void gotoLastPage ()
-	{
-		if (App.isLanguageRTL ())
-		{
-			gotoPage (0);
-		}
-		else
-		{
-			gotoPage (PAGE_COUNT - 1);
+	public void gotoLastPage() {
+		if (App.isLanguageRTL()) {
+			gotoPage(0);
+		} else {
+			gotoPage(PAGE_COUNT - 1);
 		}
 	}
 
 	/**
 	 * Goto view at given location in the pager
 	 */
-	protected void gotoPage (int pageNo)
-	{
-		pager.setCurrentItem (pageNo);
-		if (App.isLanguageRTL ())
-		{
-			pageNumber.setText (String.valueOf (PAGE_COUNT - pageNo));
+	protected void gotoPage(int pageNo) {
+		pager.setCurrentItem(pageNo);
+		if (App.isLanguageRTL()) {
+			pageNumber.setText(String.valueOf(PAGE_COUNT - pageNo));
+		} else {
+			pageNumber.setText(String.valueOf(pageNo + 1));
 		}
-		else
-		{
-			pageNumber.setText (String.valueOf (pageNo + 1));
-		}
-		navigationSeekbar.setProgress (pageNo);
+		navigationSeekbar.setProgress(pageNo);
 	}
 
 	/**
@@ -280,57 +258,51 @@ public abstract class AbstractFragmentActivity extends FragmentActivity
 	 * 
 	 * @return
 	 */
-	public abstract boolean validate ();
+	public abstract boolean validate();
 
 	/**
 	 * Submit the form to the server
 	 * 
 	 * @return
 	 */
-	public abstract boolean submit ();
+	public abstract boolean submit();
 
 	@Override
-	public void onNothingSelected (AdapterView<?> view)
-	{
+	public void onNothingSelected(AdapterView<?> view) {
 		// Not implemented
 	}
 
 	@Override
-	public void onStopTrackingTouch (SeekBar seekbar)
-	{
+	public void onStopTrackingTouch(SeekBar seekbar) {
 		// Not implemented
 	}
 
 	@Override
-	public void onStartTrackingTouch (SeekBar seekbar)
-	{
+	public void onStartTrackingTouch(SeekBar seekbar) {
 		// Not implemented
 	}
 
 	@Override
-	public void onProgressChanged (SeekBar seekbar, int progress, boolean isByUser)
-	{
+	public void onProgressChanged(SeekBar seekbar, int progress,
+			boolean isByUser) {
 		// Move to page at the index of progress
-		pager.setCurrentItem (progress);
+		pager.setCurrentItem(progress);
 	}
 
 	@Override
-	public void onPageSelected (int pageNo)
-	{
-		gotoPage (pageNo);
+	public void onPageSelected(int pageNo) {
+		gotoPage(pageNo);
 	}
 
 	@Override
-	public void onPageScrolled (int arg0, float arg1, int arg2)
-	{
-		InputMethodManager imm = (InputMethodManager) getSystemService (Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow (pager.getWindowToken (), 0);
-		updateDisplay ();
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(pager.getWindowToken(), 0);
+		updateDisplay();
 	}
 
 	@Override
-	public void onPageScrollStateChanged (int arg0)
-	{
+	public void onPageScrollStateChanged(int arg0) {
 		// Not implemented
 	}
 }

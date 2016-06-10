@@ -33,13 +33,11 @@ import java.util.ArrayList;
  * @author owais.hussain@irdresearch.org
  * 
  */
-public class FileUtil
-{
+public class FileUtil {
 	/**
 	 * 
 	 */
-	public FileUtil ()
-	{
+	public FileUtil() {
 	}
 
 	/**
@@ -49,12 +47,10 @@ public class FileUtil
 	 * @param directoryName
 	 * @return
 	 */
-	public static boolean createDirectoryInStorage (String directoryName)
-	{
-		File directory = new File (directoryName);
-		if (!directory.exists ())
-		{
-			return directory.mkdir ();
+	public static boolean createDirectoryInStorage(String directoryName) {
+		File directory = new File(directoryName);
+		if (!directory.exists()) {
+			return directory.mkdir();
 		}
 		return false;
 	}
@@ -65,12 +61,10 @@ public class FileUtil
 	 * @param directoryPath
 	 * @return
 	 */
-	public static String[] getFiles (String directoryPath)
-	{
-		File dir = new File (directoryPath);
-		if (dir.exists ())
-		{
-			return dir.list ();
+	public static String[] getFiles(String directoryPath) {
+		File dir = new File(directoryPath);
+		if (dir.exists()) {
+			return dir.list();
 		}
 		return null;
 	}
@@ -80,27 +74,22 @@ public class FileUtil
 	 * 
 	 * @return
 	 */
-	public String getText (String filePath)
-	{
-		File file = new File (filePath);
-		StringBuilder text = new StringBuilder ();
-		try
-		{
-			FileInputStream fis = new FileInputStream (file);
-			DataInputStream dis = new DataInputStream (fis);
-			BufferedReader br = new BufferedReader (new InputStreamReader (dis));
+	public String getText(String filePath) {
+		File file = new File(filePath);
+		StringBuilder text = new StringBuilder();
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			DataInputStream dis = new DataInputStream(fis);
+			BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 			String strLine;
-			while ((strLine = br.readLine ()) != null)
-			{
-				text.append (strLine);
+			while ((strLine = br.readLine()) != null) {
+				text.append(strLine);
 			}
-			dis.close ();
+			dis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace ();
-		}
-		return text.toString ();
+		return text.toString();
 	}
 
 	/**
@@ -109,45 +98,36 @@ public class FileUtil
 	 * @param filePath
 	 * @return
 	 */
-	public byte[] readByteStream (String filePath)
-	{
-		File file = new File (filePath);
-		byte[] buffer = new byte[(int) file.length ()];
-		try
-		{
-			FileInputStream fis = new FileInputStream (file);
-			fis.read (buffer);
-			fis.close ();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace ();
+	public byte[] readByteStream(String filePath) {
+		File file = new File(filePath);
+		byte[] buffer = new byte[(int) file.length()];
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			fis.read(buffer);
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return buffer;
 	}
-	
+
 	/**
 	 * Appends binary data to a file
 	 * 
 	 * @param filePath
 	 * @param bytes
 	 */
-	public void writeByteStream (String filePath, byte[] bytes)
-	{
-		File file = new File (filePath);
-		try
-		{
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
+	public void writeByteStream(String filePath, byte[] bytes) {
+		File file = new File(filePath);
+		try {
+			BufferedOutputStream bos = new BufferedOutputStream(
+					new FileOutputStream(file, true));
 			bos.write(bytes);
 			bos.flush();
 			bos.close();
-		}
-		catch (FileNotFoundException e)
-		{
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -157,27 +137,22 @@ public class FileUtil
 	 * 
 	 * @return
 	 */
-	public String[] getLines (String filePath)
-	{
-		File file = new File (filePath);
-		ArrayList<String> lines = new ArrayList<String> ();
-		try
-		{
-			FileInputStream fis = new FileInputStream (file);
-			DataInputStream dis = new DataInputStream (fis);
-			BufferedReader br = new BufferedReader (new InputStreamReader (dis));
+	public String[] getLines(String filePath) {
+		File file = new File(filePath);
+		ArrayList<String> lines = new ArrayList<String>();
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			DataInputStream dis = new DataInputStream(fis);
+			BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 			String strLine;
-			while ((strLine = br.readLine ()) != null)
-			{
-				lines.add (strLine);
+			while ((strLine = br.readLine()) != null) {
+				lines.add(strLine);
 			}
-			dis.close ();
+			dis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace ();
-		}
-		return lines.toArray (new String[] {});
+		return lines.toArray(new String[] {});
 	}
 
 	/**
@@ -186,9 +161,8 @@ public class FileUtil
 	 * 
 	 * @param text
 	 */
-	public void appendText (String filePath, String text)
-	{
-		appendText (filePath, text, false);
+	public void appendText(String filePath, String text) {
+		appendText(filePath, text, false);
 	}
 
 	/**
@@ -197,23 +171,18 @@ public class FileUtil
 	 * 
 	 * @param text
 	 */
-	public void appendText (String filePath, String text, boolean encrypt)
-	{
-		try
-		{
-			File file = new File (filePath);
-			if (!file.exists ())
-			{
-				file.createNewFile ();
+	public void appendText(String filePath, String text, boolean encrypt) {
+		try {
+			File file = new File(filePath);
+			if (!file.exists()) {
+				file.createNewFile();
 			}
-			BufferedWriter buf = new BufferedWriter (new FileWriter (file, true));
-			buf.append (text);
-			buf.newLine ();
-			buf.close ();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace ();
+			BufferedWriter buf = new BufferedWriter(new FileWriter(file, true));
+			buf.append(text);
+			buf.newLine();
+			buf.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

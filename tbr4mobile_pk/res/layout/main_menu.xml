@@ -28,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dot_dot_dot" />
-
     </LinearLayout>
 
     <ScrollView
@@ -40,10 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            
-            
-            <!--
 
+            <!--
             <Button
                 android:id="@+main_id/screeningButton"
                 style="@style/button"
@@ -136,8 +133,9 @@
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/menu_feedback"
                 android:tag="@string/hct_record_card"
-                android:text="@string/hct_record_card" /> -->
-            
+                android:text="@string/hct_record_card" />
+            -->
+
             <Button
                 android:id="@+main_id/paediatricButton"
                 style="@style/button"
@@ -146,7 +144,7 @@
                 android:drawableTop="@drawable/menu_paediatric"
                 android:tag="@string/paediatric_screening"
                 android:text="@string/paediatric_screening" />
-            
+
             <Button
                 android:id="@+main_id/adultScreeningButton"
                 style="@style/button"
@@ -155,7 +153,7 @@
                 android:drawableTop="@drawable/menu_screening"
                 android:tag="@string/tb_screening"
                 android:text="@string/adult_screening" />
-            
+
             <Button
                 android:id="@+main_id/patientRegistrationButton"
                 style="@style/button"
@@ -164,7 +162,7 @@
                 android:drawableTop="@drawable/menu_feedback"
                 android:tag="@string/patient_registration"
                 android:text="@string/patient_registration" />
-            
+
             <Button
                 android:id="@+main_id/reverseContactTracingButton"
                 style="@style/button"
@@ -173,7 +171,7 @@
                 android:drawableTop="@drawable/menu_clinical_evaluation"
                 android:tag="@string/contact_tracing"
                 android:text="@string/contact_tracing" />
-            
+
             <Button
                 android:id="@+main_id/paediatricContactTracingButton"
                 style="@style/button"
@@ -182,7 +180,7 @@
                 android:drawableTop="@drawable/menu_paediatric"
                 android:tag="@string/paediatric_contact_tracing"
                 android:text="@string/paediatric_contact_tracing" />
-            
+
             <Button
                 android:id="@+main_id/adultReverseContactTracingButton"
                 style="@style/button"
@@ -191,7 +189,7 @@
                 android:drawableTop="@drawable/menu_screening"
                 android:tag="@string/adult_reverse_contact_tracing"
                 android:text="@string/adult_reverse_contact_tracing" />
-            
+
             <Button
                 android:id="@+main_id/clinicalVisitBarriersButton"
                 style="@style/button"
@@ -200,16 +198,24 @@
                 android:drawableTop="@drawable/menu_non_pulmonary_suspect"
                 android:tag="@string/clinical_visit_barriers"
                 android:text="@string/clinical_visit_barriers" />
-            
-              <Button
+
+            <Button
+                android:id="@+main_id/privatePatientButton"
+                style="@style/button"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:drawableTop="@drawable/menu_customer_info"
+                android:tag="@string/private_patient"
+                android:text="@string/private_patient" />
+
+            <Button
                 android:id="@+main_id/feedbackButton"
                 style="@style/button"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/menu_feedback"
                 android:tag="@string/customer_info"
-                android:text="@string/feedback" />  
-            
+                android:text="@string/feedback" />
         </LinearLayout>
     </ScrollView>
 

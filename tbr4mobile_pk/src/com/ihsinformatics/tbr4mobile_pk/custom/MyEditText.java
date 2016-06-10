@@ -26,11 +26,9 @@ import com.ihsinformatics.tbr4mobile_pk.R;
  * @author owais.hussain@irdresearch.org
  * 
  */
-public class MyEditText extends EditText
-{
-	public MyEditText (Context context)
-	{
-		super (context);
+public class MyEditText extends EditText {
+	public MyEditText(Context context) {
+		super(context);
 	}
 
 	/**
@@ -47,45 +45,36 @@ public class MyEditText extends EditText
 	 * @param maxLength
 	 *            Limit of number of maximum characters. Pass 0 for unlimited
 	 */
-	public MyEditText (Context context, int tag, int hint, int inputType, int style, int maxLength, boolean multiline)
-	{
-		super (context);
-		setInputType (inputType);
-		if (style != -1)
-		{
-			setTextAppearance (context, style);
+	public MyEditText(Context context, int tag, int hint, int inputType,
+			int style, int maxLength, boolean multiline) {
+		super(context);
+		setInputType(inputType);
+		if (style != -1) {
+			setTextAppearance(context, style);
 		}
-		if (tag != -1)
-		{
-			setTag (getResources ().getString (tag));
+		if (tag != -1) {
+			setTag(getResources().getString(tag));
 		}
-		if (hint != -1)
-		{
-			setHint (hint);
+		if (hint != -1) {
+			setHint(hint);
 		}
-		if (maxLength > 0)
-		{
-			setFilters (new InputFilter[] {new InputFilter.LengthFilter (maxLength)});
+		if (maxLength > 0) {
+			setFilters(new InputFilter[] { new InputFilter.LengthFilter(
+					maxLength) });
 		}
-		if (!multiline)
-		{
-			setMaxLines (1);
+		if (!multiline) {
+			setMaxLines(1);
 		}
 	}
 
 	@Override
-	public void setEnabled(boolean enabled)
-	{
+	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		if (enabled)
-		{
-			setTextColor (getResources ().getColor (R.color.Chocolate));
-		}
-		else
-		{
-			setTextColor (getResources ().getColor (R.color.DarkGray));
+		if (enabled) {
+			setTextColor(getResources().getColor(R.color.Chocolate));
+		} else {
+			setTextColor(getResources().getColor(R.color.DarkGray));
 		}
 	}
-	
-	
+
 }

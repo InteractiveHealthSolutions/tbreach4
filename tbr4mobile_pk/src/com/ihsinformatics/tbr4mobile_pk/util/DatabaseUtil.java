@@ -32,39 +32,33 @@ import com.ihsinformatics.tbr4mobile_pk.R;
  * @author owais.hussain@irdinformatics.org
  * 
  */
-public class DatabaseUtil extends SQLiteOpenHelper
-{
-	private static final String	TAG			= "DatabaseUtil";
-	private static final String	DB_NAME		= "tbreach3.db";
-	private static final int	DB_VERSION	= 1;
-	private Context				context;
+public class DatabaseUtil extends SQLiteOpenHelper {
+	private static final String TAG = "DatabaseUtil";
+	private static final String DB_NAME = "tbreach3.db";
+	private static final int DB_VERSION = 1;
+	private Context context;
 
-	public DatabaseUtil (Context context)
-	{
-		super (context, DB_NAME, null, DB_VERSION);
+	public DatabaseUtil(Context context) {
+		super(context, DB_NAME, null, DB_VERSION);
 		this.context = context;
 	}
 
 	@Override
-	public void onCreate (SQLiteDatabase db)
-	{
+	public void onCreate(SQLiteDatabase db) {
 	}
 
 	@Override
-	public void onUpgrade (SQLiteDatabase db, int oldVersion, int newVersion)
-	{
-		if (oldVersion == newVersion)
-		{
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (oldVersion == newVersion) {
 			return;
 		}
-		switch (oldVersion)
-		{
-			case 0 : // Script to upgrade from version 0 to 1
-				break;
-			case 1 : // Script to upgrade from version 1 to 2
-				break;
+		switch (oldVersion) {
+		case 0: // Script to upgrade from version 0 to 1
+			break;
+		case 1: // Script to upgrade from version 1 to 2
+			break;
 		}
-		onUpgrade (db, ++oldVersion, newVersion);
+		onUpgrade(db, ++oldVersion, newVersion);
 	}
 
 	/**
@@ -73,18 +67,16 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * 
 	 * @param createNew
 	 */
-	public void buildDatabase (boolean createNew)
-	{
+	public void buildDatabase(boolean createNew) {
 		if (createNew)
-			context.deleteDatabase (DB_NAME);
-		String[] tables = context.getResources ().getStringArray (R.array.tables);
-		SQLiteDatabase db = getWritableDatabase ();
-		for (String s : tables)
-		{
-			db.execSQL (s);
+			context.deleteDatabase(DB_NAME);
+		String[] tables = context.getResources().getStringArray(R.array.tables);
+		SQLiteDatabase db = getWritableDatabase();
+		for (String s : tables) {
+			db.execSQL(s);
 		}
-		db.close ();
-		Log.i (TAG, "Database created/updated.");
+		db.close();
+		Log.i(TAG, "Database created/updated.");
 	}
 
 	/**
@@ -94,24 +86,20 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param values
 	 * @return
 	 */
-	public synchronized boolean insert (String table, ContentValues values)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase writableDatabase = util.getWritableDatabase ();
-		long result = writableDatabase.insert (table, null, values);
-		if (result == -1)
-		{
-			result = writableDatabase.insert (table, null, values);
+	public synchronized boolean insert(String table, ContentValues values) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase writableDatabase = util.getWritableDatabase();
+		long result = writableDatabase.insert(table, null, values);
+		if (result == -1) {
+			result = writableDatabase.insert(table, null, values);
 		}
-		writableDatabase.close ();
+		writableDatabase.close();
 		boolean check = (result != -1);
-		if (check)
-		{
-			Log.i (TAG, "Record inserted in table: " + table);
-		}
-		else
-		{
-			Log.i (TAG, "Record not inserted in table: " + table + ". Error code: " + result);
+		if (check) {
+			Log.i(TAG, "Record inserted in table: " + table);
+		} else {
+			Log.i(TAG, "Record not inserted in table: " + table
+					+ ". Error code: " + result);
 		}
 		return check;
 	}
@@ -126,20 +114,18 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 *            whereArgs = {string1, string2, string3}
 	 * @return
 	 */
-	public synchronized boolean delete (String table, String whereClause, String[] whereArgs)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase writableDatabase = util.getWritableDatabase ();
-		long result = writableDatabase.delete (table, whereClause, whereArgs);
-		writableDatabase.close ();
+	public synchronized boolean delete(String table, String whereClause,
+			String[] whereArgs) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase writableDatabase = util.getWritableDatabase();
+		long result = writableDatabase.delete(table, whereClause, whereArgs);
+		writableDatabase.close();
 		boolean check = (result != -1);
-		if (check)
-		{
-			Log.i (TAG, "Record deleted from table: " + table);
-		}
-		else
-		{
-			Log.i (TAG, "Record not deleted from table: " + table + ". Error code: " + result);
+		if (check) {
+			Log.i(TAG, "Record deleted from table: " + table);
+		} else {
+			Log.i(TAG, "Record not deleted from table: " + table
+					+ ". Error code: " + result);
 		}
 		return check;
 	}
@@ -155,20 +141,19 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 *            whereArgs = {string1, string2, string3}
 	 * @return
 	 */
-	public synchronized boolean update (String table, ContentValues values, String whereClause, String[] whereArgs)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase writableDatabase = util.getWritableDatabase ();
-		long result = writableDatabase.update (table, values, whereClause, whereArgs);
-		writableDatabase.close ();
+	public synchronized boolean update(String table, ContentValues values,
+			String whereClause, String[] whereArgs) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase writableDatabase = util.getWritableDatabase();
+		long result = writableDatabase.update(table, values, whereClause,
+				whereArgs);
+		writableDatabase.close();
 		boolean check = (result != -1);
-		if (check)
-		{
-			Log.i (TAG, "Record updated in table: " + table);
-		}
-		else
-		{
-			Log.i (TAG, "Record not updated in table: " + table + ". Error code: " + result);
+		if (check) {
+			Log.i(TAG, "Record updated in table: " + table);
+		} else {
+			Log.i(TAG, "Record not updated in table: " + table
+					+ ". Error code: " + result);
 		}
 		return check;
 	}
@@ -179,15 +164,11 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param query
 	 * @return
 	 */
-	public String getObject (String query)
-	{
+	public String getObject(String query) {
 		String result = null;
-		try
-		{
-			result = getColumnData (query)[0];
-		}
-		catch (Exception e)
-		{
+		try {
+			result = getColumnData(query)[0];
+		} catch (Exception e) {
 		}
 		return result;
 	}
@@ -200,9 +181,9 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param whereClause
 	 * @return
 	 */
-	public String getObject (String table, String column, String whereClause)
-	{
-		return getObject ("SELECT " + column + " FROM " + table + " WHERE " + whereClause);
+	public String getObject(String table, String column, String whereClause) {
+		return getObject("SELECT " + column + " FROM " + table + " WHERE "
+				+ whereClause);
 	}
 
 	/**
@@ -215,16 +196,14 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param distinct
 	 * @return
 	 */
-	public String[] getColumnData (String table, String column, String whereClause, boolean distinct)
-	{
+	public String[] getColumnData(String table, String column,
+			String whereClause, boolean distinct) {
 		String[] result = new String[0];
-		try
-		{
-			String query = "SELECT " + (distinct ? "DISTINCT " : "") + column + " FROM " + table + " WHERE " + whereClause;
-			result = getColumnData (query);
-		}
-		catch (Exception e)
-		{
+		try {
+			String query = "SELECT " + (distinct ? "DISTINCT " : "") + column
+					+ " FROM " + table + " WHERE " + whereClause;
+			result = getColumnData(query);
+		} catch (Exception e) {
 		}
 		return result;
 	}
@@ -235,25 +214,20 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param query
 	 * @return
 	 */
-	public String[] getColumnData (String query)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase readableDatabase = util.getReadableDatabase ();
-		ArrayList<String> data = new ArrayList<String> ();
-		Cursor cursor = readableDatabase.rawQuery (query, null);
-		if (cursor != null)
-		{
-			if (cursor.moveToFirst ())
-			{
-				do
-				{
-					data.add (cursor.getString (0));
-				}
-				while (cursor.moveToNext ());
+	public String[] getColumnData(String query) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase readableDatabase = util.getReadableDatabase();
+		ArrayList<String> data = new ArrayList<String>();
+		Cursor cursor = readableDatabase.rawQuery(query, null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+				do {
+					data.add(cursor.getString(0));
+				} while (cursor.moveToNext());
 			}
 		}
-		readableDatabase.close ();
-		return data.toArray (new String[] {});
+		readableDatabase.close();
+		return data.toArray(new String[] {});
 	}
 
 	/**
@@ -263,23 +237,20 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param query
 	 * @return
 	 */
-	public String[] getRecord (String query)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase readableDatabase = util.getReadableDatabase ();
-		ArrayList<String> data = new ArrayList<String> ();
-		Cursor cursor = readableDatabase.rawQuery (query, null);
-		if (cursor != null)
-		{
-			int columns = cursor.getColumnCount ();
-			if (cursor.moveToFirst ())
-			{
+	public String[] getRecord(String query) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase readableDatabase = util.getReadableDatabase();
+		ArrayList<String> data = new ArrayList<String>();
+		Cursor cursor = readableDatabase.rawQuery(query, null);
+		if (cursor != null) {
+			int columns = cursor.getColumnCount();
+			if (cursor.moveToFirst()) {
 				for (int i = 0; i < columns; i++)
-					data.add (cursor.getString (i));
+					data.add(cursor.getString(i));
 			}
 		}
-		readableDatabase.close ();
-		return data.toArray (new String[] {});
+		readableDatabase.close();
+		return data.toArray(new String[] {});
 	}
 
 	/**
@@ -290,10 +261,11 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param whereClause
 	 * @return
 	 */
-	public String[][] getTableData (String table, String columns, String whereClause)
-	{
-		String query = "SELECT " + columns + " FROM " + table + " WHERE " + whereClause;
-		return getTableData (query);
+	public String[][] getTableData(String table, String columns,
+			String whereClause) {
+		String query = "SELECT " + columns + " FROM " + table + " WHERE "
+				+ whereClause;
+		return getTableData(query);
 	}
 
 	/**
@@ -302,28 +274,23 @@ public class DatabaseUtil extends SQLiteOpenHelper
 	 * @param query
 	 * @return
 	 */
-	public String[][] getTableData (String query)
-	{
-		DatabaseUtil util = new DatabaseUtil (context);
-		SQLiteDatabase readableDatabase = util.getReadableDatabase ();
-		ArrayList<String[]> data = new ArrayList<String[]> ();
-		Cursor cursor = readableDatabase.rawQuery (query, null);
-		if (cursor != null)
-		{
-			int columns = cursor.getColumnCount ();
-			if (cursor.moveToFirst ())
-			{
-				do
-				{
+	public String[][] getTableData(String query) {
+		DatabaseUtil util = new DatabaseUtil(context);
+		SQLiteDatabase readableDatabase = util.getReadableDatabase();
+		ArrayList<String[]> data = new ArrayList<String[]>();
+		Cursor cursor = readableDatabase.rawQuery(query, null);
+		if (cursor != null) {
+			int columns = cursor.getColumnCount();
+			if (cursor.moveToFirst()) {
+				do {
 					String[] record = new String[columns];
 					for (int i = 0; i < columns; i++)
-						record[i] = cursor.getString (i);
-					data.add (record);
-				}
-				while (cursor.moveToNext ());
+						record[i] = cursor.getString(i);
+					data.add(record);
+				} while (cursor.moveToNext());
 			}
 		}
-		readableDatabase.close ();
-		return data.toArray (new String[][] {});
+		readableDatabase.close();
+		return data.toArray(new String[][] {});
 	}
 }
