@@ -1,0 +1,2 @@
+serviceClass: com.ihsinformatics.tbr4reporterweb.client.ServerService
+path: 7C92994BEE5644502B4D7F0A56000EC9.gwt.rpc
